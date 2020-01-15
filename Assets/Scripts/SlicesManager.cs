@@ -18,26 +18,37 @@ public class SlicesManager : MonoBehaviour
     public AudioClip nextLevelSound;
 
     public Animator timerAnimation;
-
+    public Slider sliderTimer;
+    [SerializeField]
+    private Image sliderImage;
     public int currentLevel;
     bool test = true;
 
-    public float timerPenelty;
-    public float timerReward;
-    public float BaseTime = 20;
+    /*public float timerPenelty;
+    public float timerReward;*/
+    //public float BaseTime = 20;
     private bool badSliceOccur = false;
+    //[SerializeField]
+    //private float BaseTimerMax = 20;
+    //private float BaseTimerMaxInitial;
     [SerializeField]
-    private float BaseTimerMax = 20;
-    private float BaseTimerMaxInitial;
+    private float initialLevelTime = 20;
+    private float timeLeft;
 
     List<int> slicesSizeList;
+
     // public AudioSource m_MyAudioSource;
-    public Slider sliderTimer;
+
+
+
+
     public int goal;
+    [SerializeField]
+    private float criticalTime=5f;
     private int minmumSize;
     public ParticleSystem particlesEndLevel;
 
-    public Text timerText;
+    //public Text timerText;
 
     TimerHelper timer;
     float timerRequired = 1f;
@@ -54,7 +65,7 @@ public class SlicesManager : MonoBehaviour
 
     public int slicesCount = 0;
 
-    private float timerOpp;
+    //private float timerOpp;
 
     // Start is called before the first frame update
     void Start()
@@ -65,11 +76,12 @@ public class SlicesManager : MonoBehaviour
         sliceableObjects = GameObject.FindGameObjectWithTag("SliceableObjects");
         goal = GameManager.currentGoal;
 
-        BaseTime = sliderTimer.value;
-        BaseTimerMax = sliderTimer.value;
-        BaseTimerMaxInitial = sliderTimer.value;
+        //BaseTime = sliderTimer.value;
+       /* BaseTimerMax = sliderTimer.value;
+        BaseTimerMaxInitial = sliderTimer.value;*/
 
         timer = TimerHelper.Create();
+        timeLeft = initialLevelTime;
     }
 
     private void OnEnable()
@@ -82,26 +94,42 @@ public class SlicesManager : MonoBehaviour
         GameManager.OnNextLevel -= NextLevel;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void TimerGraphicsUpdate()
     {
-
-        timerOpp = BaseTime - timer.Get();
-        // Mathf.Clamp(timerOpp, 0, 8);
-        sliderTimer.value = timerOpp; //(int)timer.Get();
-
-        if (sliderTimer.value <= 5)
+        sliderTimer.value = (timeLeft/initialLevelTime);//This should work if slider max value's 1 and min value's 0 
+        Color sliderColour;
+        if (sliderTimer.value > 0.5f)
+        {
+            sliderColour = Color.Lerp(Color.yellow, Color.green, sliderTimer.value-0.5f);
+        }
+        else
+        {
+            sliderColour = Color.Lerp(Color.red, Color.yellow, sliderTimer.value + 0.5f);
+        }
+      
+        sliderImage.color = sliderColour;
+        //  sliderTimer.value =(int)timer.Get();
+        if (timeLeft <= criticalTime )
         {
             timerAnimation.SetBool("isCritical2", true);
         }
-
         bool isAnimOn = timerAnimation.GetBool("isCritical2");
-        if (isAnimOn && sliderTimer.value > 5)
+        if (isAnimOn && timeLeft > criticalTime)
         {
             timerAnimation.SetBool("isCritical2", false);
         }
+       
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        //Debug.Log("timerOpp: " +timerOpp);     
+        //timerOpp = BaseTime - timer.Get();
+        timeLeft -=  Time.deltaTime;// timer.Get();
+        TimerGraphicsUpdate();
+        // Mathf.Clamp(timerOpp, 0, 8);
 
-        if (!toStopTimer && timerOpp < 0)
+        if (!toStopTimer && timeLeft < 0)
         {
             //   Debug.Log("times up! ");
             GameOver();
@@ -192,18 +220,18 @@ public class SlicesManager : MonoBehaviour
     private void BadSlice(bool toManySlices)
     {
         badSliceOccur = true;
-        timerAnimation.SetBool("isCritical", true);
+      //  timerAnimation.SetBool("isCritical", true);
         //BaseTime -= timerPenelty;
-        BaseTime = sliderTimer.value;// BaseTimerMax;
+      //  BaseTime = sliderTimer.value;// BaseTimerMax;
         OnBadSlice?.Invoke(toManySlices);
     }
 
     private void GoodSlice()
     {
         //BaseTime += timerReward;
-        BaseTime = sliderTimer.value + BaseTimerMaxInitial / 4; // sliderTimer.value + sliderTimer.value / 2;
-        if (BaseTime > BaseTimerMaxInitial)
-            BaseTime = BaseTimerMaxInitial;
+       // BaseTime = sliderTimer.value + BaseTimerMaxInitial / 4; // sliderTimer.value + sliderTimer.value / 2;
+       /* if (BaseTime > BaseTimerMaxInitial)
+            BaseTime = BaseTimerMaxInitial;*/           
     }
 
 
@@ -258,20 +286,20 @@ public class SlicesManager : MonoBehaviour
         test = true;
         audioSource.PlayOneShot(nextLevelSound);
         currentLevel++;
-        if (BaseTimerMax > 2)
+        /*if (BaseTimerMax > 2)
         {
             BaseTimerMax--;
         }
         if(currentLevel % 5 == 0)
         {
             BaseTime = sliderTimer.value - 2;
-        }
+        }*/
         particlesEndLevel.Play();
         toStopTimer = false;
-        if (!badSliceOccur)
+       /* if (!badSliceOccur)
         {
             timer = TimerHelper.Create();
-        }
+        }*/
 
         badSliceOccur = false;
     }
@@ -279,8 +307,8 @@ public class SlicesManager : MonoBehaviour
 
     void GameOver()
     {
-        BaseTimerMax = 20;
-        BaseTime = BaseTimerMax;
+       /* BaseTimerMax = 20;
+        BaseTime = BaseTimerMax;*/
         // m_MyAudioSource.Stop();
         toStopTimer = true;
         DestroyAllLeftPieces();
