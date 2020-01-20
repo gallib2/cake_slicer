@@ -21,7 +21,7 @@ public class SlicesManager : MonoBehaviour
     public Slider sliderTimer;
     [SerializeField]
     private Image sliderImage;
-    public int currentLevel;
+    //public int currentLevel;
     bool test = true;
 
     /*public float timerPenelty;
@@ -36,19 +36,18 @@ public class SlicesManager : MonoBehaviour
     private float timeLeft;
 
     List<int> slicesSizeList;
-
+    public int currentCakeIndex = 0;
+    
+    //private LevelManager levelManager;
+    [SerializeField]
+    private Level currentLevel;
     // public AudioSource m_MyAudioSource;
-
-
-
-
-    public int goal;
+    public static event Action OnGoalChange;
+    public static int goal;
     [SerializeField]
     private float criticalTime=5f;
     private int minmumSize;
     public ParticleSystem particlesEndLevel;
-
-    //public Text timerText;
 
     TimerHelper timer;
     float timerRequired = 1f;
@@ -58,28 +57,29 @@ public class SlicesManager : MonoBehaviour
     private int sliced = 0;
 
     //public GameObject cake;
-    public GameObject[] cakes;
+    //public GameObject[] cakes;
     public GameObject gameOverScreenPrefub;
 
-    GameObject sliceableObjects;
+    [SerializeField]
+    private GameObject sliceableObjects;
 
     public int slicesCount = 0;
 
     //private float timerOpp;
 
-    // Start is called before the first frame update
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
         // m_MyAudioSource = GetComponent<AudioSource>();
         // m_MyAudioSource.Play();
-        sliceableObjects = GameObject.FindGameObjectWithTag("SliceableObjects");
-        goal = GameManager.currentGoal;
+        //sliceableObjects = GameObject.FindGameObjectWithTag("SliceableObjects");
+        //goal = GameManager.currentGoal;
+        currentCakeIndex = -1;
+        NextRound();
 
         //BaseTime = sliderTimer.value;
-       /* BaseTimerMax = sliderTimer.value;
-        BaseTimerMaxInitial = sliderTimer.value;*/
-
+        /* BaseTimerMax = sliderTimer.value;
+         BaseTimerMaxInitial = sliderTimer.value;*/
         timer = TimerHelper.Create();
         timeLeft = initialLevelTime;
     }
@@ -128,7 +128,6 @@ public class SlicesManager : MonoBehaviour
         timeLeft -=  Time.deltaTime;// timer.Get();
         TimerGraphicsUpdate();
         // Mathf.Clamp(timerOpp, 0, 8);
-
         if (!toStopTimer && timeLeft < 0)
         {
             //   Debug.Log("times up! ");
@@ -141,12 +140,11 @@ public class SlicesManager : MonoBehaviour
         }
     }
 
-    void CheckSlices()
+    private void CheckSlices()
     {
         slicesCount = sliceableObjects.GetComponentsInChildren<Transform>().Length - 1;
-
-        goal = GameManager.currentGoal;
-
+        //goal = GameManager.currentGoal;
+        //goal = currentLevel.Cakes[currentCakeIndex].numberOfSlices;
         if (slicesCount == goal)
         {
             Debug.Log("slicesCount= " + slicesCount);
@@ -158,22 +156,19 @@ public class SlicesManager : MonoBehaviour
                 CalculateNewScore();
 
                 //note add a small delay after the cake is cut 
-                DestroyAllLeftPieces();
-
+                
                 GoodSlice();
 
-                GameObject cake = GetRandomCake();
-                Instantiate(cake, sliceableObjects.transform, true); // create new cake
+                NextRound();
 
                 GameManager.NextLevel();
                 //NextLevel();
             }
             else if (!isAllSlicesEqual && !GameManager.isGameOver)
             {
-                DestroyAllLeftPieces();
 
-                GameObject cake = GetRandomCake();
-                Instantiate(cake, sliceableObjects.transform, true); // create new cake
+                //GameObject cake = GetRandomCake();
+                NextRound();
 
                 GameManager.NextLevel();
                // NextLevel();
@@ -189,10 +184,9 @@ public class SlicesManager : MonoBehaviour
         else if (slicesCount > goal)
         {
             Debug.Log("BadSlice slicesCount > goal");
-            DestroyAllLeftPieces();
 
-            GameObject cake = GetRandomCake();
-            Instantiate(cake, sliceableObjects.transform, true); // create new cake
+            //GameObject cake = GetRandomCake();
+            NextRound();
 
             GameManager.NextLevel();
             NextLevel();
@@ -212,10 +206,8 @@ public class SlicesManager : MonoBehaviour
             /// 
             /// 
             //GameOver();
-
         }
     }
-
 
     private void BadSlice(bool toManySlices)
     {
@@ -233,7 +225,6 @@ public class SlicesManager : MonoBehaviour
        /* if (BaseTime > BaseTimerMaxInitial)
             BaseTime = BaseTimerMaxInitial;*/           
     }
-
 
     private void CalculateNewScore()
     {
@@ -285,7 +276,7 @@ public class SlicesManager : MonoBehaviour
         //prevLevel = currentLevel;
         test = true;
         audioSource.PlayOneShot(nextLevelSound);
-        currentLevel++;
+        //currentLevel++;
         /*if (BaseTimerMax > 2)
         {
             BaseTimerMax--;
@@ -380,12 +371,26 @@ public class SlicesManager : MonoBehaviour
 
         return slicesSizeList;
     }
+     
+    private void NextRound()
+    {
+        DestroyAllLeftPieces();
+        currentCakeIndex++;
+        if (currentCakeIndex < currentLevel.Cakes.Length)
+        {
+            goal = currentLevel.Cakes[currentCakeIndex].numberOfSlices;
+            OnGoalChange.Invoke();
+            Cake newCake = currentLevel.Cakes[currentCakeIndex];
+            GameObject cake = newCake.cakePrefab;
+            Instantiate(cake, sliceableObjects.transform, true); // create new cake
+        }
+    }
 
-    GameObject GetRandomCake()
+   /* private GameObject GetRandomCake()
     {
         int maxIndex = cakes.Length;
         int index = UnityEngine.Random.Range(0, maxIndex);
 
         return cakes[index];
-    }
+    }*/
 }

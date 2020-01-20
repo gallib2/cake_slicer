@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class Score : MonoBehaviour
 {
-    public int initialScore = 10;
-    public static int score = 10;
+    public int initialScore = 0;
+    public static int score = 0;
     public int regularScoreToAdd = 10;
 
     AudioSource audioSource;
