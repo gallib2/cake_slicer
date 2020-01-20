@@ -1819,7 +1819,7 @@ MonoBehaviour:
   sliderTimer: {fileID: 1542509673}
   sliderImage: {fileID: 130950390}
   currentLevel: 0
-  initialLevelTime: 20
+  initialLevelTime: 40
   goal: 4
   criticalTime: 5
   particlesEndLevel: {fileID: 1613897369}
@@ -7605,7 +7605,7 @@ MonoBehaviour:
   startSliceIfPossible: 0
   startedSlice: 0
   strippedLinear: 0
-  sliceType: 1
+  sliceType: 6
   sliceLayer:
     layer: 0
     layers: 00000000000000010000
@@ -7616,7 +7616,7 @@ MonoBehaviour:
   sliceJoints: 0
   material: {fileID: 0}
   createType: 0
-  complexSliceType: 1
+  complexSliceType: 0
   pointsLimit: 3
   cutSize: 0.2
   lineType: 0
