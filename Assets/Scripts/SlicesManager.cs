@@ -64,7 +64,8 @@ public class SlicesManager : MonoBehaviour
     private GameObject sliceableObjects;
 
     public int slicesCount = 0;
-
+    [SerializeField]
+    private Text cakesLeftText;
 
     //private float timerOpp;
     static public SlicesManager instance;
@@ -398,6 +399,12 @@ public class SlicesManager : MonoBehaviour
             Cake newCake = currentLevel.Cakes[currentCakeIndex];
             GameObject cake = newCake.cakePrefab;
             Instantiate(cake, sliceableObjects.transform, true); // create new cake
+            cakesLeftText.text =
+                (currentLevel.Cakes.Length - currentCakeIndex).ToString();
+        }
+        else
+        {
+            cakesLeftText.text = "0";
         }
     }
 

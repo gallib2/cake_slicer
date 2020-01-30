@@ -19,6 +19,10 @@ public class Score : MonoBehaviour
     public GameObject[] negativeFeedbackPrefubs;
     public AudioClip[] negativeSound;
     GameObject floatingText;
+    [SerializeField]
+    private UIStar starPrefab;
+    private UIStar[] stars;
+    private bool[] hasStar;
 
     private void OnEnable()
     {
@@ -45,6 +49,20 @@ public class Score : MonoBehaviour
     {
         score = 0;
         audioSource = GetComponent<AudioSource>();
+        RectTransform scoreSliderRectTransform = scoreSlider.GetComponent(typeof(RectTransform)) as RectTransform;
+        stars = new UIStar[SlicesManager.instance.currentLevel.StarRequirements.Length];
+        hasStar = new bool[stars.Length];
+        for (int i = 0; i < stars.Length; i++)
+        {
+            hasStar[i] = false;
+           float xPosition=
+                ((float)SlicesManager.instance.currentLevel.StarRequirements[i]* scoreSliderRectTransform.rect.width)
+                - (scoreSliderRectTransform.rect.width / 2);
+            UIStar newStar = Instantiate(starPrefab);
+            newStar.transform.parent = scoreSlider.transform;
+            newStar.rectTransform.localPosition = new Vector2(xPosition, 0);
+            stars[i] = newStar;
+        }
     }
 
     private void Update()
@@ -116,9 +134,11 @@ public class Score : MonoBehaviour
         scoreSlider.value = (float)ScoreDividedByMaxScore;
         for (int i = 0; i < currentLevel.StarRequirements.Length; i++)
         {
-            if(ScoreDividedByMaxScore > currentLevel.StarRequirements[i])
+            if(ScoreDividedByMaxScore > currentLevel.StarRequirements[i] && !hasStar[i])
             {
-                Debug.Log("I have star number " + i);
+                // Debug.Log("I have star number " + i);
+                hasStar[i] = true;
+                stars[i].FillStar();
             }
         }
 
