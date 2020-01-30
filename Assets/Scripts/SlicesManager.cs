@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class SlicesManager : MonoBehaviour
 {
-    public delegate void ScoreChange(int score, ScoreLevel scoreLevel);
+    public delegate void ScoreChange(int score,ScoreData.ScoreLevel scoreLevel);
     public delegate void BadSliceHandler(bool isTooManySlices);
 
     public static event ScoreChange OnScoreChange;
@@ -40,7 +40,7 @@ public class SlicesManager : MonoBehaviour
     
     //private LevelManager levelManager;
     [SerializeField]
-    private Level currentLevel;
+    public Level currentLevel;
     // public AudioSource m_MyAudioSource;
     public static event Action OnGoalChange;
     public static int goal;
@@ -65,10 +65,24 @@ public class SlicesManager : MonoBehaviour
 
     public int slicesCount = 0;
 
-    //private float timerOpp;
 
+    //private float timerOpp;
+    static public SlicesManager instance;
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+    // Start is called before the first frame update
     void Start()
     {
+      
         audioSource = GetComponent<AudioSource>();
         // m_MyAudioSource = GetComponent<AudioSource>();
         // m_MyAudioSource.Play();
@@ -123,6 +137,10 @@ public class SlicesManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Debug.Log("LevelMax" + currentLevel.MaximumScore());
+        }
         //Debug.Log("timerOpp: " +timerOpp);     
         //timerOpp = BaseTime - timer.Get();
         timeLeft -=  Time.deltaTime;// timer.Get();
@@ -229,20 +247,19 @@ public class SlicesManager : MonoBehaviour
     private void CalculateNewScore()
     {
         bool isHaveScoreLevel = false;
-        ScoreLevel playerScoreLevel = ScoreLevel.Regular;
+        ScoreData.ScoreLevel playerScoreLevel = ScoreData.ScoreLevel.Regular;
 
-        ScoreLevel[] ScoreLevelArr = (ScoreLevel[])Enum.GetValues(typeof(ScoreLevel));
+        ScoreData.ScoreLevel[] ScoreLevelArr = (ScoreData.ScoreLevel[])Enum.GetValues(typeof(ScoreData.ScoreLevel));
 
         // we need to run on the array from the biggest value to the lower.
-        foreach (ScoreLevel scoreLevelEnum in ScoreLevelArr)
+        foreach (ScoreData.ScoreLevel scoreLevelEnum in ScoreLevelArr)
         {
-            if (scoreLevelEnum != ScoreLevel.Regular)
+            if (scoreLevelEnum != ScoreData.ScoreLevel.Regular)
             {
                 int scoreLevel = (int)scoreLevelEnum;
                 isHaveScoreLevel = CheckScoreLevel(scoreLevel);
 
                 //Debug.Log("scoreLevel " + scoreLevel); Debug.Log("isHaveScoreLevel " + isHaveScoreLevel); Debug.Log("scoreLevelEnum " + scoreLevelEnum);
-
                 if (isHaveScoreLevel)
                 {
                     playerScoreLevel = scoreLevelEnum;
@@ -251,8 +268,9 @@ public class SlicesManager : MonoBehaviour
             }
         }
 
-        int scoreToAdd = (int)Enum.Parse(typeof(ScorePointsByLevel), playerScoreLevel.ToString());
-
+        int scoreToAdd = (int)Enum.Parse(typeof(ScoreData.ScorePointsByLevel), playerScoreLevel.ToString());
+        scoreToAdd = 
+           (int)((double)scoreToAdd * (ScoreData.NumberOfSlicesScoreNormaliser *(currentLevel.Cakes[currentCakeIndex].numberOfSlices)));
         OnScoreChange?.Invoke(scoreToAdd, playerScoreLevel);
     }
 
@@ -295,7 +313,6 @@ public class SlicesManager : MonoBehaviour
         badSliceOccur = false;
     }
 
-
     void GameOver()
     {
        /* BaseTimerMax = 20;
@@ -308,7 +325,6 @@ public class SlicesManager : MonoBehaviour
         SceneManager.LoadScene(2);
         //GameObject cake = GetRandomCake();
         //Instantiate(cake, sliceableObjects.transform, true);
-
     }
 
     void DestroyAllLeftPieces()
@@ -349,7 +365,6 @@ public class SlicesManager : MonoBehaviour
 
     //    //    return currSize < minmumSize;
     //    //});
-
     //}
 
     List<int> GetSlicesSizesList()
