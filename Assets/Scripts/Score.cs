@@ -15,14 +15,16 @@ public class Score : MonoBehaviour
     [SerializeField]
     private Slider scoreSlider;
     public GameObject[] floatingTextPrefubs;
-    public AudioClip[] positiveSound;
+    //public AudioClip[] positiveSound;
+    [SerializeField]
+   // private SoundEffectNames[] positiveSounds;
     public GameObject[] negativeFeedbackPrefubs;
-    public AudioClip[] negativeSound;
+   // public AudioClip[] negativeSound;
     GameObject floatingText;
     [SerializeField]
     private UIStar starPrefab;
     private UIStar[] stars;
-    private bool[] hasStar;
+    public static bool[] HasStar;
 
     private void OnEnable()
     {
@@ -51,10 +53,10 @@ public class Score : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         RectTransform scoreSliderRectTransform = scoreSlider.GetComponent(typeof(RectTransform)) as RectTransform;
         stars = new UIStar[SlicesManager.instance.currentLevel.StarRequirements.Length];
-        hasStar = new bool[stars.Length];
+        HasStar = new bool[stars.Length];
         for (int i = 0; i < stars.Length; i++)
         {
-            hasStar[i] = false;
+            HasStar[i] = false;
            float xPosition=
                 ((float)SlicesManager.instance.currentLevel.StarRequirements[i]* scoreSliderRectTransform.rect.width)
                 - (scoreSliderRectTransform.rect.width / 2);
@@ -84,7 +86,8 @@ public class Score : MonoBehaviour
         if(floatingTextPrefubs[index] && scoreLevel != ScoreData.ScoreLevel.Regular)
         {
             ShowFloatingText(scoreLevel, floatingTextPrefubs[index]);
-            audioSource.PlayOneShot(positiveSound[index]);
+            //SoundManager.instance.PlaySoundEffect(positiveSounds[index]);
+            //audioSource.PlayOneShot(positiveSound[index]);
         }
 
     }
@@ -98,7 +101,7 @@ public class Score : MonoBehaviour
         if (negativeFeedbackPrefubs[index])
         {
             ShowFloatingText(ScoreData.ScoreLevel.Regular, negativeFeedbackPrefubs[index]);
-            audioSource.PlayOneShot(negativeSound[index]);
+            //audioSource.PlayOneShot(negativeSound[index]);
         }
     }
 
@@ -134,10 +137,10 @@ public class Score : MonoBehaviour
         scoreSlider.value = (float)ScoreDividedByMaxScore;
         for (int i = 0; i < currentLevel.StarRequirements.Length; i++)
         {
-            if(ScoreDividedByMaxScore > currentLevel.StarRequirements[i] && !hasStar[i])
+            if(ScoreDividedByMaxScore > currentLevel.StarRequirements[i] && !HasStar[i])
             {
                 // Debug.Log("I have star number " + i);
-                hasStar[i] = true;
+                HasStar[i] = true;
                 stars[i].FillStar();
             }
         }
