@@ -19,14 +19,6 @@ public class SoundManager : MonoBehaviour
     [SerializeField]
     private AudioSource musicSource;
     [SerializeField]
-    private AudioSource nextLevelSource;
-    [SerializeField]
-    private AudioClip nextLevelClip;
-    [SerializeField]
-    private AudioSource VoiceFeedbackSource;
-    [SerializeField]
-    private AudioClip LoseClip;
-    [SerializeField]
     private SoundEffect[] soundEffects;
     static public SoundManager instance;
 
@@ -48,19 +40,19 @@ public class SoundManager : MonoBehaviour
         musicSource.Stop();
     }
 
-    public void PlaySoundEffect(SoundEffectNames soundEffectName)//FIX: put things in arrays, organis a bit..
+    public void PlaySoundEffect(SoundEffectNames soundEffectName)
     {
-        /*AudioSource audioSource=null;
-        AudioClip clip=null;*/
         for (int i = 0; i < soundEffects.Length; i++)
         {
             if (soundEffects[i].Name == soundEffectName)
             {
                 soundEffects[i].Source.clip = soundEffects[i].Clips[UnityEngine.Random.Range(0, soundEffects[i].Clips.Length)];
+                soundEffects[i].Source.volume = soundEffects[i].Volume;
                 soundEffects[i].Source.Play();
-                break;
+                return;
             }
            
         }
+        Debug.Log("Sound effect not found!");
     }
 }

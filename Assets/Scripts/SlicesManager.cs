@@ -34,7 +34,7 @@ public class SlicesManager : MonoBehaviour
     private float initialLevelTime = 20;
     private float timeLeft;
 
-    List<int> slicesSizeList;
+    List<double> slicesSizeList;
     public int currentCakeIndex = 0;
     
     //private LevelManager levelManager;
@@ -278,15 +278,17 @@ public class SlicesManager : MonoBehaviour
 
     private bool CheckScoreLevel(int scoreLevel)
     {
-        int sliceSizeSupposedToBe = (int)originalSize / goal;
-        //  Debug.Log("originalSize " + originalSize); Debug.Log("sliceSizeSupposedToBe " + sliceSizeSupposedToBe); Debug.Log("scoreLevel " + scoreLevel);
+        double sliceSizeSupposedToBe = originalSize / goal;
+        //Debug.Log("sliceSizeSupposedToBe " + sliceSizeSupposedToBe);
+        //Debug.Log("originalSize " + originalSize);  //Debug.Log("scoreLevel " + scoreLevel);
 
         return slicesSizeList.Any(currSize => {
             double sliceSizeSupposedToBeInPercentage = (sliceSizeSupposedToBe / originalSize) * 100;
-            double currSizePercentage = ((double)currSize / originalSize) * 100;
-            // Debug.Log("sliceSizeSupposedToBeInPercentage: " + sliceSizeSupposedToBeInPercentage); Debug.Log("currSizePercentage " + currSizePercentage);
+            double currSizePercentage = (currSize / originalSize) * 100;
+            Debug.Log("sliceSizeSupposedToBeInPercentage: " + sliceSizeSupposedToBeInPercentage); Debug.Log("currSizePercentage " + currSizePercentage);
 
-            int difference = Mathf.Abs((int)sliceSizeSupposedToBeInPercentage - (int)currSizePercentage);
+            double difference = Mathf.Abs((float)(sliceSizeSupposedToBeInPercentage - currSizePercentage));
+            Debug.Log("difference: " + difference);
             return difference <= scoreLevel;
         });
     }
@@ -319,7 +321,6 @@ public class SlicesManager : MonoBehaviour
     {
        /* BaseTimerMax = 20;
         BaseTime = BaseTimerMax;*/
-        // m_MyAudioSource.Stop();
         DestroyAllLeftPieces();
         //Instantiate(gameOverScreenPrefub);
         GameManager.GameOver();
@@ -368,9 +369,9 @@ public class SlicesManager : MonoBehaviour
     //    //});
     //}
 
-    List<int> GetSlicesSizesList()
+    List<double> GetSlicesSizesList()
     {
-        slicesSizeList = new List<int>();
+        slicesSizeList = new List<double>();
 
         foreach (Slicer2D slicer in Slicer2D.GetList())
         {

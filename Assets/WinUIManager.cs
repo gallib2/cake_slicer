@@ -28,7 +28,7 @@ public class WinUIManager : MonoBehaviour
        
         for (int i = 0; i < stars.Length; i++)
         {
-            if (Score.HasStar[i])
+            if (Score.hasStarAt[i])
             {
                 EmptyStar(stars[i]);
             }
@@ -49,7 +49,7 @@ public class WinUIManager : MonoBehaviour
     }
     public IEnumerator FillStars()
     {
-        if(Score.HasStar.Length!= stars.Length)
+        if(Score.hasStarAt.Length!= stars.Length)
         {
             Debug.Log("Uneven lengths!!!");
         }
@@ -58,7 +58,7 @@ public class WinUIManager : MonoBehaviour
             for (int i = 0; i < stars.Length; i++)
             {
                 yield return new WaitForSeconds(fillStarsWait);
-                if (Score.HasStar[i])
+                if (Score.hasStarAt[i])
                 {
                     FillStar(stars[i]);
                 }
