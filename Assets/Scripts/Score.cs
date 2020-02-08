@@ -5,19 +5,21 @@ using UnityEngine.UI;
 
 public class Score : MonoBehaviour
 {
-    public int initialScore = 10;
-    public static int score = 10;
-    public int regularScoreToAdd = 10;
-
-    AudioSource audioSource;
+    public int initialScore = 0;
+    public static int score = 0;
+    //public int regularScoreToAdd = 10;
 
     public Text scoreText;
+    [SerializeField]
+    private Slider scoreSlider;
     public GameObject[] floatingTextPrefubs;
-    public AudioClip[] positiveSound;
+    [SerializeField]
     public GameObject[] negativeFeedbackPrefubs;
-    public AudioClip[] negativeSound;
     GameObject floatingText;
-
+    [SerializeField]
+    private UIStar starPrefab;
+    private UIStar[] stars;
+    public static bool[] hasStarAt;
 
     private void OnEnable()
     {
@@ -43,7 +45,24 @@ public class Score : MonoBehaviour
     private void Start()
     {
         score = 0;
-        audioSource = GetComponent<AudioSource>();
+        hasStarAt = new bool[SlicesManager.instance.currentLevel.StarRequirements.Length];
+        CreateUIStarsBar();
+    }
+
+    private void CreateUIStarsBar()
+    {
+        RectTransform scoreSliderRectTransform = scoreSlider.GetComponent(typeof(RectTransform)) as RectTransform;
+        stars = new UIStar[SlicesManager.instance.currentLevel.StarRequirements.Length];
+        for (int i = 0; i < stars.Length; i++)
+        {
+            float xPosition =
+                 ((float)SlicesManager.instance.currentLevel.StarRequirements[i] * scoreSliderRectTransform.rect.width)
+                 - (scoreSliderRectTransform.rect.width / 2);
+            UIStar newStar = Instantiate(starPrefab);
+            newStar.transform.parent = scoreSlider.transform;
+            newStar.rectTransform.localPosition = new Vector2(xPosition, 0);
+            stars[i] = newStar;
+        }
     }
 
     private void Update()
@@ -55,16 +74,15 @@ public class Score : MonoBehaviour
         }
     }
 
-    private void ScoreChanged(int scoreToAdd, ScoreLevel scoreLevel)
+    private void ScoreChanged(int scoreToAdd,ScoreData.ScoreLevel scoreLevel)
     {
         int newScore = score + scoreToAdd;
         int index = Random.Range(0, floatingTextPrefubs.Length);
 
         SetScore(newScore);
-        if(floatingTextPrefubs[index] && scoreLevel != ScoreLevel.Regular)
+        if(floatingTextPrefubs[index] && scoreLevel != ScoreData.ScoreLevel.Regular)
         {
             ShowFloatingText(scoreLevel, floatingTextPrefubs[index]);
-            audioSource.PlayOneShot(positiveSound[index]);
         }
 
     }
@@ -77,22 +95,18 @@ public class Score : MonoBehaviour
 
         if (negativeFeedbackPrefubs[index])
         {
-            ShowFloatingText(ScoreLevel.Regular, negativeFeedbackPrefubs[index]);
-            audioSource.PlayOneShot(negativeSound[index]);
+            ShowFloatingText(ScoreData.ScoreLevel.Regular, negativeFeedbackPrefubs[index]);
         }
     }
 
-    private void ShowFloatingText(ScoreLevel scoreLevel, GameObject floatingTextPrefub)
+    private void ShowFloatingText(ScoreData.ScoreLevel scoreLevel, GameObject floatingTextPrefub)
     {
         floatingText = Instantiate(floatingTextPrefub);
-        //TextMesh floatingTextMesh = floatingText.GetComponent<TextMesh>();
-        //floatingTextMesh.text = scoreLevel.ToString();
-        //floatingTextMesh.color
     }
 
     private void NextLevel()
     {
-        int newScore = score + regularScoreToAdd;
+        int newScore = score;// + regularScoreToAdd;
 
         //Destroy(floatingText);
 
@@ -109,5 +123,17 @@ public class Score : MonoBehaviour
     {
         score = scoreToSet;
         scoreText.text = score.ToString();
+        Level currentLevel = SlicesManager.instance.currentLevel;
+        double ScoreDividedByMaxScore = ((double)score / currentLevel.MaximumScore());
+        scoreSlider.value = (float)ScoreDividedByMaxScore;
+        for (int i = 0; i < currentLevel.StarRequirements.Length; i++)
+        {
+            if(ScoreDividedByMaxScore > currentLevel.StarRequirements[i] && !hasStarAt[i])
+            {
+                hasStarAt[i] = true;
+                stars[i].FillStar();
+            }
+        }
+
     }
 }

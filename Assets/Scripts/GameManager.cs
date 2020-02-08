@@ -20,7 +20,8 @@ public class GameManager : MonoBehaviour
     public List<int> slicesSizeList;
     public static List<int> goals = new List<int>();
     public static int currentGoal;
-    public static int score = 0;
+    //[SerializeField]
+   //public  int score = 0;// Ori finds this variable unnesssry!
     public static bool isGameOver = false;
 
     private static int minSliceGoal = 2;
@@ -42,7 +43,7 @@ public class GameManager : MonoBehaviour
 
     private void OnDisable()
     {
-        score = 0;
+       // score = 0;
         isGameOver = false;
         goals.Clear();
     }
@@ -52,7 +53,7 @@ public class GameManager : MonoBehaviour
         timer = TimerHelper.Create();
         goals.Add(2);
         currentGoal = goals.Last();
-        score = 0;
+       // score = 0;
         currentLevel = 0;
         maxSliceGoal = 6;
         OnNextLevel?.Invoke();
@@ -67,7 +68,7 @@ public class GameManager : MonoBehaviour
         goals.Add(nextGoal);
 
         currentGoal = goals.Last();
-        score = goals.Count - 1;
+       // instance.score = goals.Count - 1;
         currentLevel++;
 
         OnNextLevel?.Invoke();
