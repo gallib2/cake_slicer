@@ -1551,10 +1551,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicSource: {fileID: 1389925378}
-  nextLevelSource: {fileID: 1542503593}
-  nextLevelClip: {fileID: 8300000, guid: 5eda3f41fc0b24ce0b0c5b91d22ce34b, type: 3}
-  VoiceFeedbackSource: {fileID: 1554992707}
-  LoseClip: {fileID: 8300000, guid: 9ad2d5a84e59c4d958da28b0fd6033e5, type: 3}
   soundEffects:
   - Name: 0
     Clips:
@@ -9042,7 +9038,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1882227216
 MonoBehaviour:
   m_ObjectHideFlags: 0
