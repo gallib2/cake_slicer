@@ -23,7 +23,6 @@ public class Score : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.OnNextLevel += NextLevel;
         GameManager.OnGameOver += GameOver;
         SlicesManager.OnScoreChange += ScoreChanged;
         SlicesManager.OnBadSlice += BadSlice;
@@ -31,7 +30,6 @@ public class Score : MonoBehaviour
 
     private void OnDisable()
     {
-        GameManager.OnNextLevel -= NextLevel;
         GameManager.OnGameOver -= GameOver;
         SlicesManager.OnScoreChange -= ScoreChanged;
         SlicesManager.OnBadSlice -= BadSlice;
@@ -80,7 +78,11 @@ public class Score : MonoBehaviour
         int index = Random.Range(0, floatingTextPrefubs.Length);
 
         SetScore(newScore);
-        if(floatingTextPrefubs[index] && scoreLevel != ScoreData.ScoreLevel.Regular)
+        if(scoreLevel == ScoreData.ScoreLevel.Regular)
+        {
+            BadSlice(false);
+        }
+        else if(floatingTextPrefubs[index])
         {
             ShowFloatingText(scoreLevel, floatingTextPrefubs[index]);
         }
@@ -89,7 +91,7 @@ public class Score : MonoBehaviour
 
     private void BadSlice(bool isTooManySlices)
     {
-        int tooManySlicesIndex = 3;
+        int tooManySlicesIndex = 1;
 
         int index = isTooManySlices ? tooManySlicesIndex : Random.Range(0, negativeFeedbackPrefubs.Length - 1);
 
@@ -102,15 +104,6 @@ public class Score : MonoBehaviour
     private void ShowFloatingText(ScoreData.ScoreLevel scoreLevel, GameObject floatingTextPrefub)
     {
         floatingText = Instantiate(floatingTextPrefub);
-    }
-
-    private void NextLevel()
-    {
-        int newScore = score;// + regularScoreToAdd;
-
-        //Destroy(floatingText);
-
-        SetScore(newScore);
     }
 
     private void GameOver()

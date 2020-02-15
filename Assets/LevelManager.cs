@@ -19,7 +19,8 @@ public class Level
         for (int i = 0; i < Cakes.Length; i++)
         {
             mximumScore +=(int)
-               (((double)Cakes[i].numberOfSlices * ScoreData.NumberOfSlicesScoreNormaliser) * (double)ScoreData.ScorePointsByLevel.Awesome);
+               (((double)Cakes[i].numberOfSlices * ScoreData.NumberOfSlicesScoreNormaliser) * 
+               (double)ScoreData.ScorePointsByLevel.Awesome);
         }
         return mximumScore;
     }
