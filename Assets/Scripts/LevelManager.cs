@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class LevelManager : MonoBehaviour
-{
-    public  Level TestLevel;
-}
 
-[Serializable]
-public class Level
+[CreateAssetMenu(fileName ="Level", menuName="Level")]
+public class Level : ScriptableObject
 {
     public Cake[] Cakes;
-    public double[] StarRequirements;
+    [Range(0, 1)]
+    public double[] StarRequirements = { 0.6, 0.76, 0.9 };
+
     public int MaximumScore()
     {
         int mximumScore = 0;
@@ -30,6 +28,6 @@ public class Cake
 {
     [SerializeField]
     public GameObject cakePrefab;
-    [SerializeField]
+    [SerializeField][Range(2,8)]
     public int numberOfSlices;
 }

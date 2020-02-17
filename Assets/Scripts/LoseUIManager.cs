@@ -11,13 +11,16 @@ public class LoseUIManager : MonoBehaviour
 
     private void Start()
     {
-        GameManager.OnGameOver += ShowLoseScreen;
+        GameManager.OnLose += ShowLoseScreen;
         for (int i = 0; i < elementsToAppearOnWin.Length; i++)
         {
             elementsToAppearOnWin[i].SetActive(false);
         }
     }
-
+    private void OnDisable()
+    {
+        GameManager.OnLose -= ShowLoseScreen;
+    }
     private void ShowLoseScreen()
     {
         SoundManager.instance.PlaySoundEffect(SoundEffectNames.LOSE);

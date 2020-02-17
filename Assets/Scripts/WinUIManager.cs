@@ -20,7 +20,7 @@ public class WinUIManager : MonoBehaviour
 
     private void Start()
     {
-        GameManager.OnGameOver += ShowFinalScoreAndStars;
+        GameManager.OnWin += ShowFinalScoreAndStars;
         for (int i = 0; i < elementsToAppearOnWin.Length; i++)
         {
             elementsToAppearOnWin[i].SetActive(false);
@@ -34,7 +34,10 @@ public class WinUIManager : MonoBehaviour
             }
         }
     }
-
+    private void OnDisable()
+    {
+        GameManager.OnWin -= ShowFinalScoreAndStars;
+    }
     private void ShowFinalScoreAndStars()
     {
         for (int i = 0; i < elementsToAppearOnWin.Length; i++)

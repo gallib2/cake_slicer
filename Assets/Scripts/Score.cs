@@ -23,28 +23,37 @@ public class Score : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.OnGameOver += GameOver;
+        GameManager.OnLose += GameOver;
+        GameManager.OnWin += GameOver;
         SlicesManager.OnScoreChange += ScoreChanged;
         SlicesManager.OnBadSlice += BadSlice;
     }
 
     private void OnDisable()
     {
-        GameManager.OnGameOver -= GameOver;
+        GameManager.OnLose -= GameOver;
+        GameManager.OnWin -= GameOver;
         SlicesManager.OnScoreChange -= ScoreChanged;
         SlicesManager.OnBadSlice -= BadSlice;
     }
 
     void Awake()
     {
+        Initialise();
+    }
+
+    private void Initialise()
+    {
         score = 0;
     }
+
 
     private void Start()
     {
         score = 0;
         hasStarAt = new bool[SlicesManager.instance.currentLevel.StarRequirements.Length];
         CreateUIStarsBar();
+        SetScore(0);
     }
 
     private void CreateUIStarsBar()
