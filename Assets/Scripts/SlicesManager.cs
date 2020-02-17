@@ -118,18 +118,11 @@ public class SlicesManager : MonoBehaviour
     {
         if (!GameManager.isGameOver)
         {
-            if (Input.GetKeyDown(KeyCode.L))
-            {
-                Debug.Log("LevelMax" + currentLevel.MaximumScore());
-            }
-            //Debug.Log("timerOpp: " +timerOpp);     
-            //timerOpp = BaseTime - timer.Get();
-            timeLeft -= Time.deltaTime;// timer.Get();
+            timeLeft -= Time.deltaTime;
             TimerGraphicsUpdate();
-            // Mathf.Clamp(timerOpp, 0, 8);
+
             if (!toStopTimer && timeLeft < 0)
             {
-                //   Debug.Log("times up! ");
                 GameOver();
                 toStopTimer = true;
             }
@@ -153,7 +146,6 @@ public class SlicesManager : MonoBehaviour
 
             NextRound();
 
-            GameManager.NextLevel();
         }
         else if (slicesCount > goal)
         {
@@ -161,8 +153,6 @@ public class SlicesManager : MonoBehaviour
             Debug.Log("BadSlice slicesCount > goal");
 
             NextRound();
-
-            GameManager.NextLevel();
 
             BadSlice(true);
             //OnBadSlice?.Invoke();

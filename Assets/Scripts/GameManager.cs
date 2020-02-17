@@ -6,8 +6,10 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static event Action OnNextLevel;
-    public static event Action OnGameOver;
+    //public static event Action OnGameOver;
+    public static event Action OnWin;
+    public static event Action OnLose;
+    public static event Action k;
     public static string playerName;
 
     //TimerHelper timer;
@@ -18,7 +20,6 @@ public class GameManager : MonoBehaviour
    //public  int score = 0;// Ori finds this variable unnesssry!
     public static bool isGameOver = false;
 
-    TimerHelper timer;
     static public GameManager instance;
 
     // Start is called before the first frame update
@@ -32,42 +33,26 @@ public class GameManager : MonoBehaviour
 
     private void OnDisable()
     {
-       // score = 0;
         isGameOver = false;
     }
 
     private void StartGameSettings()
     {
-        timer = TimerHelper.Create();
-       // score = 0;
-        OnNextLevel?.Invoke();
-    }
-
-    // TODO event
-    public static void NextLevel()
-    { 
-       // instance.score = goals.Count - 1;
-
-        OnNextLevel?.Invoke();
+        //Score.ins = 0;
     }
 
     public static void GameOver()
     {
         isGameOver = true;
-        OnGameOver?.Invoke();
-        //OnNextLevel?.Invoke();
-    }
+        //OnGameOver?.Invoke();
 
-    public void PlayAgain()
-    {
-        isGameOver = false;
-       // goals.Clear();
-        
-        StartGameSettings();
-
-        //if (gameOverScreenPrefub != null)
-        //{
-        //    Destroy(gameOverScreenPrefub.gameObject);
-        //}
+        if (Score.hasStarAt[0])//TODO: hardcoded winning condition(Can be moved to Level)
+        {
+            OnWin.Invoke();
+        }
+        else
+        {
+            OnLose.Invoke();
+        }
     }
 }

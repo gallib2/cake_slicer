@@ -26,7 +26,7 @@ public class SoundManager : MonoBehaviour
     {
         if (instance == null)
         {
-            GameManager.OnGameOver += OnGameEnd;
+            GameManager.OnLose += OnGameEnd;
             instance = this;
         }
         else
