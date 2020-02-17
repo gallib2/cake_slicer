@@ -74,15 +74,8 @@ public class SlicesManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-      
-        //sliceableObjects = GameObject.FindGameObjectWithTag("SliceableObjects");
-        //goal = GameManager.currentGoal;
         currentCakeIndex = -1;
         NextRound();
-
-        //BaseTime = sliderTimer.value;
-        /* BaseTimerMax = sliderTimer.value;
-         BaseTimerMaxInitial = sliderTimer.value;*/
         timer = TimerHelper.Create();
         timeLeft = initialLevelTime;
     }
@@ -155,7 +148,6 @@ public class SlicesManager : MonoBehaviour
             NextRound();
 
             BadSlice(true);
-            //OnBadSlice?.Invoke();
         }
     }
 
@@ -179,7 +171,6 @@ public class SlicesManager : MonoBehaviour
                 int scoreLevel = (int)scoreLevelEnum;
                 isHaveScoreLevel = CheckScoreLevel(scoreLevel);
 
-                //Debug.Log("scoreLevel " + scoreLevel); Debug.Log("isHaveScoreLevel " + isHaveScoreLevel); Debug.Log("scoreLevelEnum " + scoreLevelEnum);
                 if (isHaveScoreLevel)
                 {
                     playerScoreLevel = scoreLevelEnum;
@@ -197,8 +188,6 @@ public class SlicesManager : MonoBehaviour
     private bool CheckScoreLevel(int scoreLevel)
     {
         double sliceSizeSupposedToBe = originalSize / goal;
-        //Debug.Log("sliceSizeSupposedToBe " + sliceSizeSupposedToBe);
-        //Debug.Log("originalSize " + originalSize);  //Debug.Log("scoreLevel " + scoreLevel);
 
         return slicesSizeList.Any(currSize => {
             double sliceSizeSupposedToBeInPercentage = (sliceSizeSupposedToBe / originalSize) * 100;
@@ -214,9 +203,7 @@ public class SlicesManager : MonoBehaviour
     private void GameOver()
     {
         DestroyAllLeftPieces();
-        //Instantiate(gameOverScreenPrefub);
         GameManager.GameOver();
-        //SceneManager.LoadScene(2);
     }
 
     void DestroyAllLeftPieces()

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -54,5 +55,10 @@ public class GameManager : MonoBehaviour
         {
             OnLose.Invoke();
         }
+    }
+
+    public void UnloadScene()
+    {
+        SceneManager.UnloadSceneAsync(1);
     }
 }

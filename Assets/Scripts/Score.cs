@@ -60,6 +60,7 @@ public class Score : MonoBehaviour
     {
         RectTransform scoreSliderRectTransform = scoreSlider.GetComponent(typeof(RectTransform)) as RectTransform;
         stars = new UIStar[SlicesManager.instance.currentLevel.StarRequirements.Length];
+        //stars = new UIStar[3];
         for (int i = 0; i < stars.Length; i++)
         {
             float xPosition =

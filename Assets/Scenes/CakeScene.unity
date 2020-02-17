@@ -1612,7 +1612,7 @@ Transform:
   - {fileID: 1554992708}
   - {fileID: 1389925379}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &624732670
 GameObject:
@@ -1838,7 +1838,7 @@ Transform:
   - {fileID: 1869795319}
   - {fileID: 4784245923764367203}
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &709899562
 GameObject:
@@ -2233,12 +2233,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 12, y: 24}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1263629994 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2968522304472429353, guid: 212d26b70fbf943f5986944ff1b13ccb,
-    type: 3}
-  m_PrefabInstance: {fileID: 1395040297}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1281185909
 GameObject:
   m_ObjectHideFlags: 0
@@ -2630,6 +2624,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1430965823}
   m_CullTransparentMesh: 0
+--- !u!114 &1439235830 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3473805952242825545, guid: 6efdd5cc3b0f1487da46964311a8ada1,
+    type: 3}
+  m_PrefabInstance: {fileID: 3473805952976541430}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14a53259ff85f48b988a7ce458a6ee4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1445409417
 GameObject:
   m_ObjectHideFlags: 0
@@ -2879,60 +2885,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1450073812}
   m_CullTransparentMesh: 0
---- !u!1 &1453614840
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1453614842}
-  - component: {fileID: 1453614841}
-  m_Layer: 0
-  m_Name: LevelManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1453614841
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1453614840}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc59fab1ece227847ab227fcf9a752d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TestLevel:
-    Cakes:
-    - {cakePrefab: {fileID: 4429666012074374676, guid: 23fca53dde19d4ab887f088122806beb,
-        type: 3}, numberOfSlices: 2}
-    - {cakePrefab: {fileID: 4203801516081614381, guid: ece24715fa60f44fe8c0794eac32d649,
-        type: 3}, numberOfSlices: 4}
-    - {cakePrefab: {fileID: 26350562484668360, guid: 538134f30d30a425583e0a062ca6f699,
-        type: 3}, numberOfSlices: 8}
-    - {cakePrefab: {fileID: 8200570759069020071, guid: 99917c36ad61e413ba12dcf411d80edf,
-        type: 3}, numberOfSlices: 6}
-    StarRequirements: []
---- !u!4 &1453614842
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1453614840}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 12
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1474117195
 GameObject:
   m_ObjectHideFlags: 0
@@ -8834,7 +8786,7 @@ Transform:
   - {fileID: 1165453266}
   - {fileID: 4784245923705156262}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1914416716
 GameObject:
@@ -9908,9 +9860,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1263629994}
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 1439235830}
+        m_MethodName: UnloadScene
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
