@@ -15,7 +15,6 @@ public class SlicesManager : MonoBehaviour
     public static event BadSliceHandler OnBadSlice;
 
 
-
     public Animator timerAnimation;
     public Slider sliderTimer;
     [SerializeField]
@@ -42,7 +41,7 @@ public class SlicesManager : MonoBehaviour
 
     TimerHelper timer;
     float timerRequired = 1f;
-    bool toStopTimer = false;
+    private bool toStopTimer = false;
 
     private double originalSize = 0;
     private int sliced = 0;
@@ -60,6 +59,7 @@ public class SlicesManager : MonoBehaviour
 
     //private float timerOpp;
     static public SlicesManager instance;
+    //Singleton initialitation
     private void Awake()
     {
         if (instance == null)
@@ -70,19 +70,30 @@ public class SlicesManager : MonoBehaviour
         {
             Destroy(this);
         }
+        GameManager.OnLevelInitialised += InitialiseLevel;
+    }
+    private void OnDisable()
+    {
+        GameManager.OnLevelInitialised -= InitialiseLevel;
     }
     // Start is called before the first frame update
     void Start()
     {
+       
+    }
+
+    private void InitialiseLevel()
+    {
+        toStopTimer = false;
         currentCakeIndex = -1;
         NextRound();
         timer = TimerHelper.Create();
-        timeLeft = initialLevelTime;
+        timeLeft = currentLevel.initialTimeInSeconds;
     }
 
     private void TimerGraphicsUpdate()
     {
-        sliderTimer.value = (timeLeft/initialLevelTime);//This should work if slider max value's 1 and min value's 0 
+        sliderTimer.value = (timeLeft/ currentLevel.initialTimeInSeconds);//This should work if slider max value's 1 and min value's 0 
         Color sliderColour;
         if (sliderTimer.value > 0.5f)
         {

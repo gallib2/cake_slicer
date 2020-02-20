@@ -10,7 +10,8 @@ public class Level : ScriptableObject
     public Cake[] Cakes;
     [Range(0, 1)]
     public double[] StarRequirements = { 0.6, 0.76, 0.9 };
-
+    [SerializeField]
+    public float initialTimeInSeconds = 30f;
     public int MaximumScore()
     {
         int mximumScore = 0;

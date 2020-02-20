@@ -15,7 +15,7 @@ MonoBehaviour:
   Cakes:
   - cakePrefab: {fileID: 3160547572476184343, guid: 1a92ec09dec9e44b9ba4e2a6ed22e46c,
       type: 3}
-    numberOfSlices: 4
+    numberOfSlices: 7
   - cakePrefab: {fileID: 26350562484668360, guid: 538134f30d30a425583e0a062ca6f699,
       type: 3}
     numberOfSlices: 8

@@ -21,11 +21,8 @@ public class WinUIManager : MonoBehaviour
     private void Start()
     {
         GameManager.OnWin += ShowFinalScoreAndStars;
-        for (int i = 0; i < elementsToAppearOnWin.Length; i++)
-        {
-            elementsToAppearOnWin[i].SetActive(false);
-        }
-       
+        GameManager.OnLevelInitialised += HideWinScreen;
+        
         for (int i = 0; i < stars.Length; i++)
         {
             if (Score.hasStarAt[i])
@@ -34,9 +31,19 @@ public class WinUIManager : MonoBehaviour
             }
         }
     }
+
+    private void HideWinScreen()
+    {
+        for (int i = 0; i < elementsToAppearOnWin.Length; i++)
+        {
+            elementsToAppearOnWin[i].SetActive(false);
+        }
+    }
+
     private void OnDisable()
     {
         GameManager.OnWin -= ShowFinalScoreAndStars;
+        GameManager.OnLevelInitialised -= HideWinScreen;
     }
     private void ShowFinalScoreAndStars()
     {

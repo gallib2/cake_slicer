@@ -27,6 +27,7 @@ public class Score : MonoBehaviour
         GameManager.OnWin += GameOver;
         SlicesManager.OnScoreChange += ScoreChanged;
         SlicesManager.OnBadSlice += BadSlice;
+        GameManager.OnLevelInitialised += InitialiseLevel;
     }
 
     private void OnDisable()
@@ -35,25 +36,28 @@ public class Score : MonoBehaviour
         GameManager.OnWin -= GameOver;
         SlicesManager.OnScoreChange -= ScoreChanged;
         SlicesManager.OnBadSlice -= BadSlice;
+        GameManager.OnLevelInitialised -= InitialiseLevel;
     }
 
     void Awake()
     {
-        Initialise();
+        //Initialise();
     }
 
-    private void Initialise()
-    {
-        score = 0;
-    }
-
-
-    private void Start()
+    private void InitialiseLevel()
     {
         score = 0;
         hasStarAt = new bool[SlicesManager.instance.currentLevel.StarRequirements.Length];
         CreateUIStarsBar();
         SetScore(0);
+    }
+
+
+    private void Start()
+    {
+        /*hasStarAt = new bool[SlicesManager.instance.currentLevel.StarRequirements.Length];
+        CreateUIStarsBar();
+        SetScore(0);*/
     }
 
     private void CreateUIStarsBar()
