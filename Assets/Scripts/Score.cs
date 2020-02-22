@@ -27,6 +27,7 @@ public class Score : MonoBehaviour
         GameManager.OnWin += GameOver;
         SlicesManager.OnScoreChange += ScoreChanged;
         SlicesManager.OnBadSlice += BadSlice;
+        GameManager.OnLevelInitialised += InitialiseLevel;
     }
 
     private void OnDisable()
@@ -35,20 +36,15 @@ public class Score : MonoBehaviour
         GameManager.OnWin -= GameOver;
         SlicesManager.OnScoreChange -= ScoreChanged;
         SlicesManager.OnBadSlice -= BadSlice;
+        GameManager.OnLevelInitialised -= InitialiseLevel;
     }
 
     void Awake()
     {
-        Initialise();
+        //Initialise();
     }
 
-    private void Initialise()
-    {
-        score = 0;
-    }
-
-
-    private void Start()
+    private void InitialiseLevel()
     {
         score = 0;
         hasStarAt = new bool[SlicesManager.instance.currentLevel.StarRequirements.Length];
@@ -56,10 +52,19 @@ public class Score : MonoBehaviour
         SetScore(0);
     }
 
+
+    private void Start()
+    {
+        /*hasStarAt = new bool[SlicesManager.instance.currentLevel.StarRequirements.Length];
+        CreateUIStarsBar();
+        SetScore(0);*/
+    }
+
     private void CreateUIStarsBar()
     {
         RectTransform scoreSliderRectTransform = scoreSlider.GetComponent(typeof(RectTransform)) as RectTransform;
         stars = new UIStar[SlicesManager.instance.currentLevel.StarRequirements.Length];
+        //stars = new UIStar[3];
         for (int i = 0; i < stars.Length; i++)
         {
             float xPosition =

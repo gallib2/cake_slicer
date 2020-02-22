@@ -15,7 +15,6 @@ public class SlicesManager : MonoBehaviour
     public static event BadSliceHandler OnBadSlice;
 
 
-
     public Animator timerAnimation;
     public Slider sliderTimer;
     [SerializeField]
@@ -42,7 +41,7 @@ public class SlicesManager : MonoBehaviour
 
     TimerHelper timer;
     float timerRequired = 1f;
-    bool toStopTimer = false;
+    private bool toStopTimer = false;
 
     private double originalSize = 0;
     private int sliced = 0;
@@ -60,6 +59,7 @@ public class SlicesManager : MonoBehaviour
 
     //private float timerOpp;
     static public SlicesManager instance;
+    //Singleton initialitation
     private void Awake()
     {
         if (instance == null)
@@ -70,26 +70,30 @@ public class SlicesManager : MonoBehaviour
         {
             Destroy(this);
         }
+        GameManager.OnLevelInitialised += InitialiseLevel;
+    }
+    private void OnDisable()
+    {
+        GameManager.OnLevelInitialised -= InitialiseLevel;
     }
     // Start is called before the first frame update
     void Start()
     {
-      
-        //sliceableObjects = GameObject.FindGameObjectWithTag("SliceableObjects");
-        //goal = GameManager.currentGoal;
+       
+    }
+
+    private void InitialiseLevel()
+    {
+        toStopTimer = false;
         currentCakeIndex = -1;
         NextRound();
-
-        //BaseTime = sliderTimer.value;
-        /* BaseTimerMax = sliderTimer.value;
-         BaseTimerMaxInitial = sliderTimer.value;*/
         timer = TimerHelper.Create();
-        timeLeft = initialLevelTime;
+        timeLeft = currentLevel.initialTimeInSeconds;
     }
 
     private void TimerGraphicsUpdate()
     {
-        sliderTimer.value = (timeLeft/initialLevelTime);//This should work if slider max value's 1 and min value's 0 
+        sliderTimer.value = (timeLeft/ currentLevel.initialTimeInSeconds);//This should work if slider max value's 1 and min value's 0 
         Color sliderColour;
         if (sliderTimer.value > 0.5f)
         {
@@ -155,7 +159,6 @@ public class SlicesManager : MonoBehaviour
             NextRound();
 
             BadSlice(true);
-            //OnBadSlice?.Invoke();
         }
     }
 
@@ -179,7 +182,6 @@ public class SlicesManager : MonoBehaviour
                 int scoreLevel = (int)scoreLevelEnum;
                 isHaveScoreLevel = CheckScoreLevel(scoreLevel);
 
-                //Debug.Log("scoreLevel " + scoreLevel); Debug.Log("isHaveScoreLevel " + isHaveScoreLevel); Debug.Log("scoreLevelEnum " + scoreLevelEnum);
                 if (isHaveScoreLevel)
                 {
                     playerScoreLevel = scoreLevelEnum;
@@ -197,8 +199,6 @@ public class SlicesManager : MonoBehaviour
     private bool CheckScoreLevel(int scoreLevel)
     {
         double sliceSizeSupposedToBe = originalSize / goal;
-        //Debug.Log("sliceSizeSupposedToBe " + sliceSizeSupposedToBe);
-        //Debug.Log("originalSize " + originalSize);  //Debug.Log("scoreLevel " + scoreLevel);
 
         return slicesSizeList.Any(currSize => {
             double sliceSizeSupposedToBeInPercentage = (sliceSizeSupposedToBe / originalSize) * 100;
@@ -214,9 +214,7 @@ public class SlicesManager : MonoBehaviour
     private void GameOver()
     {
         DestroyAllLeftPieces();
-        //Instantiate(gameOverScreenPrefub);
         GameManager.GameOver();
-        //SceneManager.LoadScene(2);
     }
 
     void DestroyAllLeftPieces()

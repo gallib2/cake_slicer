@@ -3,22 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     //public static event Action OnGameOver;
     public static event Action OnWin;
     public static event Action OnLose;
-    public static event Action k;
+    public static event Action OnLevelInitialised;
+    //public static event Action k;
     public static string playerName;
-
     //TimerHelper timer;
     //float timerRequired = 1f;
-
-    public List<int> slicesSizeList;
+   // public List<int> slicesSizeList;
     //[SerializeField]
    //public  int score = 0;// Ori finds this variable unnesssry!
     public static bool isGameOver = false;
+    [SerializeField]
+    public Level currentLevel;
 
     static public GameManager instance;
 
@@ -26,9 +28,15 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         instance = this;
+        InitialiseLevel();
         //timer = TimerHelper.Create();
+    }
 
+    public void InitialiseLevel()
+    {
+        isGameOver = false;
         StartGameSettings();
+        OnLevelInitialised.Invoke();
     }
 
     private void OnDisable()
@@ -54,5 +62,10 @@ public class GameManager : MonoBehaviour
         {
             OnLose.Invoke();
         }
+    }
+
+    public void UnloadScene()
+    {
+        SceneManager.UnloadSceneAsync(1);
     }
 }
