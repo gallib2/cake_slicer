@@ -7,7 +7,6 @@ public class Score : MonoBehaviour
 {
     public int initialScore = 0;
     public static int score = 0;
-    //public int regularScoreToAdd = 10;
 
     public Text scoreText;
     [SerializeField]
@@ -19,12 +18,14 @@ public class Score : MonoBehaviour
     [SerializeField]
     private UIStar starPrefab;
     private UIStar[] stars;
-    public static bool[] hasStarAt;
+
+    public int CurrentStars { get; set; }
+
 
     private void OnEnable()
     {
-        GameManager.OnLose += GameOver;
-        GameManager.OnWin += GameOver;
+        //GameManager.OnLose += GameOver;
+        //GameManager.OnWin += GameOver;
         SlicesManager.OnScoreChange += ScoreChanged;
         SlicesManager.OnBadSlice += BadSlice;
         GameManager.OnLevelInitialised += InitialiseLevel;
@@ -32,8 +33,8 @@ public class Score : MonoBehaviour
 
     private void OnDisable()
     {
-        GameManager.OnLose -= GameOver;
-        GameManager.OnWin -= GameOver;
+        //GameManager.OnLose -= GameOver;
+        //GameManager.OnWin -= GameOver;
         SlicesManager.OnScoreChange -= ScoreChanged;
         SlicesManager.OnBadSlice -= BadSlice;
         GameManager.OnLevelInitialised -= InitialiseLevel;
@@ -47,17 +48,8 @@ public class Score : MonoBehaviour
     private void InitialiseLevel()
     {
         score = 0;
-        hasStarAt = new bool[SlicesManager.instance.currentLevel.StarRequirements.Length];
         CreateUIStarsBar();
         SetScore(0);
-    }
-
-
-    private void Start()
-    {
-        /*hasStarAt = new bool[SlicesManager.instance.currentLevel.StarRequirements.Length];
-        CreateUIStarsBar();
-        SetScore(0);*/
     }
 
     private void CreateUIStarsBar()
@@ -120,11 +112,11 @@ public class Score : MonoBehaviour
         floatingText = Instantiate(floatingTextPrefub);
     }
 
-    private void GameOver()
-    {
-        Highscores.AddNewHighScore(GameManager.playerName, score);
-        //SetScore(initialScore);
-    }
+    //private void GameOver()
+    //{
+    //    Highscores.AddNewHighScore(GameManager.playerName, score);
+    //    //SetScore(initialScore);
+    //}
 
     private void SetScore(int scoreToSet)
     {
@@ -135,9 +127,11 @@ public class Score : MonoBehaviour
         scoreSlider.value = (float)ScoreDividedByMaxScore;
         for (int i = 0; i < currentLevel.StarRequirements.Length; i++)
         {
-            if(ScoreDividedByMaxScore > currentLevel.StarRequirements[i] && !hasStarAt[i])
+            bool isAlreadyHasStar = CurrentStars == i + 1;
+            bool shouldGetStar = ScoreDividedByMaxScore > currentLevel.StarRequirements[i];
+            if (shouldGetStar && !isAlreadyHasStar)
             {
-                hasStarAt[i] = true;
+                CurrentStars++;
                 stars[i].FillStar();
             }
         }

@@ -9374,7 +9374,7 @@ MonoBehaviour:
   cutSize: 0.2
   lineType: 0
   drawSlicer: 1
-  visualScale: 1
+  visualScale: 2
   lineWidth: 0.13
   lineEndWidth: 0.11
   zPosition: -7
@@ -9454,6 +9454,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 3473805952242825545, guid: 6efdd5cc3b0f1487da46964311a8ada1,
+        type: 3}
+      propertyPath: score
+      value: 
+      objectReference: {fileID: 171932521}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6efdd5cc3b0f1487da46964311a8ada1, type: 3}
 --- !u!82 &4784245922641790834

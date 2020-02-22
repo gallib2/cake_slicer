@@ -7,7 +7,7 @@ public class LevelsManager : MonoBehaviour
 {
     public void LoadLevel()
     {
-        SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
-        //SceneManager.LoadScene(1);
+        //SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
+        SceneManager.LoadScene(1);
     }
 }

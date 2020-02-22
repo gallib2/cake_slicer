@@ -12,6 +12,9 @@ public class Level : ScriptableObject
     public double[] StarRequirements = { 0.6, 0.76, 0.9 };
     [SerializeField]
     public float initialTimeInSeconds = 30f;
+    [Range(1,3)]
+    public int minStarsToWin;
+
     public int MaximumScore()
     {
         int mximumScore = 0;

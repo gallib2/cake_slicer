@@ -25,10 +25,10 @@ public class WinUIManager : MonoBehaviour
         
         for (int i = 0; i < stars.Length; i++)
         {
-            if (Score.hasStarAt[i])
-            {
+           // if (Score.hasStarAt[i])
+            //{
                 EmptyStar(stars[i]);
-            }
+            //}
         }
     }
 
@@ -45,7 +45,7 @@ public class WinUIManager : MonoBehaviour
         GameManager.OnWin -= ShowFinalScoreAndStars;
         GameManager.OnLevelInitialised -= HideWinScreen;
     }
-    private void ShowFinalScoreAndStars()
+    private void ShowFinalScoreAndStars(int numberOfStars)
     {
         for (int i = 0; i < elementsToAppearOnWin.Length; i++)
         {
@@ -55,11 +55,11 @@ public class WinUIManager : MonoBehaviour
         {
             elementsToDisppearOnWin[i].SetActive(false);
         }
-        StartCoroutine(FillStars());
+        StartCoroutine(FillStars(numberOfStars));
     }
-    public IEnumerator FillStars()
+    public IEnumerator FillStars(int numberOfStars)
     {
-        if(Score.hasStarAt.Length!= stars.Length)
+        if(numberOfStars != stars.Length)
         {
             Debug.Log("Uneven lengths!!!");
         }
@@ -68,7 +68,8 @@ public class WinUIManager : MonoBehaviour
             for (int i = 0; i < stars.Length; i++)
             {
                 yield return new WaitForSeconds(fillStarsWait);
-                if (Score.hasStarAt[i])
+                bool toFillStars = numberOfStars <= i + 1;
+                if (toFillStars)
                 {
                     FillStar(stars[i]);
                 }
