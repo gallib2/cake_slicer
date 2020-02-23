@@ -6,10 +6,23 @@ public class RoundFeedback : MonoBehaviour
 {
     [SerializeField]
     private SoundEffectNames soundToPlayOnStart;
+
+    public SoundEffectNames SoundToPlayOnStart
+    {
+        get { return soundToPlayOnStart; }
+        set { soundToPlayOnStart = value; }
+    }
+
+    //[SerializeField]
+    //private SoundManager soundManager;
+
+
     // Start is called before the first frame update
     void Start()
     {
-        SoundManager.instance.PlaySoundEffect(soundToPlayOnStart);
+        //soundManager = gameObject.AddComponent<SoundManager>();
+
+        //soundManager.PlaySoundEffect(soundToPlayOnStart);
     }
 
 

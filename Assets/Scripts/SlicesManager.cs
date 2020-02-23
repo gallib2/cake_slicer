@@ -11,8 +11,10 @@ public class SlicesManager : MonoBehaviour
     public delegate void ScoreChange(int score,ScoreData.ScoreLevel scoreLevel);
     public delegate void BadSliceHandler(bool isTooManySlices);
 
+    public static event Action OnGoalChange;
     public static event ScoreChange OnScoreChange;
     public static event BadSliceHandler OnBadSlice;
+    public static event Action OnGameOver;
 
 
     public Animator timerAnimation;
@@ -29,26 +31,18 @@ public class SlicesManager : MonoBehaviour
     List<double> slicesSizeList;
     public int currentCakeIndex = 0;
     
-    //private LevelManager levelManager;
     [SerializeField]
     public Level currentLevel;
-    public static event Action OnGoalChange;
     public static int goal;
     [SerializeField]
     private float criticalTime=5f;
     private int minmumSize;
     public ParticleSystem particlesEndLevel;
 
-    TimerHelper timer;
-    float timerRequired = 1f;
     private bool toStopTimer = false;
 
     private double originalSize = 0;
     private int sliced = 0;
-
-    //public GameObject cake;
-    //public GameObject[] cakes;
-    public GameObject gameOverScreenPrefub;
 
     [SerializeField]
     private GameObject sliceableObjects;
@@ -56,30 +50,17 @@ public class SlicesManager : MonoBehaviour
     public int slicesCount = 0;
     [SerializeField]
     private Text cakesLeftText;
+    [SerializeField]
+    private SoundManager soundManager;
 
-    //private float timerOpp;
-    static public SlicesManager instance;
-    //Singleton initialitation
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(this);
-        }
+        currentLevel = LevelsManager.CurrentLevel;
         GameManager.OnLevelInitialised += InitialiseLevel;
     }
     private void OnDisable()
     {
         GameManager.OnLevelInitialised -= InitialiseLevel;
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-       
     }
 
     private void InitialiseLevel()
@@ -87,7 +68,6 @@ public class SlicesManager : MonoBehaviour
         toStopTimer = false;
         currentCakeIndex = -1;
         NextRound();
-        timer = TimerHelper.Create();
         timeLeft = currentLevel.initialTimeInSeconds;
     }
 
@@ -142,7 +122,6 @@ public class SlicesManager : MonoBehaviour
         slicesCount = sliceableObjects.GetComponentsInChildren<Transform>().Length - 1;
         if (slicesCount == goal)
         {
-            Debug.Log("slicesCount: " + slicesCount);
             slicesSizeList = GetSlicesSizesList();
 
             CalculateNewScore();
@@ -153,8 +132,7 @@ public class SlicesManager : MonoBehaviour
         }
         else if (slicesCount > goal)
         {
-            Debug.Log("slicesCount: " + slicesCount);
-            Debug.Log("BadSlice slicesCount > goal");
+            Debug.Log("BadSlice slicesCount > goal => slicesCount: " + slicesCount);
 
             NextRound();
 
@@ -203,10 +181,10 @@ public class SlicesManager : MonoBehaviour
         return slicesSizeList.Any(currSize => {
             double sliceSizeSupposedToBeInPercentage = (sliceSizeSupposedToBe / originalSize) * 100;
             double currSizePercentage = (currSize / originalSize) * 100;
-            Debug.Log("sliceSizeSupposedToBeInPercentage: " + sliceSizeSupposedToBeInPercentage); Debug.Log("currSizePercentage " + currSizePercentage);
+            //Debug.Log("sliceSizeSupposedToBeInPercentage: " + sliceSizeSupposedToBeInPercentage); Debug.Log("currSizePercentage " + currSizePercentage);
 
             double difference = Mathf.Abs((float)(sliceSizeSupposedToBeInPercentage - currSizePercentage));
-            Debug.Log("difference: " + difference);
+            //Debug.Log("difference: " + difference);
             return difference <= scoreLevel;
         });
     }
@@ -214,7 +192,7 @@ public class SlicesManager : MonoBehaviour
     private void GameOver()
     {
         DestroyAllLeftPieces();
-        GameManager.GameOver();
+        OnGameOver?.Invoke();
     }
 
     void DestroyAllLeftPieces()
@@ -260,6 +238,7 @@ public class SlicesManager : MonoBehaviour
      
     private void NextRound()
     {
+        Debug.Log("--------------------- in NextRound!!!");
         toStopTimer = false;
         DestroyAllLeftPieces();
         currentCakeIndex++;
@@ -279,7 +258,7 @@ public class SlicesManager : MonoBehaviour
             toStopTimer = true;
             GameOver();
         }
-        SoundManager.instance.PlaySoundEffect(SoundEffectNames.NEXT_LEVEL);
+        soundManager.PlaySoundEffect(SoundEffectNames.NEXT_LEVEL);
         particlesEndLevel.Play();
     }
 }
