@@ -50,21 +50,12 @@ public class SlicesManager : MonoBehaviour
     public int slicesCount = 0;
     [SerializeField]
     private Text cakesLeftText;
-
-    //private float timerOpp;
-    static public SlicesManager instance;
-    //Singleton initialitation
+    [SerializeField]
+    private SoundManager soundManager;
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(this);
-        }
+        currentLevel = LevelsManager.CurrentLevel;
         GameManager.OnLevelInitialised += InitialiseLevel;
     }
     private void OnDisable()
@@ -131,7 +122,6 @@ public class SlicesManager : MonoBehaviour
         slicesCount = sliceableObjects.GetComponentsInChildren<Transform>().Length - 1;
         if (slicesCount == goal)
         {
-            Debug.Log("slicesCount: " + slicesCount);
             slicesSizeList = GetSlicesSizesList();
 
             CalculateNewScore();
@@ -142,8 +132,7 @@ public class SlicesManager : MonoBehaviour
         }
         else if (slicesCount > goal)
         {
-            Debug.Log("slicesCount: " + slicesCount);
-            Debug.Log("BadSlice slicesCount > goal");
+            Debug.Log("BadSlice slicesCount > goal => slicesCount: " + slicesCount);
 
             NextRound();
 
@@ -249,6 +238,7 @@ public class SlicesManager : MonoBehaviour
      
     private void NextRound()
     {
+        Debug.Log("--------------------- in NextRound!!!");
         toStopTimer = false;
         DestroyAllLeftPieces();
         currentCakeIndex++;
@@ -268,7 +258,7 @@ public class SlicesManager : MonoBehaviour
             toStopTimer = true;
             GameOver();
         }
-        SoundManager.instance.PlaySoundEffect(SoundEffectNames.NEXT_LEVEL);
+        soundManager.PlaySoundEffect(SoundEffectNames.NEXT_LEVEL);
         particlesEndLevel.Play();
     }
 }

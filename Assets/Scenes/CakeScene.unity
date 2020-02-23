@@ -794,6 +794,7 @@ MonoBehaviour:
   - {fileID: 3243427735086436329, guid: 074807bed0ed34253b8f72a234ba549d, type: 3}
   starPrefab: {fileID: 2720626988391652686, guid: 62ab8fc1839aaa44d9bc5e1810073d4e,
     type: 3}
+  soundManager: {fileID: 557494143}
 --- !u!1 &198021693
 GameObject:
   m_ObjectHideFlags: 0
@@ -1809,7 +1810,9 @@ MonoBehaviour:
   elementsToAppearOnLose:
   - {fileID: 1869795315}
   - {fileID: 4784245923764367212}
-  elementsToDisppearOnLose: []
+  elementsToDisppearOnLose:
+  - {fileID: 557494142}
+  soundManager: {fileID: 557494143}
 --- !u!4 &663937163
 Transform:
   m_ObjectHideFlags: 0
@@ -3039,11 +3042,10 @@ MonoBehaviour:
   currentLevel: {fileID: 11400000, guid: da407d32711e722488601a5c4025a4e5, type: 2}
   criticalTime: 5
   particlesEndLevel: {fileID: 1613897369}
-  gameOverScreenPrefub: {fileID: 3765943968393477968, guid: a8277f5d06a444d42bd222ecb4ceaacb,
-    type: 3}
   sliceableObjects: {fileID: 1724091152938058}
   slicesCount: 0
   cakesLeftText: {fileID: 849736505}
+  soundManager: {fileID: 557494143}
 --- !u!114 &1539613482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9287,7 +9289,7 @@ GameObject:
   - component: {fileID: 114717082668378978}
   - component: {fileID: 1539613476}
   - component: {fileID: 1539613482}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Demo9Scene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9303,7 +9305,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4039380620267628}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sliceable Objects
   m_TagString: SliceableObjects
   m_Icon: {fileID: 0}

@@ -19,6 +19,9 @@ public class Score : MonoBehaviour
     private UIStar starPrefab;
     private UIStar[] stars;
 
+    [SerializeField]
+    private SoundManager soundManager;
+
     public int CurrentStars { get; set; }
 
 
@@ -55,15 +58,16 @@ public class Score : MonoBehaviour
     private void CreateUIStarsBar()
     {
         RectTransform scoreSliderRectTransform = scoreSlider.GetComponent(typeof(RectTransform)) as RectTransform;
-        stars = new UIStar[SlicesManager.instance.currentLevel.StarRequirements.Length];
+        stars = new UIStar[LevelsManager.CurrentLevel.StarRequirements.Length];
         //stars = new UIStar[3];
         for (int i = 0; i < stars.Length; i++)
         {
             float xPosition =
-                 ((float)SlicesManager.instance.currentLevel.StarRequirements[i] * scoreSliderRectTransform.rect.width)
+                 ((float)LevelsManager.CurrentLevel.StarRequirements[i] * scoreSliderRectTransform.rect.width)
                  - (scoreSliderRectTransform.rect.width / 2);
             UIStar newStar = Instantiate(starPrefab);
-            newStar.transform.parent = scoreSlider.transform;
+            newStar.transform.SetParent(scoreSlider.transform);
+            //newStar.transform.parent = scoreSlider.transform;
             newStar.rectTransform.localPosition = new Vector2(xPosition, 0);
             stars[i] = newStar;
         }
@@ -110,6 +114,8 @@ public class Score : MonoBehaviour
     private void ShowFloatingText(ScoreData.ScoreLevel scoreLevel, GameObject floatingTextPrefub)
     {
         floatingText = Instantiate(floatingTextPrefub);
+        RoundFeedback feedbackGameObject = floatingText.GetComponent<RoundFeedback>();
+        soundManager.PlaySoundEffect(feedbackGameObject.SoundToPlayOnStart);
     }
 
     //private void GameOver()
@@ -122,7 +128,7 @@ public class Score : MonoBehaviour
     {
         score = scoreToSet;
         scoreText.text = score.ToString();
-        Level currentLevel = SlicesManager.instance.currentLevel;
+        Level currentLevel = LevelsManager.CurrentLevel;
         double ScoreDividedByMaxScore = ((double)score / currentLevel.MaximumScore());
         scoreSlider.value = (float)ScoreDividedByMaxScore;
         for (int i = 0; i < currentLevel.StarRequirements.Length; i++)

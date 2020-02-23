@@ -14,8 +14,8 @@ public class GameManager : MonoBehaviour
 
     public static string playerName;
     public static bool isGameOver = false;
-    [SerializeField]
-    public Level currentLevel;
+    //[SerializeField]
+    //public Level currentLevel;
     public Score score;
 
     private void OnEnable()
@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour
 
     public void UnloadScene()
     {
-        SceneManager.UnloadSceneAsync(1);
+        //SceneManager.UnloadSceneAsync(1);
+        SceneManager.LoadScene(1);
     }
 }

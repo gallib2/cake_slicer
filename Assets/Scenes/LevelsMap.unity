@@ -146,7 +146,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 87502021}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!20 &87502023
 Camera:
   m_ObjectHideFlags: 0
@@ -313,6 +313,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ef9f48c47694f74b8d4142085197bb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameLevels:
+  - {fileID: 11400000, guid: da407d32711e722488601a5c4025a4e5, type: 2}
+  - {fileID: 11400000, guid: 15bcf9ad30673844dadab20ea5dd95cf, type: 2}
 --- !u!1 &811564449
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,11 +400,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 724964482}
         m_MethodName: LoadLevel
-        m_Mode: 1
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -780,11 +783,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 724964482}
         m_MethodName: LoadLevel
-        m_Mode: 1
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0

@@ -8,6 +8,8 @@ public class LoseUIManager : MonoBehaviour
     private GameObject[] elementsToAppearOnLose;
     [SerializeField]
     private GameObject[] elementsToDisppearOnLose;
+    [SerializeField]
+    private SoundManager soundManager;
 
     private void Start()
     {
@@ -23,7 +25,7 @@ public class LoseUIManager : MonoBehaviour
 
     private void ShowLoseScreen()
     {
-        SoundManager.instance.PlaySoundEffect(SoundEffectNames.LOSE);
+        soundManager.PlaySoundEffect(SoundEffectNames.LOSE);
         for (int i = 0; i < elementsToAppearOnLose.Length; i++)
         {
             elementsToAppearOnLose[i].SetActive(true);

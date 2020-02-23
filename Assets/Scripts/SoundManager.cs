@@ -20,19 +20,15 @@ public class SoundManager : MonoBehaviour
     private AudioSource musicSource;
     [SerializeField]
     private SoundEffect[] soundEffects;
-    static public SoundManager instance;
 
-    private void Awake()
+    private void OnEnable()
     {
-        if (instance == null)
-        {
-            GameManager.OnLose += OnGameEnd;
-            instance = this;
-        }
-        else
-        {
-            Destroy(this);
-        }
+        GameManager.OnLose += OnGameEnd;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnLose -= OnGameEnd;
     }
 
     private void OnGameEnd()
