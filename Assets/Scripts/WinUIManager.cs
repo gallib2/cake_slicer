@@ -45,6 +45,7 @@ public class WinUIManager : MonoBehaviour
         GameManager.OnWin -= ShowFinalScoreAndStars;
         GameManager.OnLevelInitialised -= HideWinScreen;
     }
+
     private void ShowFinalScoreAndStars(int numberOfStars)
     {
         for (int i = 0; i < elementsToAppearOnWin.Length; i++)
@@ -57,6 +58,7 @@ public class WinUIManager : MonoBehaviour
         }
         StartCoroutine(FillStars(numberOfStars));
     }
+
     public IEnumerator FillStars(int numberOfStars)
     {
         if(numberOfStars != stars.Length)
@@ -81,6 +83,7 @@ public class WinUIManager : MonoBehaviour
     {
         star.sprite = fullStarImage;
     }
+
     private void EmptyStar(Image star)
     {
         star.sprite = emptyStarImage;

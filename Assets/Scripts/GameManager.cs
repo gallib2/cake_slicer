@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     {
         isGameOver = true;
 
-        if (score.CurrentStars > 1) //TODO: hardcoded winning condition(Can be moved to Level)
+        if (score.CurrentStars > 0) //TODO: hardcoded winning condition(Can be moved to Level)
         {
             OnWin?.Invoke(score.CurrentStars);
         }
