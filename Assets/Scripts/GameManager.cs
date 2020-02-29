@@ -14,9 +14,8 @@ public class GameManager : MonoBehaviour
 
     public static string playerName;
     public static bool isGameOver = false;
-    //[SerializeField]
-    //public Level currentLevel;
     public Score score;
+    private Level currentLevel;
 
     private void OnEnable()
     {
@@ -31,6 +30,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        currentLevel = LevelsManager.CurrentLevel;
         InitialiseLevel();
     }
 
@@ -43,9 +43,11 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         isGameOver = true;
+        currentLevel.PlayingCount++;
 
-        if (score.CurrentStars > 0) //TODO: hardcoded winning condition(Can be moved to Level)
+        if (score.CurrentStars >= currentLevel.MinStarsToWin) //TODO: hardcoded winning condition(Can be moved to Level)
         {
+            currentLevel.LevelSucceeded();
             OnWin?.Invoke(score.CurrentStars);
         }
         else
@@ -56,7 +58,6 @@ public class GameManager : MonoBehaviour
 
     public void UnloadScene()
     {
-        //SceneManager.UnloadSceneAsync(1);
         SceneManager.LoadScene(1);
     }
 }

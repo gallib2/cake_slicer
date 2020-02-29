@@ -50,11 +50,11 @@ public class WinUIManager : MonoBehaviour
     {
         for (int i = 0; i < elementsToAppearOnWin.Length; i++)
         {
-            elementsToAppearOnWin[i].SetActive(true);
+            elementsToAppearOnWin[i]?.SetActive(true);
         }
         for (int i = 0; i < elementsToDisppearOnWin.Length; i++)
         {
-            elementsToDisppearOnWin[i].SetActive(false);
+            elementsToDisppearOnWin[i]?.SetActive(false);
         }
         StartCoroutine(FillStars(numberOfStars));
     }

@@ -21,11 +21,7 @@ public class SlicesManager : MonoBehaviour
     public Slider sliderTimer;
     [SerializeField]
     private Image sliderImage;
-    //public int currentLevel;
-    bool test = true;
 
-    [SerializeField]
-    private float initialLevelTime = 20;
     private float timeLeft;
 
     List<double> slicesSizeList;
@@ -42,7 +38,6 @@ public class SlicesManager : MonoBehaviour
     private bool toStopTimer = false;
 
     private double originalSize = 0;
-    private int sliced = 0;
 
     [SerializeField]
     private GameObject sliceableObjects;
@@ -68,12 +63,12 @@ public class SlicesManager : MonoBehaviour
         toStopTimer = false;
         currentCakeIndex = -1;
         NextRound();
-        timeLeft = currentLevel.initialTimeInSeconds;
+        timeLeft = currentLevel.InitialTimeInSeconds;
     }
 
     private void TimerGraphicsUpdate()
     {
-        sliderTimer.value = (timeLeft/ currentLevel.initialTimeInSeconds);//This should work if slider max value's 1 and min value's 0 
+        sliderTimer.value = (timeLeft/ currentLevel.InitialTimeInSeconds);//This should work if slider max value's 1 and min value's 0 
         Color sliderColour;
         if (sliderTimer.value > 0.5f)
         {
@@ -229,8 +224,6 @@ public class SlicesManager : MonoBehaviour
 
             //  Debug.Log("current size : " + currentSizeInt);
             slicesSizeList.Add(currentSizeInt);
-
-            sliced = slicer.sliceCounter;
         }
 
         return slicesSizeList;

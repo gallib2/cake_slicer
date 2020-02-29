@@ -3027,7 +3027,6 @@ MonoBehaviour:
   timerAnimation: {fileID: 709899565}
   sliderTimer: {fileID: 1542509673}
   sliderImage: {fileID: 130950390}
-  initialLevelTime: 40
   currentCakeIndex: 0
   currentLevel: {fileID: 11400000, guid: da407d32711e722488601a5c4025a4e5, type: 2}
   criticalTime: 5
@@ -8996,7 +8995,6 @@ MonoBehaviour:
   elementsToDisppearOnWin:
   - {fileID: 92409465}
   - {fileID: 1849895315}
-  - {fileID: 0}
   - {fileID: 368507429}
 --- !u!4 &1882227217
 Transform:

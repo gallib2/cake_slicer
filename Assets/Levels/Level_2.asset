@@ -12,17 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc59fab1ece227847ab227fcf9a752d0, type: 3}
   m_Name: Level_2
   m_EditorClassIdentifier: Assembly-CSharp::Level
-  Cakes:
+  cakes:
   - cakePrefab: {fileID: 4203801516081614381, guid: ece24715fa60f44fe8c0794eac32d649,
       type: 3}
     numberOfSlices: 4
   - cakePrefab: {fileID: 3160547572476184343, guid: 1a92ec09dec9e44b9ba4e2a6ed22e46c,
       type: 3}
-    numberOfSlices: 6
+    numberOfSlices: 4
   - cakePrefab: {fileID: 4985836295831633166, guid: ecd991d16dcbc44ec9f4caaae81aaf9c,
       type: 3}
-    numberOfSlices: 8
-  StarRequirements:
+    numberOfSlices: 6
+  starRequirements:
   - 0.6
   - 0.76
   - 0.9
