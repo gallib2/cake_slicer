@@ -59,7 +59,6 @@ public class Score : MonoBehaviour
     {
         RectTransform scoreSliderRectTransform = scoreSlider.GetComponent(typeof(RectTransform)) as RectTransform;
         stars = new UIStar[LevelsManager.CurrentLevel.StarRequirements.Length];
-        Debug.Log("stars.Length: " + stars.Length);
         //stars = new UIStar[3];
         for (int i = 0; i < stars.Length; i++)
         {

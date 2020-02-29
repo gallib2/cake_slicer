@@ -63,7 +63,7 @@ public class SlicesManager : MonoBehaviour
     {
         if (!GameManager.isGameOver)
         {
-             CheckSlices();
+            CheckSlices();
             if (timer.ToStopTimer)
             {
                 GameOver();
@@ -77,6 +77,7 @@ public class SlicesManager : MonoBehaviour
         slicesCount = sliceableObjects.GetComponentsInChildren<Transform>().Length - 1;
         if (slicesCount == goal)
         {
+            Debug.Log("slicesCount: " + slicesCount+ "goal: " + goal );
             slicesSizeList = GetSlicesSizesList();
 
             CalculateNewScore();
@@ -154,6 +155,8 @@ public class SlicesManager : MonoBehaviour
     {
         foreach (Transform item in sliceableObjects.transform)
         {
+            //Debug.Log("DestroyAllLeftPieces... " + item);
+            //DestroyImmediate(item.gameObject);
             Destroy(item.gameObject);
         }
     }
