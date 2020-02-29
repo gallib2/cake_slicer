@@ -25,6 +25,7 @@ public class LoseUIManager : MonoBehaviour
 
     private void ShowLoseScreen()
     {
+        Debug.Log("ShowLoseScreen");
         soundManager.PlaySoundEffect(SoundEffectNames.LOSE);
         for (int i = 0; i < elementsToAppearOnLose.Length; i++)
         {
