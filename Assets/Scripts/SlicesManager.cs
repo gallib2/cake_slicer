@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class SlicesManager : MonoBehaviour
 {
-    public delegate void ScoreChange(int score,ScoreData.ScoreLevel scoreLevel);
+    public delegate void ScoreChange(int score, ScoreData.ScoreLevel scoreLevel);
     public delegate void BadSliceHandler(bool isTooManySlices);
 
     public static event Action OnGoalChange;
@@ -16,26 +16,16 @@ public class SlicesManager : MonoBehaviour
     public static event BadSliceHandler OnBadSlice;
     public static event Action OnGameOver;
 
-
-    public Animator timerAnimation;
-    public Slider sliderTimer;
-    [SerializeField]
-    private Image sliderImage;
-
-    private float timeLeft;
-
     List<double> slicesSizeList;
     public int currentCakeIndex = 0;
-    
+
     [SerializeField]
     public Level currentLevel;
     public static int goal;
     [SerializeField]
-    private float criticalTime=5f;
+    private float criticalTime = 5f;
     private int minmumSize;
     public ParticleSystem particlesEndLevel;
-
-    private bool toStopTimer = false;
 
     private double originalSize = 0;
 
@@ -47,6 +37,9 @@ public class SlicesManager : MonoBehaviour
     private Text cakesLeftText;
     [SerializeField]
     private SoundManager soundManager;
+
+    [SerializeField]
+    private Timer timer;
 
     private void Awake()
     {
@@ -60,56 +53,23 @@ public class SlicesManager : MonoBehaviour
 
     private void InitialiseLevel()
     {
-        toStopTimer = false;
         currentCakeIndex = -1;
         NextRound();
-        timeLeft = currentLevel.InitialTimeInSeconds;
     }
 
-    private void TimerGraphicsUpdate()
-    {
-        sliderTimer.value = (timeLeft/ currentLevel.InitialTimeInSeconds);//This should work if slider max value's 1 and min value's 0 
-        Color sliderColour;
-        if (sliderTimer.value > 0.5f)
-        {
-            sliderColour = Color.Lerp(Color.yellow, Color.green, sliderTimer.value-0.5f);
-        }
-        else
-        {
-            sliderColour = Color.Lerp(Color.red, Color.yellow, sliderTimer.value + 0.5f);
-        }
-      
-        sliderImage.color = sliderColour;
-        //  sliderTimer.value =(int)timer.Get();
-        if (timeLeft <= criticalTime )
-        {
-            timerAnimation.SetBool("isCritical2", true);
-        }
-        bool isAnimOn = timerAnimation.GetBool("isCritical2");
-        if (isAnimOn && timeLeft > criticalTime)
-        {
-            timerAnimation.SetBool("isCritical2", false);
-        }
-       
-    }
+    
     // Update is called once per frame
     void Update()
     {
         if (!GameManager.isGameOver)
         {
-            timeLeft -= Time.deltaTime;
-            TimerGraphicsUpdate();
-
-            if (!toStopTimer && timeLeft < 0)
+            CheckSlices();
+            if (timer.ToStopTimer)
             {
                 GameOver();
-                toStopTimer = true;
             }
-            else
-            {
-                CheckSlices();
-            }
-        }    
+        }
+
     }
 
     private void CheckSlices()
@@ -117,6 +77,7 @@ public class SlicesManager : MonoBehaviour
         slicesCount = sliceableObjects.GetComponentsInChildren<Transform>().Length - 1;
         if (slicesCount == goal)
         {
+            Debug.Log("slicesCount: " + slicesCount+ "goal: " + goal );
             slicesSizeList = GetSlicesSizesList();
 
             CalculateNewScore();
@@ -194,6 +155,8 @@ public class SlicesManager : MonoBehaviour
     {
         foreach (Transform item in sliceableObjects.transform)
         {
+            //Debug.Log("DestroyAllLeftPieces... " + item);
+            //DestroyImmediate(item.gameObject);
             Destroy(item.gameObject);
         }
     }
@@ -232,7 +195,7 @@ public class SlicesManager : MonoBehaviour
     private void NextRound()
     {
         Debug.Log("--------------------- in NextRound!!!");
-        toStopTimer = false;
+        timer.ToStopTimer = false;
         DestroyAllLeftPieces();
         currentCakeIndex++;
         if (currentCakeIndex < currentLevel.Cakes.Length)
@@ -248,7 +211,7 @@ public class SlicesManager : MonoBehaviour
         else
         {
             cakesLeftText.text = "0";
-            toStopTimer = true;
+            timer.ToStopTimer = true;
             GameOver();
         }
         soundManager.PlaySoundEffect(SoundEffectNames.NEXT_LEVEL);
