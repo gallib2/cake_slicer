@@ -50,31 +50,25 @@ public class WinUIManager : MonoBehaviour
     {
         for (int i = 0; i < elementsToAppearOnWin.Length; i++)
         {
-            elementsToAppearOnWin[i]?.SetActive(true);
+            elementsToAppearOnWin[i].SetActive(true);
         }
         for (int i = 0; i < elementsToDisppearOnWin.Length; i++)
         {
-            elementsToDisppearOnWin[i]?.SetActive(false);
+            elementsToDisppearOnWin[i].SetActive(false);
         }
         StartCoroutine(FillStars(numberOfStars));
     }
 
     public IEnumerator FillStars(int numberOfStars)
     {
-        if(numberOfStars != stars.Length)
+        for (int i = 0; i < stars.Length; i++)
         {
-            Debug.Log("Uneven lengths!!!");
-        }
-        else
-        {
-            for (int i = 0; i < stars.Length; i++)
+            yield return new WaitForSeconds(fillStarsWait);
+            bool toFillStars = numberOfStars >= i + 1;
+
+            if (toFillStars)
             {
-                yield return new WaitForSeconds(fillStarsWait);
-                bool toFillStars = numberOfStars <= i + 1;
-                if (toFillStars)
-                {
-                    FillStar(stars[i]);
-                }
+                FillStar(stars[i]);
             }
         }
     }
