@@ -9094,7 +9094,7 @@ MonoBehaviour:
   startSliceIfPossible: 0
   startedSlice: 0
   strippedLinear: 0
-  sliceType: 6
+  sliceType: 4
   sliceLayer:
     layer: 0
     layers: 00000000000000010000
@@ -9107,10 +9107,10 @@ MonoBehaviour:
   createType: 0
   complexSliceType: 0
   pointsLimit: 3
-  cutSize: 0.2
+  cutSize: 0.08
   lineType: 0
   drawSlicer: 1
-  visualScale: 2
+  visualScale: 1.1
   lineWidth: 0.13
   lineEndWidth: 0.11
   zPosition: -7
