@@ -8,6 +8,8 @@ public class Timer : MonoBehaviour
     //public Slider sliderTimer;
     [SerializeField]
     private Image timerFillImage;
+    [SerializeField]
+    private Text text;
 
     private float timeLeft;
     public bool ToStopTimer { get; set; }
@@ -47,6 +49,7 @@ public class Timer : MonoBehaviour
     }
     private void TimerGraphicsUpdate()
     {
+        text.text = (Mathf.CeilToInt( timeLeft)).ToString();
         //sliderTimer.value = (timeLeft / currentLevel.InitialTimeInSeconds);//This should work if slider max value's 1 and min value's 0 
         timerFillImage.fillAmount = (timeLeft / currentLevel.InitialTimeInSeconds);//This should work if slider max value's 1 and min value's 0 
         /*Color sliderColour;
