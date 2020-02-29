@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     public static string playerName;
     public static bool isGameOver = false;
     public Score score;
+
+    [SerializeField]
     private Level currentLevel;
 
     private void OnEnable()
