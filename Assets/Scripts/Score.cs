@@ -59,6 +59,7 @@ public class Score : MonoBehaviour
     {
         RectTransform scoreSliderRectTransform = scoreSlider.GetComponent(typeof(RectTransform)) as RectTransform;
         stars = new UIStar[LevelsManager.CurrentLevel.StarRequirements.Length];
+        Debug.Log("stars.Length: " + stars.Length);
         //stars = new UIStar[3];
         for (int i = 0; i < stars.Length; i++)
         {
@@ -69,6 +70,7 @@ public class Score : MonoBehaviour
             newStar.transform.SetParent(scoreSlider.transform);
             //newStar.transform.parent = scoreSlider.transform;
             newStar.rectTransform.localPosition = new Vector2(xPosition, 0);
+            newStar.rectTransform.localScale = new Vector3(1,1,1);
             stars[i] = newStar;
         }
     }

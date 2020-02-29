@@ -6,10 +6,19 @@ public class UIStar : MonoBehaviour
 {
     [SerializeField]
     private Image image;
+    [SerializeField]
+    private Sprite emptySprite;
+    [SerializeField]
+    private Sprite fullSprite;
     public RectTransform rectTransform;
+    private void Start()
+    {
+        image.sprite = emptySprite;
+    }
     public void FillStar()
     {
-        image.color = Color.yellow;
+        image.sprite = fullSprite;
+        // image.color = Color.yellow;
     }
 
 }

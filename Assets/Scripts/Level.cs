@@ -7,13 +7,49 @@ using System;
 [CreateAssetMenu(fileName ="Level", menuName="Level")]
 public class Level : ScriptableObject
 {
-    public Cake[] Cakes;
-    [Range(0, 1)]
-    public double[] StarRequirements = { 0.6, 0.76, 0.9 };
     [SerializeField]
-    public float initialTimeInSeconds = 30f;
-    [Range(1,3)]
-    public int minStarsToWin;
+    private Cake[] cakes;
+    [Range(0, 1)][SerializeField]
+    private double[] starRequirements = { 0.6, 0.76, 0.9 };
+    [SerializeField]
+    private float initialTimeInSeconds = 30f;
+    [Range(1,3)][SerializeField]
+    private int minStarsToWin;
+
+    public bool IsSucceedFirstTry { get; private set; }
+    public int PlayingCount { get; set; }
+
+    public Cake[] Cakes
+    {
+        get { return cakes; }
+        set { cakes = value; }
+    }
+
+    public double[] StarRequirements
+    {
+        get { return starRequirements; }
+        set { starRequirements = value; }
+    }
+
+    public float InitialTimeInSeconds
+    {
+        get { return initialTimeInSeconds; }
+        set { initialTimeInSeconds = value; }
+    }
+
+    public int MinStarsToWin
+    {
+        get { return minStarsToWin; }
+        set { minStarsToWin = value; }
+    }
+
+    public void LevelSucceeded()
+    {
+        if(PlayingCount == 1)
+        {
+            IsSucceedFirstTry = true;
+        }
+    }
 
     public int MaximumScore()
     {
@@ -27,6 +63,7 @@ public class Level : ScriptableObject
         return mximumScore;
     }
 }
+
 [Serializable]
 public class Cake
 {
