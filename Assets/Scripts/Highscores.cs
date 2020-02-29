@@ -51,7 +51,7 @@ public class Highscores : MonoBehaviour
 
     IEnumerator DownloadHighscoresFromDatabase(string username)
     {
-        Debug.Log("username: " + username);
+        //Debug.Log("username: " + username);
         string url = webUrl + publicCode + "/pipe-get/" + UnityWebRequest.EscapeURL(username);
         UnityWebRequest webRequest = UnityWebRequest.Get(url);
 

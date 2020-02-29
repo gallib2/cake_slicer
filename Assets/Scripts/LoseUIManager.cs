@@ -5,32 +5,42 @@ using UnityEngine;
 public class LoseUIManager : MonoBehaviour
 {
     [SerializeField]
-    private GameObject[] elementsToAppearOnWin;
+    private GameObject[] elementsToAppearOnLose;
     [SerializeField]
-    private GameObject[] elementsToDisppearOnWin;
+    private GameObject[] elementsToDisppearOnLose;
+    [SerializeField]
+    private SoundManager soundManager;
 
     private void Start()
     {
         GameManager.OnLose += ShowLoseScreen;
-        for (int i = 0; i < elementsToAppearOnWin.Length; i++)
-        {
-            elementsToAppearOnWin[i].SetActive(false);
-        }
+        GameManager.OnLevelInitialised += HideLoseScreen;
     }
+
     private void OnDisable()
     {
         GameManager.OnLose -= ShowLoseScreen;
+        GameManager.OnLevelInitialised -= HideLoseScreen;
     }
+
     private void ShowLoseScreen()
     {
-        SoundManager.instance.PlaySoundEffect(SoundEffectNames.LOSE);
-        for (int i = 0; i < elementsToAppearOnWin.Length; i++)
+        soundManager.PlaySoundEffect(SoundEffectNames.LOSE);
+        for (int i = 0; i < elementsToAppearOnLose.Length; i++)
         {
-            elementsToAppearOnWin[i].SetActive(true);
+            elementsToAppearOnLose[i].SetActive(true);
         }
-        for (int i = 0; i < elementsToDisppearOnWin.Length; i++)
+        for (int i = 0; i < elementsToDisppearOnLose.Length; i++)
         {
-            elementsToDisppearOnWin[i].SetActive(false);
+            elementsToDisppearOnLose[i].SetActive(false);
+        }
+    }
+
+    private void HideLoseScreen()
+    {
+        for (int i = 0; i < elementsToAppearOnLose.Length; i++)
+        {
+            elementsToAppearOnLose[i].SetActive(false);
         }
     }
 }

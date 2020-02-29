@@ -19,7 +19,9 @@ public class DisplayHighscores : MonoBehaviour
         HighscoreManager = GetComponent<Highscores>();
 
         if(GameManager.playerName != string.Empty)
+        {
             StartCoroutine(RefreshHighscores());
+        }
     }
 
     public void OnHighscoresDownloaded(Highscore[] highscoreList)

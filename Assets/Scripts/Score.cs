@@ -7,7 +7,6 @@ public class Score : MonoBehaviour
 {
     public int initialScore = 0;
     public static int score = 0;
-    //public int regularScoreToAdd = 10;
 
     public Text scoreText;
     [SerializeField]
@@ -19,39 +18,39 @@ public class Score : MonoBehaviour
     [SerializeField]
     private UIStar starPrefab;
     private UIStar[] stars;
-    public static bool[] hasStarAt;
+
+    [SerializeField]
+    private SoundManager soundManager;
+
+    public int CurrentStars { get; set; }
+
 
     private void OnEnable()
     {
-        GameManager.OnLose += GameOver;
-        GameManager.OnWin += GameOver;
+        //GameManager.OnLose += GameOver;
+        //GameManager.OnWin += GameOver;
         SlicesManager.OnScoreChange += ScoreChanged;
         SlicesManager.OnBadSlice += BadSlice;
+        GameManager.OnLevelInitialised += InitialiseLevel;
     }
 
     private void OnDisable()
     {
-        GameManager.OnLose -= GameOver;
-        GameManager.OnWin -= GameOver;
+        //GameManager.OnLose -= GameOver;
+        //GameManager.OnWin -= GameOver;
         SlicesManager.OnScoreChange -= ScoreChanged;
         SlicesManager.OnBadSlice -= BadSlice;
+        GameManager.OnLevelInitialised -= InitialiseLevel;
     }
 
     void Awake()
     {
-        Initialise();
+        //Initialise();
     }
 
-    private void Initialise()
+    private void InitialiseLevel()
     {
         score = 0;
-    }
-
-
-    private void Start()
-    {
-        score = 0;
-        hasStarAt = new bool[SlicesManager.instance.currentLevel.StarRequirements.Length];
         CreateUIStarsBar();
         SetScore(0);
     }
@@ -59,15 +58,19 @@ public class Score : MonoBehaviour
     private void CreateUIStarsBar()
     {
         RectTransform scoreSliderRectTransform = scoreSlider.GetComponent(typeof(RectTransform)) as RectTransform;
-        stars = new UIStar[SlicesManager.instance.currentLevel.StarRequirements.Length];
+        stars = new UIStar[LevelsManager.CurrentLevel.StarRequirements.Length];
+        Debug.Log("stars.Length: " + stars.Length);
+        //stars = new UIStar[3];
         for (int i = 0; i < stars.Length; i++)
         {
             float xPosition =
-                 ((float)SlicesManager.instance.currentLevel.StarRequirements[i] * scoreSliderRectTransform.rect.width)
+                 ((float)LevelsManager.CurrentLevel.StarRequirements[i] * scoreSliderRectTransform.rect.width)
                  - (scoreSliderRectTransform.rect.width / 2);
             UIStar newStar = Instantiate(starPrefab);
-            newStar.transform.parent = scoreSlider.transform;
+            newStar.transform.SetParent(scoreSlider.transform);
+            //newStar.transform.parent = scoreSlider.transform;
             newStar.rectTransform.localPosition = new Vector2(xPosition, 0);
+            newStar.rectTransform.localScale = new Vector3(1,1,1);
             stars[i] = newStar;
         }
     }
@@ -113,26 +116,30 @@ public class Score : MonoBehaviour
     private void ShowFloatingText(ScoreData.ScoreLevel scoreLevel, GameObject floatingTextPrefub)
     {
         floatingText = Instantiate(floatingTextPrefub);
+        RoundFeedback feedbackGameObject = floatingText.GetComponent<RoundFeedback>();
+        soundManager.PlaySoundEffect(feedbackGameObject.SoundToPlayOnStart);
     }
 
-    private void GameOver()
-    {
-        Highscores.AddNewHighScore(GameManager.playerName, score);
-        //SetScore(initialScore);
-    }
+    //private void GameOver()
+    //{
+    //    Highscores.AddNewHighScore(GameManager.playerName, score);
+    //    //SetScore(initialScore);
+    //}
 
     private void SetScore(int scoreToSet)
     {
         score = scoreToSet;
         scoreText.text = score.ToString();
-        Level currentLevel = SlicesManager.instance.currentLevel;
+        Level currentLevel = LevelsManager.CurrentLevel;
         double ScoreDividedByMaxScore = ((double)score / currentLevel.MaximumScore());
         scoreSlider.value = (float)ScoreDividedByMaxScore;
         for (int i = 0; i < currentLevel.StarRequirements.Length; i++)
         {
-            if(ScoreDividedByMaxScore > currentLevel.StarRequirements[i] && !hasStarAt[i])
+            bool isAlreadyHasStar = CurrentStars == i + 1;
+            bool shouldGetStar = ScoreDividedByMaxScore > currentLevel.StarRequirements[i];
+            if (shouldGetStar && !isAlreadyHasStar)
             {
-                hasStarAt[i] = true;
+                CurrentStars++;
                 stars[i].FillStar();
             }
         }

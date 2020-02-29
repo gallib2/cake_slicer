@@ -3,56 +3,61 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     //public static event Action OnGameOver;
-    public static event Action OnWin;
+    public static event Action<int> OnWin;
     public static event Action OnLose;
-    public static event Action k;
+    public static event Action OnLevelInitialised;
+
     public static string playerName;
-
-    //TimerHelper timer;
-    //float timerRequired = 1f;
-
-    public List<int> slicesSizeList;
-    //[SerializeField]
-   //public  int score = 0;// Ori finds this variable unnesssry!
     public static bool isGameOver = false;
+    public Score score;
+    private Level currentLevel;
 
-    static public GameManager instance;
-
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
-        instance = this;
-        //timer = TimerHelper.Create();
-
-        StartGameSettings();
+        SlicesManager.OnGameOver += GameOver;
     }
 
     private void OnDisable()
     {
+        SlicesManager.OnGameOver -= GameOver;
         isGameOver = false;
     }
 
-    private void StartGameSettings()
+    void Start()
     {
-        //Score.ins = 0;
+        currentLevel = LevelsManager.CurrentLevel;
+        InitialiseLevel();
     }
 
-    public static void GameOver()
+    public void InitialiseLevel()
+    {
+        isGameOver = false;
+        OnLevelInitialised.Invoke();
+    }
+
+    public void GameOver()
     {
         isGameOver = true;
-        //OnGameOver?.Invoke();
+        currentLevel.PlayingCount++;
 
-        if (Score.hasStarAt[0])//TODO: hardcoded winning condition(Can be moved to Level)
+        if (score.CurrentStars >= currentLevel.MinStarsToWin) //TODO: hardcoded winning condition(Can be moved to Level)
         {
-            OnWin.Invoke();
+            currentLevel.LevelSucceeded();
+            OnWin?.Invoke(score.CurrentStars);
         }
         else
         {
             OnLose.Invoke();
         }
+    }
+
+    public void UnloadScene()
+    {
+        SceneManager.LoadScene(1);
     }
 }

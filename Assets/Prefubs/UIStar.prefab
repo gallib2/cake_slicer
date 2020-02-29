@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1816605501629259840}
   - component: {fileID: 2720626988391652686}
   m_Layer: 5
-  m_Name: Star
+  m_Name: UIStar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ RectTransform:
   m_GameObject: {fileID: 3167527203505044993}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.006445313, y: 0.006445313, z: 0.006445313}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 475, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 44, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1323264026133684920
 CanvasRenderer:
@@ -64,7 +64,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: e6753a0eef3b15e43a6d0aedd8fc4509, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -87,4 +87,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 1816605501629259840}
+  emptySprite: {fileID: 21300000, guid: 61d9dc1e8b71cff4fb2689aa2afdf443, type: 3}
+  fullSprite: {fileID: 21300000, guid: e6753a0eef3b15e43a6d0aedd8fc4509, type: 3}
   rectTransform: {fileID: 3167527203505044994}
