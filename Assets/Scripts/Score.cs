@@ -10,7 +10,7 @@ public class Score : MonoBehaviour
 
     public Text scoreText;
     [SerializeField]
-    private Slider scoreSlider;
+    private Image scoreSliderFill;
     public GameObject[] floatingTextPrefubs;
     [SerializeField]
     public GameObject[] negativeFeedbackPrefubs;
@@ -18,7 +18,8 @@ public class Score : MonoBehaviour
     [SerializeField]
     private UIStar starPrefab;
     private UIStar[] stars;
-
+    [SerializeField]
+    private float StarYOffset = 54f;
     [SerializeField]
     private SoundManager soundManager;
 
@@ -57,7 +58,7 @@ public class Score : MonoBehaviour
 
     private void CreateUIStarsBar()
     {
-        RectTransform scoreSliderRectTransform = scoreSlider.GetComponent(typeof(RectTransform)) as RectTransform;
+        RectTransform scoreSliderRectTransform = scoreSliderFill.GetComponent(typeof(RectTransform)) as RectTransform;
         stars = new UIStar[LevelsManager.CurrentLevel.StarRequirements.Length];
         //stars = new UIStar[3];
         for (int i = 0; i < stars.Length; i++)
@@ -66,9 +67,9 @@ public class Score : MonoBehaviour
                  ((float)LevelsManager.CurrentLevel.StarRequirements[i] * scoreSliderRectTransform.rect.width)
                  - (scoreSliderRectTransform.rect.width / 2);
             UIStar newStar = Instantiate(starPrefab);
-            newStar.transform.SetParent(scoreSlider.transform);
+            newStar.transform.SetParent(scoreSliderFill.transform);
             //newStar.transform.parent = scoreSlider.transform;
-            newStar.rectTransform.localPosition = new Vector2(xPosition, 0);
+            newStar.rectTransform.localPosition = new Vector2(xPosition, 0+StarYOffset);
             newStar.rectTransform.localScale = new Vector3(1,1,1);
             stars[i] = newStar;
         }
@@ -131,7 +132,7 @@ public class Score : MonoBehaviour
         scoreText.text = score.ToString();
         Level currentLevel = LevelsManager.CurrentLevel;
         double ScoreDividedByMaxScore = ((double)score / currentLevel.MaximumScore());
-        scoreSlider.value = (float)ScoreDividedByMaxScore;
+        scoreSliderFill.fillAmount = (float)ScoreDividedByMaxScore;
         for (int i = 0; i < currentLevel.StarRequirements.Length; i++)
         {
             bool isAlreadyHasStar = CurrentStars == i + 1;

@@ -18,25 +18,29 @@ public class WinUIManager : MonoBehaviour
     [SerializeField]
     private GameObject[] elementsToDisppearOnWin;
 
-    private void Start()
+    private void Awake()
     {
         GameManager.OnWin += ShowFinalScoreAndStars;
         GameManager.OnLevelInitialised += HideWinScreen;
-        
-        for (int i = 0; i < stars.Length; i++)
-        {
-           // if (Score.hasStarAt[i])
-            //{
-                EmptyStar(stars[i]);
-            //}
-        }
+       // HideWinScreen();//Should be called by OnLevelInitialised though
     }
 
     private void HideWinScreen()
     {
+        for (int i = 0; i < stars.Length; i++)
+        {
+            // if (Score.hasStarAt[i])
+            //{
+            EmptyStar(stars[i]);
+            //}
+        }
         for (int i = 0; i < elementsToAppearOnWin.Length; i++)
         {
             elementsToAppearOnWin[i].SetActive(false);
+        }
+        for (int i = 0; i < elementsToDisppearOnWin.Length; i++)
+        {
+            elementsToDisppearOnWin[i].SetActive(true);
         }
     }
 
