@@ -10352,7 +10352,7 @@ GameObject:
   - component: {fileID: 4784245922717981374}
   - component: {fileID: 4784245922717981373}
   m_Layer: 0
-  m_Name: StartBttn
+  m_Name: MapButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

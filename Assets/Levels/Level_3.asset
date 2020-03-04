@@ -10,25 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc59fab1ece227847ab227fcf9a752d0, type: 3}
-  m_Name: Level_1
+  m_Name: Level_3
   m_EditorClassIdentifier: Assembly-CSharp::Level
-  displayName: LVL 1
+  displayName: LVL 3
   cakes:
-  - cakePrefab: {fileID: 4203801516081614381, guid: ece24715fa60f44fe8c0794eac32d649,
+  - cakePrefab: {fileID: 26350562484668360, guid: 538134f30d30a425583e0a062ca6f699,
       type: 3}
-    numberOfSlices: 2
+    numberOfSlices: 5
   - cakePrefab: {fileID: 3160547572476184343, guid: 1a92ec09dec9e44b9ba4e2a6ed22e46c,
       type: 3}
     numberOfSlices: 4
   - cakePrefab: {fileID: 4985836295831633166, guid: ecd991d16dcbc44ec9f4caaae81aaf9c,
       type: 3}
-    numberOfSlices: 4
+    numberOfSlices: 6
   - cakePrefab: {fileID: 4429666012074374676, guid: 23fca53dde19d4ab887f088122806beb,
       type: 3}
     numberOfSlices: 6
+  - cakePrefab: {fileID: 4911320157851095417, guid: 6bbc46f43986a442bb376470578932f0,
+      type: 3}
+    numberOfSlices: 8
+  - cakePrefab: {fileID: 8200570759069020071, guid: 99917c36ad61e413ba12dcf411d80edf,
+      type: 3}
+    numberOfSlices: 5
   starRequirements:
-  - 0.5
-  - 0.76
-  - 1
-  initialTimeInSeconds: 30
+  - 0.4699999988079071
+  - 0.699999988079071
+  - 0.949999988079071
+  initialTimeInSeconds: 45
   minStarsToWin: 1

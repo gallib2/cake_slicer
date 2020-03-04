@@ -149,7 +149,7 @@ public class Score : MonoBehaviour
         scoreSliderFill.fillAmount = (float)ScoreDividedByMaxScore;
         for (int i = 0; i < currentLevel.StarRequirements.Length; i++)
         {
-            bool isAlreadyHasStar = CurrentStars == i + 1;
+            bool isAlreadyHasStar = (CurrentStars >= i + 1);//CurrentStars == i + 1;
             bool shouldGetStar = ScoreDividedByMaxScore > currentLevel.StarRequirements[i];
             if (shouldGetStar && !isAlreadyHasStar)
             {
