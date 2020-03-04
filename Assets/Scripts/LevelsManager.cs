@@ -9,7 +9,7 @@ public class LevelsManager: MonoBehaviour
     public static Level CurrentLevel { get; set; }
     public static int CurrentLevelNumber { get; set; }
 
-    public Level[] gameLevels; // TODO - maybe later we can read this form a config file
+    public Level[] gameLevels; // TODO - maybe later we can read this from a config file
 
     public void LoadLevel(int levelNumber)
     {

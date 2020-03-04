@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Score : MonoBehaviour
 {
-    public int initialScore = 0;
+    //public int initialScore = 0;
     public static int score = 0;
 
     public Text scoreText;
@@ -16,8 +16,8 @@ public class Score : MonoBehaviour
     public GameObject[] negativeFeedbackPrefubs;
     GameObject floatingText;
     [SerializeField]
-    private UIStar starPrefab;
-    private UIStar[] stars;
+    private UIStar UIStarPrefab;
+    private UIStar[] UIStars;
     [SerializeField]
     private float StarYOffset = 54f;
     [SerializeField]
@@ -52,26 +52,40 @@ public class Score : MonoBehaviour
     private void InitialiseLevel()
     {
         score = 0;
+        CurrentStars = 0;
         CreateUIStarsBar();
         SetScore(0);
     }
 
     private void CreateUIStarsBar()
     {
+        if (UIStars != null)
+        {
+            //TODO: this part can be avoided by reusing stars that had been created, (We're better off not creating and destroying objects willy-nilly )
+            for (int i = 0; i < UIStars.Length; i++)
+            {
+                if(UIStars[i] != null)
+                {
+                    GameObject.Destroy(UIStars[i].gameObject);
+                }
+            }
+        }
+
         RectTransform scoreSliderRectTransform = scoreSliderFill.GetComponent(typeof(RectTransform)) as RectTransform;
-        stars = new UIStar[LevelsManager.CurrentLevel.StarRequirements.Length];
+        UIStars = new UIStar[LevelsManager.CurrentLevel.StarRequirements.Length];
         //stars = new UIStar[3];
-        for (int i = 0; i < stars.Length; i++)
+        for (int i = 0; i < UIStars.Length; i++)
         {
             float xPosition =
                  ((float)LevelsManager.CurrentLevel.StarRequirements[i] * scoreSliderRectTransform.rect.width)
                  - (scoreSliderRectTransform.rect.width / 2);
-            UIStar newStar = Instantiate(starPrefab);
+            UIStar newStar = Instantiate(UIStarPrefab);
             newStar.transform.SetParent(scoreSliderFill.transform);
             //newStar.transform.parent = scoreSlider.transform;
             newStar.rectTransform.localPosition = new Vector2(xPosition, 0+StarYOffset);
             newStar.rectTransform.localScale = new Vector3(1,1,1);
-            stars[i] = newStar;
+            newStar.gameObject.SetActive(true);// the objects are not active when instantiated for some reason...
+            UIStars[i] = newStar;
         }
     }
 
@@ -140,7 +154,7 @@ public class Score : MonoBehaviour
             if (shouldGetStar && !isAlreadyHasStar)
             {
                 CurrentStars++;
-                stars[i].FillStar();
+                UIStars[i].FillStar();
             }
         }
 
