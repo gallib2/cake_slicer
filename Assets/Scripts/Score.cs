@@ -150,7 +150,7 @@ public class Score : MonoBehaviour
         for (int i = 0; i < currentLevel.StarRequirements.Length; i++)
         {
             bool isAlreadyHasStar = (CurrentStars >= i + 1);//CurrentStars == i + 1;
-            bool shouldGetStar = ScoreDividedByMaxScore > currentLevel.StarRequirements[i];
+            bool shouldGetStar = (ScoreDividedByMaxScore >= currentLevel.StarRequirements[i]);
             if (shouldGetStar && !isAlreadyHasStar)
             {
                 CurrentStars++;
