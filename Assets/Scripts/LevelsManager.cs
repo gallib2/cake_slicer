@@ -8,8 +8,9 @@ public class LevelsManager: MonoBehaviour
     private const int cakesScene = 1;
     public static Level CurrentLevel { get; set; }
     public static int CurrentLevelNumber { get; set; }
-
+    //Should these not be static?
     public Level[] gameLevels; // TODO - maybe later we can read this from a config file
+    private SavedData savedData;
 
     public void LoadLevel(int levelNumber)
     {
@@ -33,5 +34,23 @@ public class LevelsManager: MonoBehaviour
                 SceneManager.LoadScene(cakesScene);
             }
         }
+    }
+
+    private void Awake()
+    {
+        savedData = SaveAndLoadManager.LoadSavedData();
+    }
+
+    public System.UInt32 GetLevelSavedScore(Level level)
+    {
+        for (int i = 0; i < gameLevels.Length; i++)
+        {
+            if (level == gameLevels[i])
+            {
+                return savedData.savedLevelsData[i].score;
+            }
+        }
+        Debug.Log("Level was not found!");
+        return 666;
     }
 }

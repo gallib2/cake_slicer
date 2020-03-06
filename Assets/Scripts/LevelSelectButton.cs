@@ -14,7 +14,17 @@ public class LevelSelectButton : MonoBehaviour
 
     void Start()
     {
-        text.text = level.DisplayName;
+        System.UInt32 savedScore = levelsManager.GetLevelSavedScore(level);
+        text.text = level.DisplayName+"\n SCORE "+ savedScore.ToString() + "\n";
+        double ScoreDividedByMaxScore = ((double)savedScore / level.MaximumScore());
+        for (int i = 0; i < level.StarRequirements.Length; i++)//TODO: copied from SetScore.. this piece of code should reside somewhere else
+        {
+            bool shouldGetStar = (ScoreDividedByMaxScore >= level.StarRequirements[i]);
+            if (shouldGetStar)
+            {
+                text.text += (i == 0 ? "*":" *");
+            }
+        }
     }
 
     public void LoadLevel()
