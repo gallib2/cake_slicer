@@ -46,6 +46,7 @@ public class SlicesManager : MonoBehaviour
         currentLevel = LevelsManager.CurrentLevel;
         GameManager.OnLevelInitialised += InitialiseLevel;
     }
+
     private void OnDisable()
     {
         GameManager.OnLevelInitialised -= InitialiseLevel;

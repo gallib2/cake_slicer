@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
         if (score.CurrentStars >= currentLevel.MinStarsToWin) //TODO: hardcoded winning condition(Can be moved to Level)
         {
             currentLevel.LevelSucceeded();
-            OnWin?.Invoke(score.CurrentStars);
+            OnWin?.Invoke(score.CurrentStars);//TODO: Record the number of stars or/and score if it's larger than it was previously
         }
         else
         {
@@ -60,6 +60,6 @@ public class GameManager : MonoBehaviour
 
     public void UnloadScene()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
     }
 }

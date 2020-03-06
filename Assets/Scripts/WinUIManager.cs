@@ -65,6 +65,7 @@ public class WinUIManager : MonoBehaviour
 
     public IEnumerator FillStars(int numberOfStars)
     {
+        Debug.Log("numberOfStars: " + numberOfStars);
         for (int i = 0; i < stars.Length; i++)
         {
             yield return new WaitForSeconds(fillStarsWait);

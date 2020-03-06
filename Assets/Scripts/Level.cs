@@ -8,13 +8,17 @@ using System;
 public class Level : ScriptableObject
 {
     [SerializeField]
+    private string displayName;
+
+   [SerializeField]
     private Cake[] cakes;
     [Range(0, 1)][SerializeField]
     private double[] starRequirements = { 0.6, 0.76, 0.9 };
     [SerializeField]
     private float initialTimeInSeconds = 30f;
     [Range(1,3)][SerializeField]
-    private int minStarsToWin;
+    private int minStarsToWin;//Ori: I thought 1 star guarantees a win
+
 
     public bool IsSucceedFirstTry { get; private set; }
     public int PlayingCount { get; set; }
@@ -23,6 +27,11 @@ public class Level : ScriptableObject
     {
         get { return cakes; }
         set { cakes = value; }
+    }
+
+    public string DisplayName
+    {
+        get { return displayName; }
     }
 
     public double[] StarRequirements
