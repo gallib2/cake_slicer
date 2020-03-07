@@ -40,12 +40,15 @@ public class SlicesManager : MonoBehaviour
 
     [SerializeField]
     private Timer timer;
+    [SerializeField]
+    private bool perfectSlicing = false;
 
     private void Awake()
     {
         currentLevel = LevelsManager.CurrentLevel;
         GameManager.OnLevelInitialised += InitialiseLevel;
     }
+
     private void OnDisable()
     {
         GameManager.OnLevelInitialised -= InitialiseLevel;
@@ -57,14 +60,13 @@ public class SlicesManager : MonoBehaviour
         NextRound();
     }
 
-    
     // Update is called once per frame
     void Update()
     {
         if (!GameManager.isGameOver)
         {
             CheckSlices();
-            if (timer.ToStopTimer)
+            if (timer.ToStopTimer && !GameManager.isGameOver)//the reason !GameManager.isGameOver is checked is that CheckSlices() can lead to a GameOver()
             {
                 GameOver();
             }
@@ -123,6 +125,13 @@ public class SlicesManager : MonoBehaviour
                 }
             }
         }
+
+        if (perfectSlicing)
+        {
+            playerScoreLevel = ScoreData.ScoreLevel.Awesome;
+            Debug.Log("PERFECT!");
+        }
+
         Debug.Log(playerScoreLevel.ToString());
         int scoreToAdd = (int)Enum.Parse(typeof(ScoreData.ScorePointsByLevel), playerScoreLevel.ToString());
         scoreToAdd = 
