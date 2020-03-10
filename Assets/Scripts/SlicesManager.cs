@@ -33,6 +33,8 @@ public class SlicesManager : MonoBehaviour
 
     [SerializeField]
     private GameObject sliceableObjects;
+    [SerializeField]
+    private GameObject obstacleObjects;
 
     public int slicesCount = 0;
     [SerializeField]
@@ -76,6 +78,7 @@ public class SlicesManager : MonoBehaviour
                     if (colliderAtfingerPosition.gameObject.GetComponent<Obstacle>())
                     {
                         //  Debug.Log("Obstacle!!!!1111");
+                        Handheld.Vibrate();
                         NextRound();
                         return;
                     }
@@ -185,6 +188,11 @@ public class SlicesManager : MonoBehaviour
             //DestroyImmediate(item.gameObject);
             Destroy(item.gameObject);
         }
+
+        foreach (Transform item in obstacleObjects.transform)
+        {
+            Destroy(item.gameObject);
+        }
     }
 
     bool IsAllSlicesAreAlmostEqual()
@@ -229,8 +237,12 @@ public class SlicesManager : MonoBehaviour
             goal = currentLevel.Cakes[currentCakeIndex].numberOfSlices;
             OnGoalChange.Invoke();
             Cake newCake = currentLevel.Cakes[currentCakeIndex];
-            GameObject cake = newCake.cakePrefab;
-            Instantiate(cake, sliceableObjects.transform, true); // create new cake
+            GameObject cakeGameObject = Instantiate(newCake.cakePrefab, sliceableObjects.transform, true); // create new cake
+            Obstacle[] obstacles = cakeGameObject.GetComponentsInChildren<Obstacle>();
+            for (int i = 0; i < obstacles.Length; i++)
+            {
+                obstacles[i].transform.parent = obstacleObjects.transform;
+            }
             cakesLeftText.text =
                 (currentLevel.Cakes.Length - currentCakeIndex).ToString();
         }
