@@ -16,16 +16,25 @@ MonoBehaviour:
   cakes:
   - cakePrefab: {fileID: 4203801516081614381, guid: ece24715fa60f44fe8c0794eac32d649,
       type: 3}
-    numberOfSlices: 4
+    numberOfSlices: 2
   - cakePrefab: {fileID: 3160547572476184343, guid: 1a92ec09dec9e44b9ba4e2a6ed22e46c,
       type: 3}
-    numberOfSlices: 6
+    numberOfSlices: 4
   - cakePrefab: {fileID: 4985836295831633166, guid: ecd991d16dcbc44ec9f4caaae81aaf9c,
+      type: 3}
+    numberOfSlices: 4
+  - cakePrefab: {fileID: 4911320157851095417, guid: 6bbc46f43986a442bb376470578932f0,
+      type: 3}
+    numberOfSlices: 6
+  - cakePrefab: {fileID: 26350562484668360, guid: 1c8b087c60cd5da42bed8f2215540a27,
+      type: 3}
+    numberOfSlices: 6
+  - cakePrefab: {fileID: 3160547572476184343, guid: 1a92ec09dec9e44b9ba4e2a6ed22e46c,
       type: 3}
     numberOfSlices: 8
   starRequirements:
   - 0.6
   - 0.76
   - 0.9
-  initialTimeInSeconds: 20
+  initialTimeInSeconds: 25
   minStarsToWin: 1
