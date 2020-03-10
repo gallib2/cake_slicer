@@ -5,20 +5,21 @@ using UnityEngine.UI;
 
 public class Score : MonoBehaviour
 {
-    public int initialScore = 0;
+    //public int initialScore = 0;
     public static int score = 0;
 
     public Text scoreText;
     [SerializeField]
-    private Slider scoreSlider;
+    private Image scoreSliderFill;
     public GameObject[] floatingTextPrefubs;
     [SerializeField]
     public GameObject[] negativeFeedbackPrefubs;
     GameObject floatingText;
     [SerializeField]
-    private UIStar starPrefab;
-    private UIStar[] stars;
-
+    private UIStar UIStarPrefab;
+    private UIStar[] UIStars;
+    [SerializeField]
+    private float StarYOffset = 54f;
     [SerializeField]
     private SoundManager soundManager;
 
@@ -51,27 +52,40 @@ public class Score : MonoBehaviour
     private void InitialiseLevel()
     {
         score = 0;
+        CurrentStars = 0;
         CreateUIStarsBar();
         SetScore(0);
     }
 
     private void CreateUIStarsBar()
     {
-        RectTransform scoreSliderRectTransform = scoreSlider.GetComponent(typeof(RectTransform)) as RectTransform;
-        stars = new UIStar[LevelsManager.CurrentLevel.StarRequirements.Length];
-        Debug.Log("stars.Length: " + stars.Length);
+        if (UIStars != null)
+        {
+            //TODO: this part can be avoided by reusing stars that had been created, (We're better off not creating and destroying objects willy-nilly )
+            for (int i = 0; i < UIStars.Length; i++)
+            {
+                if(UIStars[i] != null)
+                {
+                    GameObject.Destroy(UIStars[i].gameObject);
+                }
+            }
+        }
+
+        RectTransform scoreSliderRectTransform = scoreSliderFill.GetComponent(typeof(RectTransform)) as RectTransform;
+        UIStars = new UIStar[LevelsManager.CurrentLevel.StarRequirements.Length];
         //stars = new UIStar[3];
-        for (int i = 0; i < stars.Length; i++)
+        for (int i = 0; i < UIStars.Length; i++)
         {
             float xPosition =
                  ((float)LevelsManager.CurrentLevel.StarRequirements[i] * scoreSliderRectTransform.rect.width)
                  - (scoreSliderRectTransform.rect.width / 2);
-            UIStar newStar = Instantiate(starPrefab);
-            newStar.transform.SetParent(scoreSlider.transform);
+            UIStar newStar = Instantiate(UIStarPrefab);
+            newStar.transform.SetParent(scoreSliderFill.transform);
             //newStar.transform.parent = scoreSlider.transform;
-            newStar.rectTransform.localPosition = new Vector2(xPosition, 0);
+            newStar.rectTransform.localPosition = new Vector2(xPosition, 0+StarYOffset);
             newStar.rectTransform.localScale = new Vector3(1,1,1);
-            stars[i] = newStar;
+            newStar.gameObject.SetActive(true);// the objects are not active when instantiated for some reason...
+            UIStars[i] = newStar;
         }
     }
 
@@ -132,15 +146,15 @@ public class Score : MonoBehaviour
         scoreText.text = score.ToString();
         Level currentLevel = LevelsManager.CurrentLevel;
         double ScoreDividedByMaxScore = ((double)score / currentLevel.MaximumScore());
-        scoreSlider.value = (float)ScoreDividedByMaxScore;
+        scoreSliderFill.fillAmount = (float)ScoreDividedByMaxScore;
         for (int i = 0; i < currentLevel.StarRequirements.Length; i++)
         {
-            bool isAlreadyHasStar = CurrentStars == i + 1;
-            bool shouldGetStar = ScoreDividedByMaxScore > currentLevel.StarRequirements[i];
+            bool isAlreadyHasStar = (CurrentStars >= i + 1);//CurrentStars == i + 1;
+            bool shouldGetStar = (ScoreDividedByMaxScore >= currentLevel.StarRequirements[i]);
             if (shouldGetStar && !isAlreadyHasStar)
             {
                 CurrentStars++;
-                stars[i].FillStar();
+                UIStars[i].FillStar();
             }
         }
 

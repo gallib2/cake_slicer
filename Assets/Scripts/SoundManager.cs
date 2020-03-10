@@ -24,13 +24,19 @@ public class SoundManager : MonoBehaviour
     private void OnEnable()
     {
         GameManager.OnLose += OnGameEnd;
+        GameManager.OnLevelInitialised += InitialiseLevel;
     }
 
     private void OnDisable()
     {
         GameManager.OnLose -= OnGameEnd;
+        GameManager.OnLevelInitialised -= InitialiseLevel;
     }
 
+    private void InitialiseLevel()
+    {
+        musicSource.Play();
+    }
     private void OnGameEnd()
     {
         musicSource.Stop();
@@ -47,7 +53,6 @@ public class SoundManager : MonoBehaviour
                 soundEffects[i].Source.Play();
                 return;
             }
-           
         }
         Debug.Log("Sound effect not found!");
     }
