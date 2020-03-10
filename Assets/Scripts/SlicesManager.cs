@@ -15,6 +15,8 @@ public class SlicesManager : MonoBehaviour
     public static event ScoreChange OnScoreChange;
     public static event BadSliceHandler OnBadSlice;
     public static event Action OnGameOver;
+   // public int obstaclesLayer = 9;
+    public LayerMask obstacleLayerMask;
 
     List<double> slicesSizeList;
     public int currentCakeIndex = 0;
@@ -31,6 +33,8 @@ public class SlicesManager : MonoBehaviour
 
     [SerializeField]
     private GameObject sliceableObjects;
+    [SerializeField]
+    private GameObject obstacleObjects;
 
     public int slicesCount = 0;
     [SerializeField]
@@ -65,6 +69,23 @@ public class SlicesManager : MonoBehaviour
     {
         if (!GameManager.isGameOver)
         {
+            if (Input.GetMouseButton(0))
+            {
+                Vector2 fingerPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Collider2D colliderAtfingerPosition = Physics2D.OverlapPoint(fingerPosition, obstacleLayerMask);
+                if (colliderAtfingerPosition != null)
+                {
+                    if (colliderAtfingerPosition.gameObject.GetComponent<Obstacle>())
+                    {
+                        //  Debug.Log("Obstacle!!!!1111");
+                        Slicer2DController.ClearPoints();
+                        Handheld.Vibrate();
+                        NextRound();
+                        return;
+                    }
+                }
+            }
+
             CheckSlices();
             if (timer.ToStopTimer && !GameManager.isGameOver)//the reason !GameManager.isGameOver is checked is that CheckSlices() can lead to a GameOver()
             {
@@ -168,6 +189,11 @@ public class SlicesManager : MonoBehaviour
             //DestroyImmediate(item.gameObject);
             Destroy(item.gameObject);
         }
+
+        foreach (Transform item in obstacleObjects.transform)
+        {
+            Destroy(item.gameObject);
+        }
     }
 
     bool IsAllSlicesAreAlmostEqual()
@@ -212,8 +238,12 @@ public class SlicesManager : MonoBehaviour
             goal = currentLevel.Cakes[currentCakeIndex].numberOfSlices;
             OnGoalChange.Invoke();
             Cake newCake = currentLevel.Cakes[currentCakeIndex];
-            GameObject cake = newCake.cakePrefab;
-            Instantiate(cake, sliceableObjects.transform, true); // create new cake
+            GameObject cakeGameObject = Instantiate(newCake.cakePrefab, sliceableObjects.transform, true); // create new cake
+            Obstacle[] obstacles = cakeGameObject.GetComponentsInChildren<Obstacle>();
+            for (int i = 0; i < obstacles.Length; i++)
+            {
+                obstacles[i].transform.parent = obstacleObjects.transform;
+            }
             cakesLeftText.text =
                 (currentLevel.Cakes.Length - currentCakeIndex).ToString();
         }
