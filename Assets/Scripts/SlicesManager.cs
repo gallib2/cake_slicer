@@ -15,6 +15,8 @@ public class SlicesManager : MonoBehaviour
     public static event ScoreChange OnScoreChange;
     public static event BadSliceHandler OnBadSlice;
     public static event Action OnGameOver;
+   // public int obstaclesLayer = 9;
+    public LayerMask obstacleLayerMask;
 
     List<double> slicesSizeList;
     public int currentCakeIndex = 0;
@@ -65,6 +67,21 @@ public class SlicesManager : MonoBehaviour
     {
         if (!GameManager.isGameOver)
         {
+            if (Input.GetMouseButton(0))
+            {
+                Vector2 fingerPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Collider2D colliderAtfingerPosition = Physics2D.OverlapPoint(fingerPosition, obstacleLayerMask);
+                if (colliderAtfingerPosition != null)
+                {
+                    if (colliderAtfingerPosition.gameObject.GetComponent<Obstacle>())
+                    {
+                        //  Debug.Log("Obstacle!!!!1111");
+                        NextRound();
+                        return;
+                    }
+                }
+            }
+
             CheckSlices();
             if (timer.ToStopTimer && !GameManager.isGameOver)//the reason !GameManager.isGameOver is checked is that CheckSlices() can lead to a GameOver()
             {
