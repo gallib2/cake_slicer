@@ -17,24 +17,33 @@ MonoBehaviour:
   - cakePrefab: {fileID: 4985836295831633166, guid: ecd991d16dcbc44ec9f4caaae81aaf9c,
       type: 3}
     numberOfSlices: 4
+    fractions: []
   - cakePrefab: {fileID: 3160547572476184343, guid: 1a92ec09dec9e44b9ba4e2a6ed22e46c,
       type: 3}
     numberOfSlices: 6
+    fractions: []
   - cakePrefab: {fileID: 4429666012074374676, guid: 23fca53dde19d4ab887f088122806beb,
       type: 3}
     numberOfSlices: 6
+    fractions:
+    - numerator: 2
+      denominator: 3
+    - numerator: 1
+      denominator: 2
   - cakePrefab: {fileID: 4203801516081614381, guid: ece24715fa60f44fe8c0794eac32d649,
       type: 3}
     numberOfSlices: 8
+    fractions: []
   - cakePrefab: {fileID: 26350562484668360, guid: 538134f30d30a425583e0a062ca6f699,
       type: 3}
     numberOfSlices: 2
+    fractions: []
   - cakePrefab: {fileID: 4429666012074374676, guid: 1e8de7b4a1b529b4d923fca3b08a5138,
       type: 3}
     numberOfSlices: 4
+    fractions: []
   starRequirements:
   - 0.4699999988079071
   - 0.699999988079071
   - 0.949999988079071
   initialTimeInSeconds: 45
-  minStarsToWin: 1

@@ -235,7 +235,20 @@ public class SlicesManager : MonoBehaviour
         currentCakeIndex++;
         if (currentCakeIndex < currentLevel.Cakes.Length)
         {
-            goal = currentLevel.Cakes[currentCakeIndex].numberOfSlices;
+            if(currentLevel.Cakes[currentCakeIndex].fractions.Length > 1)
+            {
+                //Gal, please make a Lambda expression outta this:
+                goal = 0;
+                for (int i = 0; i < currentLevel.Cakes[currentCakeIndex].fractions.Length; i++)
+                {
+                    goal += currentLevel.Cakes[currentCakeIndex].fractions[i].numerator;
+                }
+            }
+            else
+            {
+                goal = currentLevel.Cakes[currentCakeIndex].numberOfSlices;
+            }
+               
             OnGoalChange.Invoke();
             Cake newCake = currentLevel.Cakes[currentCakeIndex];
             GameObject cakeGameObject = Instantiate(newCake.cakePrefab, sliceableObjects.transform, true); // create new cake

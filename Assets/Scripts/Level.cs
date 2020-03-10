@@ -16,8 +16,8 @@ public class Level : ScriptableObject
     private double[] starRequirements = { 0.6, 0.76, 0.9 };
     [SerializeField]
     private float initialTimeInSeconds = 30f;
-    [Range(1,3)][SerializeField]
-    private int minStarsToWin;//Ori: I thought 1 star guarantees a win
+  /*  [Range(1,3)][SerializeField]
+    private int minStarsToWin;//Ori: I thought 1 star guarantees a win*/
 
 
     public bool IsSucceedFirstTry { get; private set; }
@@ -46,11 +46,11 @@ public class Level : ScriptableObject
         set { initialTimeInSeconds = value; }
     }
 
-    public int MinStarsToWin
+    /*public int MinStarsToWin
     {
         get { return minStarsToWin; }
         set { minStarsToWin = value; }
-    }
+    }*/
 
     public void LevelSucceeded()
     {
@@ -80,4 +80,15 @@ public class Cake
     public GameObject cakePrefab;
     [SerializeField][Range(2,8)]
     public int numberOfSlices;
+    public Fraction[] fractions;
+
+}
+
+[Serializable]
+public struct Fraction
+{
+    [SerializeField][Range(1, 10)]
+    public byte numerator;
+    [SerializeField] [Range(1, 10)]
+    public byte denominator;
 }

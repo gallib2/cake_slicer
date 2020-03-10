@@ -17,30 +17,41 @@ MonoBehaviour:
   - cakePrefab: {fileID: 4203801516081614381, guid: ece24715fa60f44fe8c0794eac32d649,
       type: 3}
     numberOfSlices: 8
+    fractions: []
   - cakePrefab: {fileID: 3160547572476184343, guid: 1a92ec09dec9e44b9ba4e2a6ed22e46c,
       type: 3}
     numberOfSlices: 4
+    fractions:
+    - numerator: 2
+      denominator: 4
+    - numerator: 1
+      denominator: 2
   - cakePrefab: {fileID: 4911320157851095417, guid: 6bbc46f43986a442bb376470578932f0,
       type: 3}
     numberOfSlices: 6
+    fractions: []
   - cakePrefab: {fileID: 4203801516081614381, guid: ece24715fa60f44fe8c0794eac32d649,
       type: 3}
     numberOfSlices: 8
+    fractions: []
   - cakePrefab: {fileID: 4203801516081614381, guid: ece24715fa60f44fe8c0794eac32d649,
       type: 3}
     numberOfSlices: 8
+    fractions: []
   - cakePrefab: {fileID: 4203801516081614381, guid: ece24715fa60f44fe8c0794eac32d649,
       type: 3}
     numberOfSlices: 8
+    fractions: []
   - cakePrefab: {fileID: 4203801516081614381, guid: ece24715fa60f44fe8c0794eac32d649,
       type: 3}
     numberOfSlices: 8
+    fractions: []
   - cakePrefab: {fileID: 4203801516081614381, guid: ece24715fa60f44fe8c0794eac32d649,
       type: 3}
     numberOfSlices: 8
+    fractions: []
   starRequirements:
   - 0.4000000059604645
   - 0.75
   - 1
   initialTimeInSeconds: 450
-  minStarsToWin: 1
