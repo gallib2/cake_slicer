@@ -78,6 +78,7 @@ public class SlicesManager : MonoBehaviour
                     if (colliderAtfingerPosition.gameObject.GetComponent<Obstacle>())
                     {
                         //  Debug.Log("Obstacle!!!!1111");
+                        Slicer2DController.ClearPoints();
                         Handheld.Vibrate();
                         NextRound();
                         return;
