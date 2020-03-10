@@ -19,6 +19,12 @@ MonoBehaviour:
     numberOfSlices: 2
   - cakePrefab: {fileID: 3160547572476184343, guid: 1a92ec09dec9e44b9ba4e2a6ed22e46c,
       type: 3}
+    numberOfSlices: 2
+  - cakePrefab: {fileID: 4985836295831633166, guid: ecd991d16dcbc44ec9f4caaae81aaf9c,
+      type: 3}
+    numberOfSlices: 4
+  - cakePrefab: {fileID: 4911320157851095417, guid: 6bbc46f43986a442bb376470578932f0,
+      type: 3}
     numberOfSlices: 4
   - cakePrefab: {fileID: 4985836295831633166, guid: ecd991d16dcbc44ec9f4caaae81aaf9c,
       type: 3}
@@ -27,8 +33,8 @@ MonoBehaviour:
       type: 3}
     numberOfSlices: 6
   starRequirements:
-  - 0.5
-  - 0.76
-  - 1
+  - 0.2549999952316284
+  - 0.5440000295639038
+  - 0.871999979019165
   initialTimeInSeconds: 30
   minStarsToWin: 1
