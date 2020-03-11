@@ -60,6 +60,7 @@ public class SlicesManager : MonoBehaviour
 
     private void InitialiseLevel()
     {
+        currentLevel.IsLegitimate();
         currentCakeIndex = -1;
         NextRound();
     }
@@ -86,7 +87,7 @@ public class SlicesManager : MonoBehaviour
                 }
             }
 
-            CheckSlices();
+            CheckSlices();//TODO: We don't have to do this every frame.
             if (timer.ToStopTimer && !GameManager.isGameOver)//the reason !GameManager.isGameOver is checked is that CheckSlices() can lead to a GameOver()
             {
                 GameOver();
@@ -129,36 +130,108 @@ public class SlicesManager : MonoBehaviour
         bool isHaveScoreLevel = false;
         ScoreData.ScoreLevel playerScoreLevel = ScoreData.ScoreLevel.Regular;
 
-        ScoreData.ScoreLevel[] ScoreLevelArr = (ScoreData.ScoreLevel[])Enum.GetValues(typeof(ScoreData.ScoreLevel));
-
-        // we need to run on the array from the biggest value to the lower.
-        foreach (ScoreData.ScoreLevel scoreLevelEnum in ScoreLevelArr)
-        {
-            if (scoreLevelEnum != ScoreData.ScoreLevel.Regular)
-            {
-                int scoreLevel = (int)scoreLevelEnum;
-                isHaveScoreLevel = CheckScoreLevel(scoreLevel);
-
-                if (isHaveScoreLevel)
-                {
-                    playerScoreLevel = scoreLevelEnum;
-                    break;
-                }
-            }
-        }
-
         if (perfectSlicing)
         {
             playerScoreLevel = ScoreData.ScoreLevel.Awesome;
             Debug.Log("PERFECT!");
+        }
+        else
+        {
+            ScoreData.ScoreLevel[] ScoreLevelArr = (ScoreData.ScoreLevel[])Enum.GetValues(typeof(ScoreData.ScoreLevel));
+
+            if (currentLevel.Cakes[currentCakeIndex].fractions.Length > 0)
+            {
+                Fraction[] fractions = currentLevel.Cakes[currentCakeIndex].fractions;
+                List<double> slicesSupposedToBeInPercentage = new List<double>();
+                for (int i = 0; i < fractions.Length; i++)
+                {
+                    double sliceSupposedToBeInPercentage = (1 / (double)fractions[i].denominator) * 100;
+                    //Debug.Log("sliceSupposedToBeInPercentage = " + sliceSupposedToBeInPercentage);
+                    for (int j = 0; j < fractions[i].numerator; j++)
+                    {
+                        slicesSupposedToBeInPercentage.Add(sliceSupposedToBeInPercentage);
+                    }
+                }
+                List<double> slicesInPercentage = SlicesSizesInDoubles();
+                double overallSize = 0;
+                for (int i = 0; i < slicesInPercentage.Count; i++)
+                {
+                    overallSize += slicesInPercentage[i];
+                }
+                for (int i = 0; i < slicesInPercentage.Count; i++)
+                {
+                    slicesInPercentage[i] = ((slicesInPercentage[i]/ overallSize) * 100);
+                    Debug.Log("slicesInPercentage[i] = " + (slicesInPercentage[i]));
+                }
+
+                //List<ScoreData.ScoreLevel> scoreLevels = new List<ScoreData.ScoreLevel>();
+                List<double> differences = new List<double>();
+                foreach (double sliceSupposedToBeInPercentage in slicesSupposedToBeInPercentage)
+                {
+                    double difference;
+                    double smallestDifference=100;
+                    int smallestDifferenceIndex=0;
+                    for (int i = 0; i < slicesInPercentage.Count; i++)
+                    {
+                        difference = Math.Abs(slicesInPercentage[i] - sliceSupposedToBeInPercentage);
+                        if (difference < smallestDifference)
+                        {
+                            smallestDifference = difference;
+                            smallestDifferenceIndex = i;
+                        }
+                    }
+                    Debug.Log("smallestDifference = " + smallestDifference);
+                    slicesInPercentage.RemoveAt(smallestDifferenceIndex);
+                    differences.Add(smallestDifference);
+                    //ScoreData.ScoreLevel sliceScoreLevel = ScoreData.ScoreLevel.Regular;
+                }
+                double differencesAverage = 0;
+                for (int i = 0; i < differences.Count; i++)
+                {
+                    differencesAverage += differences[i];
+                }
+                differencesAverage /= differences.Count;
+                Debug.Log("differencesAverage = " + differencesAverage);
+                foreach (ScoreData.ScoreLevel possibleScoreLevel in ScoreLevelArr)
+                {
+                    if (possibleScoreLevel != ScoreData.ScoreLevel.Regular)//might not be nesssry
+                    {
+                        if(differencesAverage <= (double)possibleScoreLevel)
+                        {
+                            playerScoreLevel = possibleScoreLevel;
+                            break;
+                        }
+                    }
+                }
+                //Phew....
+            }
+            else
+            {
+                // we need to run on the array from the biggest value to the lower.
+                foreach (ScoreData.ScoreLevel scoreLevelEnum in ScoreLevelArr)
+                {
+                    if (scoreLevelEnum != ScoreData.ScoreLevel.Regular)
+                    {
+                        int scoreLevel = (int)scoreLevelEnum;
+                        isHaveScoreLevel = CheckScoreLevel(scoreLevel);
+
+                        if (isHaveScoreLevel)
+                        {
+                            playerScoreLevel = scoreLevelEnum;
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         Debug.Log(playerScoreLevel.ToString());
         int scoreToAdd = (int)Enum.Parse(typeof(ScoreData.ScorePointsByLevel), playerScoreLevel.ToString());
         scoreToAdd = 
            (int)((double)scoreToAdd * (ScoreData.NumberOfSlicesScoreNormaliser *(currentLevel.Cakes[currentCakeIndex].numberOfSlices)));
-        OnScoreChange?.Invoke(scoreToAdd, playerScoreLevel);
+           OnScoreChange?.Invoke(scoreToAdd, playerScoreLevel);
     }
+
 
     private bool CheckScoreLevel(int scoreLevel)
     {
@@ -217,7 +290,7 @@ public class SlicesManager : MonoBehaviour
         {
             Polygon2D poly = slicer.GetPolygon().ToWorldSpace(slicer.transform);
 
-            originalSize = slicer.GetComponent<DemoSlicer2DInspectorTracker>().originalSize;
+            originalSize = slicer.GetComponent<DemoSlicer2DInspectorTracker>().originalSize;//TODO: why are we doing this here?
             int currentSizeInt = Mathf.FloorToInt((float)poly.GetArea()); //(int)poly.GetArea();
 
             //  Debug.Log("current size : " + currentSizeInt);
@@ -226,7 +299,25 @@ public class SlicesManager : MonoBehaviour
 
         return slicesSizeList;
     }
-     
+
+    List<double> SlicesSizesInDoubles()
+    {
+        List<double> slicesSizesInDoubles = new List<double>();
+
+        foreach (Slicer2D slicer in Slicer2D.GetList())
+        {
+            Polygon2D poly = slicer.GetPolygon().ToWorldSpace(slicer.transform);
+
+            originalSize = slicer.GetComponent<DemoSlicer2DInspectorTracker>().originalSize;//TODO: why are we doing this here?
+            double size = poly.GetArea(); //(int)poly.GetArea();
+
+            //  Debug.Log("current size : " + currentSizeInt);
+            slicesSizesInDoubles.Add(size);
+        }
+
+        return slicesSizesInDoubles;
+    }
+
     private void NextRound()
     {
         Debug.Log("--------------------- in NextRound!!!");
