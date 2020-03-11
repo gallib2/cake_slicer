@@ -3272,7 +3272,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   currentCakeIndex: 0
-  currentLevel: {fileID: 11400000, guid: da407d32711e722488601a5c4025a4e5, type: 2}
+  currentLevel: {fileID: 0}
   criticalTime: 5
   particlesEndLevel: {fileID: 1613897369}
   sliceableObjects: {fileID: 1724091152938058}
@@ -3289,7 +3289,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1437217053105182}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 994816c2b26da49d0a3b7f98e023c486, type: 3}
   m_Name: 
