@@ -14,24 +14,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Level
   displayName: LVL 3
   cakes:
-  - cakePrefab: {fileID: 26350562484668360, guid: 538134f30d30a425583e0a062ca6f699,
-      type: 3}
-    numberOfSlices: 5
-  - cakePrefab: {fileID: 3160547572476184343, guid: 1a92ec09dec9e44b9ba4e2a6ed22e46c,
+  - cakePrefab: {fileID: 4985836295831633166, guid: ecd991d16dcbc44ec9f4caaae81aaf9c,
       type: 3}
     numberOfSlices: 4
-  - cakePrefab: {fileID: 4985836295831633166, guid: ecd991d16dcbc44ec9f4caaae81aaf9c,
+  - cakePrefab: {fileID: 3160547572476184343, guid: 1a92ec09dec9e44b9ba4e2a6ed22e46c,
       type: 3}
     numberOfSlices: 6
   - cakePrefab: {fileID: 4429666012074374676, guid: 23fca53dde19d4ab887f088122806beb,
       type: 3}
     numberOfSlices: 6
-  - cakePrefab: {fileID: 4911320157851095417, guid: 6bbc46f43986a442bb376470578932f0,
+  - cakePrefab: {fileID: 4203801516081614381, guid: ece24715fa60f44fe8c0794eac32d649,
       type: 3}
     numberOfSlices: 8
-  - cakePrefab: {fileID: 8200570759069020071, guid: 99917c36ad61e413ba12dcf411d80edf,
+  - cakePrefab: {fileID: 26350562484668360, guid: 538134f30d30a425583e0a062ca6f699,
       type: 3}
-    numberOfSlices: 5
+    numberOfSlices: 2
+  - cakePrefab: {fileID: 4429666012074374676, guid: 1e8de7b4a1b529b4d923fca3b08a5138,
+      type: 3}
+    numberOfSlices: 4
   starRequirements:
   - 0.4699999988079071
   - 0.699999988079071
