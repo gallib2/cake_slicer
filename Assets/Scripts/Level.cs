@@ -87,6 +87,7 @@ public class Level : ScriptableObject
 
     public bool IsLegitimate()
     {
+        bool isLegitimate = true;
         for (int i = 0; i < Cakes.Length; i++)
         {
             if (Cakes[i].fractions.Length > 0)
@@ -99,15 +100,29 @@ public class Level : ScriptableObject
                 if(combinedFractions != 1)
                 {
                     Debug.LogError("Fractions make up " + combinedFractions + " instead of 1!");
-                    return false;
+                    isLegitimate = false;
                 }
             }
             else
             {
+                if (Cakes[i].numberOfSlices <= 0)
+                {
+                    Debug.LogError("Cakes[i].numberOfSlices <= 0");
+                    isLegitimate = false;
+                }
             }
         }
-        Debug.Log("Level is legitimate! (:");
-        return true;
+
+        if (isLegitimate)
+        {
+            Debug.Log("Level is legitimate! (:");
+        }
+        else
+        {
+            Debug.Log("Level is NOT legitimate! );");
+        }
+       
+        return isLegitimate;
     }
 }
 
@@ -117,7 +132,7 @@ public class Cake
     [SerializeField]
     public GameObject cakePrefab;
     [SerializeField][Range(2,8)]
-    public int numberOfSlices;
+    public byte numberOfSlices;
     public Fraction[] fractions;
 
 }

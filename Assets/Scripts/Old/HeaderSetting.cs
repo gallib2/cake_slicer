@@ -20,9 +20,8 @@ public class HeaderSetting : MonoBehaviour
         SlicesManager.OnGoalChange -= GoalChange;
     }
 
-
     private void GoalChange()
     {
-        goalText.text = SlicesManager.goal.ToString();
+       // goalText.text = SlicesManager.slicesToSlice.ToString();
     }
 }

@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     public static bool isGameOver = false;
     public Score score;
 
+    public static bool FunSlicing = false;
+
     [SerializeField]
     private Level currentLevel;
 
@@ -63,4 +65,9 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
+
+   /* public void SetFunSlicing(bool to)
+    {
+        FunSlicing = to;
+    }*/
 }
