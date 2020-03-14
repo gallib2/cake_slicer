@@ -19,9 +19,9 @@ MonoBehaviour:
     numberOfSlices: 8
     fractions:
     - numerator: 2
-      denominator: 4
+      denominator: 3
     - numerator: 1
-      denominator: 2
+      denominator: 3
   - cakePrefab: {fileID: 3160547572476184343, guid: 1a92ec09dec9e44b9ba4e2a6ed22e46c,
       type: 3}
     numberOfSlices: 4

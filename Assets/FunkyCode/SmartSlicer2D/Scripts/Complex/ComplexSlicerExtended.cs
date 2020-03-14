@@ -143,11 +143,13 @@ public class ComplexSlicerExtended {
 			return(result);
 		}
 
-		if (Math2D.SliceIntersectItself(slice)) {
-			if (Slicer2D.Debug.enabled) {
+		if (Math2D.SliceIntersectItself(slice))
+		{
+			if (Slicer2D.Debug.enabled)
+			{
 				Debug.LogWarning("Slicer2D: Complex Cut Slicer intersected with itself!");
 			}
-			return(result);
+			return (result);
 		}
 
 		Vector2D startPoint = null;
