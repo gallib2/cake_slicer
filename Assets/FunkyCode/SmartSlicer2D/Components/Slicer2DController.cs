@@ -119,6 +119,10 @@ public class Slicer2DController : MonoBehaviour {
 
 	public void Awake() {
 		instance = this;
+        if (GameManager.FunSlicing)
+        {
+            sliceType = SliceType.ComplexTracked;
+        }
 	}
 	
 	public void Start() {
