@@ -65,9 +65,9 @@ public class Level : ScriptableObject
         int maximumScore = 0;
         for (int i = 0; i < Cakes.Length; i++)
         {
-            //Can be made into a lambda expression methinx
-            int numberOfSlices = 0;
-            if (Cakes[i].fractions.Length > 0)
+            int numberOfSlices = 
+                (Cakes[i].fractions.Length > 0 ? Cakes[i].fractions.Length : Cakes[i].numberOfSlices);
+            /*if (Cakes[i].fractions.Length > 0)
             {
                 for (int j = 0; j < Cakes[i].fractions.Length; j++)
                 {
@@ -77,10 +77,12 @@ public class Level : ScriptableObject
             else
             {
                 numberOfSlices = Cakes[i].numberOfSlices;
-            }
+            }*/
             maximumScore += (int)
                  (((double)numberOfSlices * ScoreData.NumberOfSlicesScoreNormaliser) *
                  (double)ScoreData.ScorePointsByLevel.Awesome);
+
+            maximumScore += i * ScoreData.COMBO_MULTIPLIER;//?
         }
         return maximumScore;
     }
