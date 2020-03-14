@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     public static bool isGameOver = false;
     public Score score;
 
+    public static bool FunSlicing = false;
+
     [SerializeField]
     private Level currentLevel;
 
@@ -47,7 +49,7 @@ public class GameManager : MonoBehaviour
         isGameOver = true;
         currentLevel.PlayingCount++;
 
-        if (score.CurrentStars >= currentLevel.MinStarsToWin) //TODO: hardcoded winning condition(Can be moved to Level)
+        if (score.CurrentStars >= 1/*currentLevel.MinStarsToWin*/) //TODO: hardcoded winning condition(Can be moved to Level)
         {
             currentLevel.LevelSucceeded();
             SaveAndLoadManager.TrySaveLevelData(LevelsManager.CurrentLevelNumber, (UInt32)Score.score);
@@ -63,4 +65,9 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
+
+   /* public void SetFunSlicing(bool to)
+    {
+        FunSlicing = to;
+    }*/
 }
