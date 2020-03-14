@@ -65,8 +65,8 @@ public class Level : ScriptableObject
         int maximumScore = 0;
         for (int i = 0; i < Cakes.Length; i++)
         {
-            int numberOfSlices = 
-                (Cakes[i].fractions.Length > 0 ? Cakes[i].fractions.Length : Cakes[i].numberOfSlices);
+            /*int numberOfSlices = 
+                (Cakes[i].fractions.Length > 0 ? Cakes[i].fractions.Length : Cakes[i].numberOfSlices);*/
             /*if (Cakes[i].fractions.Length > 0)
             {
                 for (int j = 0; j < Cakes[i].fractions.Length; j++)
@@ -79,7 +79,7 @@ public class Level : ScriptableObject
                 numberOfSlices = Cakes[i].numberOfSlices;
             }*/
             maximumScore += (int)
-                 (((double)numberOfSlices * ScoreData.NumberOfSlicesScoreNormaliser) *
+                 (((double)Cakes[i].SlicesToSlice() * ScoreData.NumberOfSlicesScoreNormaliser) *
                  (double)ScoreData.ScorePointsByLevel.Awesome);
 
             maximumScore += i * ScoreData.COMBO_MULTIPLIER;//?
@@ -92,7 +92,7 @@ public class Level : ScriptableObject
         bool isLegitimate = true;
         for (int i = 0; i < Cakes.Length; i++)
         {
-            if (Cakes[i].fractions.Length > 0)
+            if (Cakes[i].fractions != null && Cakes[i].fractions.Length > 0)
             {
                 double combinedFractions = 0;
                 for (int j = 0; j < Cakes[i].fractions.Length; j++)
@@ -136,6 +136,11 @@ public class Cake
     [SerializeField][Range(2,8)]
     public byte numberOfSlices;
     public Fraction[] fractions;
+
+    public int SlicesToSlice()
+    {
+        return ((fractions != null &&fractions.Length > 0) ? fractions.Length : numberOfSlices);
+    }
 
 }
 

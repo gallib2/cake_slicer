@@ -162,7 +162,7 @@ public class SlicesManager : MonoBehaviour
 
             List<double> differences = new List<double>();
             // if fractions
-            bool isFractions = currentLevel.Cakes[currentCakeIndex].fractions.Length > 0;
+            bool isFractions = (currentLevel.Cakes[currentCakeIndex].fractions != null && currentLevel.Cakes[currentCakeIndex].fractions.Length > 0);
             if (isFractions)
             {
                 Fraction[] fractions = currentLevel.Cakes[currentCakeIndex].fractions;
@@ -289,8 +289,7 @@ public class SlicesManager : MonoBehaviour
         currentCakeIndex++;
         if (currentCakeIndex < currentLevel.Cakes.Length)
         {
-            slicesToSlice = (currentLevel.Cakes[currentCakeIndex].fractions.Length > 0 ?
-                  currentLevel.Cakes[currentCakeIndex].fractions.Length : currentLevel.Cakes[currentCakeIndex].numberOfSlices);
+            slicesToSlice = currentLevel.Cakes[currentCakeIndex].SlicesToSlice();
             // OnGoalChange.Invoke();
 
             Cake newCake = currentLevel.Cakes[currentCakeIndex];
@@ -317,7 +316,8 @@ public class SlicesManager : MonoBehaviour
 
     private void UpdateSliceDemandGraphics()
     {
-        if (currentLevel.Cakes[currentCakeIndex].fractions.Length > 0)
+        bool isFractions = (currentLevel.Cakes[currentCakeIndex].fractions != null && currentLevel.Cakes[currentCakeIndex].fractions.Length > 0);
+        if (isFractions)
         {
             sliceDemandText.text = "";
             Fraction[] fractions = currentLevel.Cakes[currentCakeIndex].fractions;
