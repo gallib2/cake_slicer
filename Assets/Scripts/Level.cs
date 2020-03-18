@@ -141,6 +141,10 @@ public class Cake
     {
         return ((fractions != null &&fractions.Length > 0) ? fractions.Length : numberOfSlices);
     }
+    public bool HasFractions()
+    {
+        return (fractions != null && fractions.Length > 0);
+    }
 
 }
 

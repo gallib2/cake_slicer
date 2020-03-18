@@ -48,6 +48,10 @@ public class SlicesManager : MonoBehaviour
     private bool perfectSlicing = false;
     [SerializeField]
     private Text sliceDemandText;
+    [SerializeField]
+    private FractionUI[] fractionUIS;
+    [SerializeField]
+    private SliceDemandUI sliceDemandUI;
 
     private int comboCounter = 0;
 
@@ -316,22 +320,38 @@ public class SlicesManager : MonoBehaviour
 
     private void UpdateSliceDemandGraphics()
     {
-        bool isFractions = (currentLevel.Cakes[currentCakeIndex].fractions != null && currentLevel.Cakes[currentCakeIndex].fractions.Length > 0);
-        if (isFractions)
+        bool hasFractions = (currentLevel.Cakes[currentCakeIndex].HasFractions());
+        if (hasFractions)
         {
-            sliceDemandText.text = "";
+            sliceDemandText.gameObject.SetActive(false);
             Fraction[] fractions = currentLevel.Cakes[currentCakeIndex].fractions;
-            for (int i = 0; i < fractions.Length; i++)
+            for (int i = 0; i < fractionUIS.Length; i++)
             {
-                if (i > 0)
+                if (i < fractions.Length)
+                {
+                    fractionUIS[i].gameObject.SetActive(true);
+                    fractionUIS[i].ChangeText(fractions[i]);
+                }
+                else
+                {
+                    fractionUIS[i].gameObject.SetActive(false);
+                }
+                /*if (i > 0)
                 {
                     sliceDemandText.text += ",";
                 }
-                sliceDemandText.text += fractions[i].numerator + "/" + fractions[i].denominator;
+                sliceDemandText.text += fractions[i].numerator + "/" + fractions[i].denominator;*/
             }
+            sliceDemandUI.ChangeDestination(fractions.Length);
         }
         else
         {
+            for (int i = 0; i < fractionUIS.Length; i++)
+            {
+                fractionUIS[i].gameObject.SetActive(false);
+            }
+            sliceDemandUI.ChangeDestination(1);
+            sliceDemandText.gameObject.SetActive(true);
             sliceDemandText.text = slicesToSlice.ToString();
         }
        
