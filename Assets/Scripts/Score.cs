@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System;
 public class Score : MonoBehaviour
 {
     //public int initialScore = 0;
@@ -16,6 +16,10 @@ public class Score : MonoBehaviour
     [SerializeField]
     public GameObject[] negativeFeedbackPrefubs;
     GameObject floatingText;
+    [SerializeField]
+    private ScoreFeedback scoreFeedback;
+    [SerializeField]
+    private ScoreFeedbackSprite[] scoreFeedbackSprites;
     [SerializeField]
     private UIStar UIStarPrefab;
     private UIStar[] UIStars;
@@ -99,10 +103,10 @@ public class Score : MonoBehaviour
         }
     }
 
-    private void ScoreChanged(int scoreToAdd,ScoreData.ScoreLevel scoreLevel)
+    private void ScoreChanged(int bonuslessScoreToAdd, int bonus, ScoreData.ScoreLevel scoreLevel)
     {
-        int newScore = score + scoreToAdd;
-        int index = Random.Range(0, floatingTextPrefubs.Length);
+        int newScore = score + bonuslessScoreToAdd + bonus;
+        int index = UnityEngine.Random.Range(0, floatingTextPrefubs.Length);
 
         SetScore(newScore);
         if(scoreLevel == ScoreData.ScoreLevel.Regular)
@@ -113,6 +117,7 @@ public class Score : MonoBehaviour
         {
             ShowFloatingText(scoreLevel, floatingTextPrefubs[index]);
         }
+        CreateScoreFeedback(bonuslessScoreToAdd, bonus, scoreLevel);
 
     }
 
@@ -120,7 +125,7 @@ public class Score : MonoBehaviour
     {
         int tooManySlicesIndex = 1;
 
-        int index = isTooManySlices ? tooManySlicesIndex : Random.Range(0, negativeFeedbackPrefubs.Length - 1);
+        int index = isTooManySlices ? tooManySlicesIndex : UnityEngine.Random.Range(0, negativeFeedbackPrefubs.Length - 1);
 
         if (negativeFeedbackPrefubs[index])
         {
@@ -130,9 +135,31 @@ public class Score : MonoBehaviour
 
     private void ShowFloatingText(ScoreData.ScoreLevel scoreLevel, GameObject floatingTextPrefub)
     {
+        return;
         floatingText = Instantiate(floatingTextPrefub);
         RoundFeedback feedbackGameObject = floatingText.GetComponent<RoundFeedback>();
         soundManager.PlaySoundEffect(feedbackGameObject.SoundToPlayOnStart);
+    }
+
+    private void CreateScoreFeedback(int bonuslessScore, int bonus, ScoreData.ScoreLevel scoreLevel)
+    {
+        Vector3 feedbackPosition = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+        feedbackPosition.x = Mathf.Clamp(feedbackPosition.x, 0,1);
+        feedbackPosition.y = Mathf.Clamp(feedbackPosition.y, 0, 1);
+        feedbackPosition = Camera.main.ViewportToWorldPoint(feedbackPosition);
+        ScoreFeedback newScoreFeedback = Instantiate
+            (scoreFeedback, feedbackPosition, Quaternion.identity);
+        //Making sure Z is zero so that the camera actually desplays the damn thing
+        Sprite feedbackSprite=null;
+        for (int i = 0; i < scoreFeedbackSprites.Length; i++)
+        {
+            if(scoreLevel== scoreFeedbackSprites[i].scoreLevel)
+            {
+                feedbackSprite = scoreFeedbackSprites[i].sprite;
+            }
+        }
+        newScoreFeedback.transform.position = new Vector3(newScoreFeedback.transform.position.x, newScoreFeedback.transform.position.y, 0);
+        newScoreFeedback.ScoreFeedbackConstructor(bonuslessScore,bonus, feedbackSprite);
     }
 
     //private void GameOver()
@@ -164,4 +191,11 @@ public class Score : MonoBehaviour
             Debug.LogError("Score is somehow larger than the level's maximum score!");
         }
     }
+}
+
+[Serializable]
+public class ScoreFeedbackSprite
+{
+    public ScoreData.ScoreLevel scoreLevel;
+    public Sprite sprite;
 }

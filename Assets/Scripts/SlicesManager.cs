@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class SlicesManager : MonoBehaviour
 {
-    public delegate void ScoreChange(int score, ScoreData.ScoreLevel scoreLevel);
+    public delegate void ScoreChange(int bonuslessScoreToAdd,int bonus, ScoreData.ScoreLevel scoreLevel);
     public delegate void BadSliceHandler(bool isTooManySlices);
 
     public static event Action OnGoalChange;
@@ -77,6 +77,10 @@ public class SlicesManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+       /* Debug.Log("X" + Camera.main.pixelRect.x + "XMax:" + Camera.main.pixelRect.xMax);
+        Debug.Log("Y" + Camera.main.pixelRect.y + "YMax:" + Camera.main.pixelRect.yMax);
+        Debug.Log(Camera.main.ScreenToViewportPoint(Input.mousePosition));*/
         if (!GameManager.isGameOver)
         {
             if (Input.GetMouseButton(0))
@@ -234,21 +238,22 @@ public class SlicesManager : MonoBehaviour
         }
 
         Debug.Log(playerScoreLevel.ToString());
-        int scoreToAdd = (int)Enum.Parse(typeof(ScoreData.ScorePointsByLevel), playerScoreLevel.ToString());
-        scoreToAdd = (int)((double)scoreToAdd * (ScoreData.NumberOfSlicesScoreNormaliser * slicesToSlice));
+        int bonuslessScoreToAdd = (int)Enum.Parse(typeof(ScoreData.ScorePointsByLevel), playerScoreLevel.ToString());
+        bonuslessScoreToAdd = (int)((double)bonuslessScoreToAdd * (ScoreData.NumberOfSlicesScoreNormaliser * slicesToSlice));
+        int bonus = 0;
         if (playerScoreLevel == ScoreData.ScoreLevel.Awesome)
         {
-            scoreToAdd += comboCounter * ScoreData.COMBO_MULTIPLIER;
+            bonus = comboCounter * ScoreData.COMBO_MULTIPLIER;
             comboCounter++;
         }
         else
         {
             comboCounter = 0;
         }
-        OnScoreChange?.Invoke(scoreToAdd, playerScoreLevel);
+        OnScoreChange?.Invoke(bonuslessScoreToAdd,bonus, playerScoreLevel);
         //comboCounter = (playerScoreLevel == ScoreData.ScoreLevel.Awesome ? (comboCounter + 1) : 0);
         Debug.Log("comboCounter = " + comboCounter);
-        Debug.Log("scoreToAdd = " + scoreToAdd);
+        Debug.Log("scoreToAdd = " + bonuslessScoreToAdd+bonus);
     }
 
     private void GameOver()

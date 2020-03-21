@@ -101,7 +101,7 @@ public class Level : ScriptableObject
                 }
                 if(combinedFractions != 1)
                 {
-                    Debug.LogError("Fractions make up " + combinedFractions + " instead of 1!");
+                    Debug.LogError("Fractions make up " + combinedFractions.ToString() + " instead of 1!");
                     isLegitimate = false;
                 }
             }
