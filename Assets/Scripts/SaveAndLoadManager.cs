@@ -29,7 +29,7 @@ public static class SaveAndLoadManager
         }
         else
         {
-            return new SavedData(4);//Should not stay hardcoded...
+            return new SavedData(5);//TODO: Should not stay hardcoded...
         }
        // return null;
     }

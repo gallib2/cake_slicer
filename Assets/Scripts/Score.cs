@@ -7,6 +7,7 @@ public class Score : MonoBehaviour
 {
     //public int initialScore = 0;
     public static int score = 0;
+    
 
     public Text scoreText;
     [SerializeField]
@@ -145,7 +146,8 @@ public class Score : MonoBehaviour
         score = scoreToSet;
         scoreText.text = score.ToString();
         Level currentLevel = LevelsManager.CurrentLevel;
-        double ScoreDividedByMaxScore = ((double)score / currentLevel.MaximumScore());
+        int levelMaxScore = currentLevel.MaximumScore();
+        double ScoreDividedByMaxScore = ((double)score / levelMaxScore);
         scoreSliderFill.fillAmount = (float)ScoreDividedByMaxScore;
         for (int i = 0; i < currentLevel.StarRequirements.Length; i++)
         {
@@ -157,6 +159,9 @@ public class Score : MonoBehaviour
                 UIStars[i].FillStar();
             }
         }
-
+        if (score > levelMaxScore)
+        {
+            Debug.LogError("Score is somehow larger than the level's maximum score!");
+        }
     }
 }

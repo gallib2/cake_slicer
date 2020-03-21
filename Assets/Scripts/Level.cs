@@ -16,8 +16,8 @@ public class Level : ScriptableObject
     private double[] starRequirements = { 0.6, 0.76, 0.9 };
     [SerializeField]
     private float initialTimeInSeconds = 30f;
-    [Range(1,3)][SerializeField]
-    private int minStarsToWin;//Ori: I thought 1 star guarantees a win
+  /*  [Range(1,3)][SerializeField]
+    private int minStarsToWin;//Ori: I thought 1 star guarantees a win*/
 
 
     public bool IsSucceedFirstTry { get; private set; }
@@ -46,11 +46,11 @@ public class Level : ScriptableObject
         set { initialTimeInSeconds = value; }
     }
 
-    public int MinStarsToWin
+    /*public int MinStarsToWin
     {
         get { return minStarsToWin; }
         set { minStarsToWin = value; }
-    }
+    }*/
 
     public void LevelSucceeded()
     {
@@ -62,14 +62,69 @@ public class Level : ScriptableObject
 
     public int MaximumScore()
     {
-        int mximumScore = 0;
+        int maximumScore = 0;
         for (int i = 0; i < Cakes.Length; i++)
         {
-            mximumScore +=(int)
-               (((double)Cakes[i].numberOfSlices * ScoreData.NumberOfSlicesScoreNormaliser) * 
-               (double)ScoreData.ScorePointsByLevel.Awesome);
+            /*int numberOfSlices = 
+                (Cakes[i].fractions.Length > 0 ? Cakes[i].fractions.Length : Cakes[i].numberOfSlices);*/
+            /*if (Cakes[i].fractions.Length > 0)
+            {
+                for (int j = 0; j < Cakes[i].fractions.Length; j++)
+                {
+                    numberOfSlices += Cakes[i].fractions[j].numerator;
+                }
+            }
+            else
+            {
+                numberOfSlices = Cakes[i].numberOfSlices;
+            }*/
+            maximumScore += (int)
+                 (((double)Cakes[i].SlicesToSlice() * ScoreData.NumberOfSlicesScoreNormaliser) *
+                 (double)ScoreData.ScorePointsByLevel.Awesome);
+
+            maximumScore += i * ScoreData.COMBO_MULTIPLIER;//?
         }
-        return mximumScore;
+        return maximumScore;
+    }
+
+    public bool IsLegitimate()
+    {
+        bool isLegitimate = true;
+        for (int i = 0; i < Cakes.Length; i++)
+        {
+            if (Cakes[i].fractions != null && Cakes[i].fractions.Length > 0)
+            {
+                double combinedFractions = 0;
+                for (int j = 0; j < Cakes[i].fractions.Length; j++)
+                {
+                    combinedFractions += (double)Cakes[i].fractions[j].numerator / (double)Cakes[i].fractions[j].denominator;
+                }
+                if(combinedFractions != 1)
+                {
+                    Debug.LogError("Fractions make up " + combinedFractions + " instead of 1!");
+                    isLegitimate = false;
+                }
+            }
+            else
+            {
+                if (Cakes[i].numberOfSlices <= 0)
+                {
+                    Debug.LogError("Cakes[i].numberOfSlices <= 0");
+                    isLegitimate = false;
+                }
+            }
+        }
+
+        if (isLegitimate)
+        {
+            Debug.Log("Level is legitimate! (:");
+        }
+        else
+        {
+            Debug.Log("Level is NOT legitimate! );");
+        }
+       
+        return isLegitimate;
     }
 }
 
@@ -79,5 +134,25 @@ public class Cake
     [SerializeField]
     public GameObject cakePrefab;
     [SerializeField][Range(2,8)]
-    public int numberOfSlices;
+    public byte numberOfSlices;
+    public Fraction[] fractions;
+
+    public int SlicesToSlice()
+    {
+        return ((fractions != null &&fractions.Length > 0) ? fractions.Length : numberOfSlices);
+    }
+    public bool HasFractions()
+    {
+        return (fractions != null && fractions.Length > 0);
+    }
+
+}
+
+[Serializable]
+public struct Fraction
+{
+    [SerializeField][Range(1, 10)]
+    public byte numerator;
+    [SerializeField] [Range(1, 10)]
+    public byte denominator;
 }

@@ -18,18 +18,18 @@ public class SlicesManager : MonoBehaviour
    // public int obstaclesLayer = 9;
     public LayerMask obstacleLayerMask;
 
-    List<double> slicesSizeList;
+    //List<double> slicesSizeList;
     public int currentCakeIndex = 0;
 
     [SerializeField]
     public Level currentLevel;
-    public static int goal;
+    private static int slicesToSlice;
     [SerializeField]
     private float criticalTime = 5f;
     private int minmumSize;
     public ParticleSystem particlesEndLevel;
 
-    private double originalSize = 0;
+    //private double originalSize = 0;
 
     [SerializeField]
     private GameObject sliceableObjects;
@@ -46,6 +46,14 @@ public class SlicesManager : MonoBehaviour
     private Timer timer;
     [SerializeField]
     private bool perfectSlicing = false;
+    [SerializeField]
+    private Text sliceDemandText;
+    [SerializeField]
+    private FractionUI[] fractionUIS;
+    [SerializeField]
+    private SliceDemandUI sliceDemandUI;
+
+    private int comboCounter = 0;
 
     private void Awake()
     {
@@ -60,6 +68,8 @@ public class SlicesManager : MonoBehaviour
 
     private void InitialiseLevel()
     {
+        comboCounter = 0;
+        currentLevel.IsLegitimate();
         currentCakeIndex = -1;
         NextRound();
     }
@@ -80,13 +90,14 @@ public class SlicesManager : MonoBehaviour
                         //  Debug.Log("Obstacle!!!!1111");
                         Slicer2DController.ClearPoints();
                         Handheld.Vibrate();
+                        BadSlice();
                         NextRound();
                         return;
                     }
                 }
             }
 
-            CheckSlices();
+            CheckSlices();//TODO: We don't have to do this every frame.
             if (timer.ToStopTimer && !GameManager.isGameOver)//the reason !GameManager.isGameOver is checked is that CheckSlices() can lead to a GameOver()
             {
                 GameOver();
@@ -97,11 +108,11 @@ public class SlicesManager : MonoBehaviour
 
     private void CheckSlices()
     {
-        slicesCount = sliceableObjects.GetComponentsInChildren<Transform>().Length - 1;
-        if (slicesCount == goal)
+        slicesCount = sliceableObjects.GetComponentsInChildren<Transform>().Length - 1;//TODO: this comes out wrong alot
+        if (slicesCount == slicesToSlice)
         {
-            Debug.Log("slicesCount: " + slicesCount+ "goal: " + goal );
-            slicesSizeList = GetSlicesSizesList();
+            Debug.Log("slicesCount: " + slicesCount+ "goal: " + slicesToSlice);
+            //slicesSizeList = GetSlicesSizesList();
 
             CalculateNewScore();
             // TODO :note add a small delay after the cake is cut 
@@ -109,7 +120,7 @@ public class SlicesManager : MonoBehaviour
             NextRound();
 
         }
-        else if (slicesCount > goal)
+        else if (slicesCount > slicesToSlice)
         {
             Debug.Log("BadSlice slicesCount > goal => slicesCount: " + slicesCount);
 
@@ -119,60 +130,125 @@ public class SlicesManager : MonoBehaviour
         }
     }
 
-    private void BadSlice(bool toManySlices)
+    private void BadSlice(bool toManySlices = false)
     {
+        comboCounter = 0;
         OnBadSlice?.Invoke(toManySlices);
     }
 
     private void CalculateNewScore()
     {
-        bool isHaveScoreLevel = false;
+        //bool isHaveScoreLevel = false;
         ScoreData.ScoreLevel playerScoreLevel = ScoreData.ScoreLevel.Regular;
-
-        ScoreData.ScoreLevel[] ScoreLevelArr = (ScoreData.ScoreLevel[])Enum.GetValues(typeof(ScoreData.ScoreLevel));
-
-        // we need to run on the array from the biggest value to the lower.
-        foreach (ScoreData.ScoreLevel scoreLevelEnum in ScoreLevelArr)
-        {
-            if (scoreLevelEnum != ScoreData.ScoreLevel.Regular)
-            {
-                int scoreLevel = (int)scoreLevelEnum;
-                isHaveScoreLevel = CheckScoreLevel(scoreLevel);
-
-                if (isHaveScoreLevel)
-                {
-                    playerScoreLevel = scoreLevelEnum;
-                    break;
-                }
-            }
-        }
 
         if (perfectSlicing)
         {
             playerScoreLevel = ScoreData.ScoreLevel.Awesome;
             Debug.Log("PERFECT!");
         }
+        else
+        {
+            
+            //We get a list of the real sizes of all slices, determine their overall size and then modify the list so that it will contain the percentage rather than real size
+            List<double> slicesInPercentage = SlicesSizesInDoubles();
+            double overallSize = 0;
+            // get overall size
+            for (int i = 0; i < slicesInPercentage.Count; i++)
+            {
+                overallSize += slicesInPercentage[i];
+            }
+            // calculate the (new) percetage 
+            for (int i = 0; i < slicesInPercentage.Count; i++)
+            {
+                slicesInPercentage[i] = ((slicesInPercentage[i] / overallSize) * 100);
+                Debug.Log("slicesInPercentage[i] = " + (slicesInPercentage[i]));
+            }
+
+            List<double> differences = new List<double>();
+            // if fractions
+            bool isFractions = (currentLevel.Cakes[currentCakeIndex].fractions != null && currentLevel.Cakes[currentCakeIndex].fractions.Length > 0);
+            if (isFractions)
+            {
+                Fraction[] fractions = currentLevel.Cakes[currentCakeIndex].fractions;
+                List<double> slicesSupposedToBeInPercentage = new List<double>();
+                for (int i = 0; i < fractions.Length; i++)
+                {
+                    double sliceSupposedToBeInPercentage = 
+                        ((double)fractions[i].numerator / (double)fractions[i].denominator) * 100;
+                    Debug.Log("sliceSupposedToBeInPercentage = " + sliceSupposedToBeInPercentage);
+                    slicesSupposedToBeInPercentage.Add(sliceSupposedToBeInPercentage);
+                }
+                //List<ScoreData.ScoreLevel> scoreLevels = new List<ScoreData.ScoreLevel>();
+
+                foreach (double sliceSupposedToBeInPercentage in slicesSupposedToBeInPercentage)
+                {
+                    double difference;
+                    double smallestDifference = 100;
+                    int smallestDifferenceIndex = 0;
+                    for (int i = 0; i < slicesInPercentage.Count; i++)
+                    {
+                        difference = Math.Abs(slicesInPercentage[i] - sliceSupposedToBeInPercentage);
+                        if (difference < smallestDifference)
+                        {
+                            smallestDifference = difference;
+                            smallestDifferenceIndex = i;
+                        }
+                    }
+                    Debug.Log("smallestDifference = " + smallestDifference);
+                    slicesInPercentage.RemoveAt(smallestDifferenceIndex);
+                    differences.Add(smallestDifference);
+                    //ScoreData.ScoreLevel sliceScoreLevel = ScoreData.ScoreLevel.Regular;
+                }
+            }
+            else
+            {
+                double sliceSupposedToBeInPercentage = ((1 / (double)currentLevel.Cakes[currentCakeIndex].numberOfSlices) * 100);
+                Debug.Log("sliceSupposedToBeInPercentage = " + sliceSupposedToBeInPercentage);
+                for (int i = 0; i < slicesInPercentage.Count; i++)
+                {
+                    differences.Add (Math.Abs(slicesInPercentage[i] - sliceSupposedToBeInPercentage));
+                }
+            }
+
+            double differencesAverage = 0;
+            for (int i = 0; i < differences.Count; i++)
+            {
+                differencesAverage += differences[i];
+            }
+            differencesAverage /= differences.Count;
+            Debug.Log("differencesAverage = " + differencesAverage);
+
+            ScoreData.ScoreLevel[] ScoreLevelArr = (ScoreData.ScoreLevel[])Enum.GetValues(typeof(ScoreData.ScoreLevel));
+            foreach (ScoreData.ScoreLevel possibleScoreLevel in ScoreLevelArr)
+            {
+                if (possibleScoreLevel != ScoreData.ScoreLevel.Regular)//might not be nesssry
+                {
+                    if(differencesAverage <= (double)possibleScoreLevel)
+                    {
+                        playerScoreLevel = possibleScoreLevel;
+                        break;
+                    }
+                }
+            }
+                //Phew....
+        }
 
         Debug.Log(playerScoreLevel.ToString());
         int scoreToAdd = (int)Enum.Parse(typeof(ScoreData.ScorePointsByLevel), playerScoreLevel.ToString());
-        scoreToAdd = 
-           (int)((double)scoreToAdd * (ScoreData.NumberOfSlicesScoreNormaliser *(currentLevel.Cakes[currentCakeIndex].numberOfSlices)));
+        scoreToAdd = (int)((double)scoreToAdd * (ScoreData.NumberOfSlicesScoreNormaliser * slicesToSlice));
+        if (playerScoreLevel == ScoreData.ScoreLevel.Awesome)
+        {
+            scoreToAdd += comboCounter * ScoreData.COMBO_MULTIPLIER;
+            comboCounter++;
+        }
+        else
+        {
+            comboCounter = 0;
+        }
         OnScoreChange?.Invoke(scoreToAdd, playerScoreLevel);
-    }
-
-    private bool CheckScoreLevel(int scoreLevel)
-    {
-        double sliceSizeSupposedToBe = originalSize / goal;
-
-        return slicesSizeList.Any(currSize => {
-            double sliceSizeSupposedToBeInPercentage = (sliceSizeSupposedToBe / originalSize) * 100;
-            double currSizePercentage = (currSize / originalSize) * 100;
-            //Debug.Log("sliceSizeSupposedToBeInPercentage: " + sliceSizeSupposedToBeInPercentage); Debug.Log("currSizePercentage " + currSizePercentage);
-
-            double difference = Mathf.Abs((float)(sliceSizeSupposedToBeInPercentage - currSizePercentage));
-            //Debug.Log("difference: " + difference);
-            return difference <= scoreLevel;
-        });
+        //comboCounter = (playerScoreLevel == ScoreData.ScoreLevel.Awesome ? (comboCounter + 1) : 0);
+        Debug.Log("comboCounter = " + comboCounter);
+        Debug.Log("scoreToAdd = " + scoreToAdd);
     }
 
     private void GameOver()
@@ -185,8 +261,6 @@ public class SlicesManager : MonoBehaviour
     {
         foreach (Transform item in sliceableObjects.transform)
         {
-            //Debug.Log("DestroyAllLeftPieces... " + item);
-            //DestroyImmediate(item.gameObject);
             Destroy(item.gameObject);
         }
 
@@ -196,37 +270,21 @@ public class SlicesManager : MonoBehaviour
         }
     }
 
-    bool IsAllSlicesAreAlmostEqual()
+    List<double> SlicesSizesInDoubles()
     {
-        bool isAlmostEqual = false;
-        slicesSizeList = GetSlicesSizesList();
-        int sliceSizeSupposedToBe = (int)originalSize / goal;
-
-        minmumSize = sliceSizeSupposedToBe / 4;
-
-        isAlmostEqual = !slicesSizeList.Any(currSize => currSize < minmumSize);
-
-        return isAlmostEqual;
-    }
-
-    List<double> GetSlicesSizesList()
-    {
-        slicesSizeList = new List<double>();
+        List<double> slicesSizesInDoubles = new List<double>();
 
         foreach (Slicer2D slicer in Slicer2D.GetList())
         {
             Polygon2D poly = slicer.GetPolygon().ToWorldSpace(slicer.transform);
-
-            originalSize = slicer.GetComponent<DemoSlicer2DInspectorTracker>().originalSize;
-            int currentSizeInt = Mathf.FloorToInt((float)poly.GetArea()); //(int)poly.GetArea();
-
+            double size = poly.GetArea(); //(int)poly.GetArea();
             //  Debug.Log("current size : " + currentSizeInt);
-            slicesSizeList.Add(currentSizeInt);
+            slicesSizesInDoubles.Add(size);
         }
 
-        return slicesSizeList;
+        return slicesSizesInDoubles;
     }
-     
+
     private void NextRound()
     {
         Debug.Log("--------------------- in NextRound!!!");
@@ -235,8 +293,9 @@ public class SlicesManager : MonoBehaviour
         currentCakeIndex++;
         if (currentCakeIndex < currentLevel.Cakes.Length)
         {
-            goal = currentLevel.Cakes[currentCakeIndex].numberOfSlices;
-            OnGoalChange.Invoke();
+            slicesToSlice = currentLevel.Cakes[currentCakeIndex].SlicesToSlice();
+            // OnGoalChange.Invoke();
+
             Cake newCake = currentLevel.Cakes[currentCakeIndex];
             GameObject cakeGameObject = Instantiate(newCake.cakePrefab, sliceableObjects.transform, true); // create new cake
             Obstacle[] obstacles = cakeGameObject.GetComponentsInChildren<Obstacle>();
@@ -246,6 +305,7 @@ public class SlicesManager : MonoBehaviour
             }
             cakesLeftText.text =
                 (currentLevel.Cakes.Length - currentCakeIndex).ToString();
+            UpdateSliceDemandGraphics();
         }
         else
         {
@@ -255,5 +315,45 @@ public class SlicesManager : MonoBehaviour
         }
         soundManager.PlaySoundEffect(SoundEffectNames.NEXT_LEVEL);
         particlesEndLevel.Play();
+
+    }
+
+    private void UpdateSliceDemandGraphics()
+    {
+        bool hasFractions = (currentLevel.Cakes[currentCakeIndex].HasFractions());
+        if (hasFractions)
+        {
+            sliceDemandText.gameObject.SetActive(false);
+            Fraction[] fractions = currentLevel.Cakes[currentCakeIndex].fractions;
+            for (int i = 0; i < fractionUIS.Length; i++)
+            {
+                if (i < fractions.Length)
+                {
+                    fractionUIS[i].gameObject.SetActive(true);
+                    fractionUIS[i].ChangeText(fractions[i]);
+                }
+                else
+                {
+                    fractionUIS[i].gameObject.SetActive(false);
+                }
+                /*if (i > 0)
+                {
+                    sliceDemandText.text += ",";
+                }
+                sliceDemandText.text += fractions[i].numerator + "/" + fractions[i].denominator;*/
+            }
+            sliceDemandUI.ChangeDestination(fractions.Length);
+        }
+        else
+        {
+            for (int i = 0; i < fractionUIS.Length; i++)
+            {
+                fractionUIS[i].gameObject.SetActive(false);
+            }
+            sliceDemandUI.ChangeDestination(1);
+            sliceDemandText.gameObject.SetActive(true);
+            sliceDemandText.text = slicesToSlice.ToString();
+        }
+       
     }
 }
