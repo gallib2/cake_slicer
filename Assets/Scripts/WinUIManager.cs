@@ -10,15 +10,17 @@ public class WinUIManager : MonoBehaviour
     [SerializeField]
     private Sprite fullStarImage;
     [SerializeField]
-    private Image[] stars;
+    private WinPopUpStar[] stars;
     [SerializeField]
     private float fillStarsWait = 0.5f;
     [SerializeField]
     private GameObject[] elementsToAppearOnWin;
     [SerializeField]
     private GameObject[] elementsToDisppearOnWin;
+    [SerializeField]
+    private GameOverScoreDisplay scoreDisplay;
 
-    private void Awake()
+   private void Awake()
     {
         GameManager.OnWin += ShowFinalScoreAndStars;
         GameManager.OnLevelInitialised += HideWinScreen;
@@ -31,7 +33,8 @@ public class WinUIManager : MonoBehaviour
         {
             // if (Score.hasStarAt[i])
             //{
-            EmptyStar(stars[i]);
+            //EmptyStar(stars[i]);
+            stars[i].EmptyStar();
             //}
         }
         for (int i = 0; i < elementsToAppearOnWin.Length; i++)
@@ -52,6 +55,7 @@ public class WinUIManager : MonoBehaviour
 
     private void ShowFinalScoreAndStars(int numberOfStars)
     {
+        scoreDisplay.SetText(Score.score.ToString());//Turn into an event maybe?
         for (int i = 0; i < elementsToAppearOnWin.Length; i++)
         {
             elementsToAppearOnWin[i].SetActive(true);
@@ -73,12 +77,13 @@ public class WinUIManager : MonoBehaviour
 
             if (toFillStars)
             {
-                FillStar(stars[i]);
+                //FillStar(stars[i]);
+                stars[i].FillStar();
             }
         }
     }
 
-    private void FillStar(Image star)
+    /*private void FillStar(Image star)
     {
         star.sprite = fullStarImage;
     }
@@ -86,5 +91,5 @@ public class WinUIManager : MonoBehaviour
     private void EmptyStar(Image star)
     {
         star.sprite = emptyStarImage;
-    }
+    }*/
 }
