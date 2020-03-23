@@ -103,3 +103,4 @@ MonoBehaviour:
   - 0.75
   - 1
   initialTimeInSeconds: 450
+  isLocked: 0

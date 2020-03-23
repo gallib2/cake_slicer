@@ -28,10 +28,23 @@ public class LevelsManager: MonoBehaviour
         {
             if(level == gameLevels[i])
             {
-                CurrentLevelNumber = i;
-                CurrentLevel = level;
-                CurrentLevel.PlayingCount++;
-                SceneManager.LoadScene(cakesScene);
+                bool isAfterFirstLevel = i > 0;
+                bool isPrevLevelSucceeded = isAfterFirstLevel && gameLevels[i - 1].IsLevelSucceeded;
+
+                Debug.Log("----------------- isPrevLevelSucceeded: " + isPrevLevelSucceeded);
+                Debug.Log("----------------- i: " + isPrevLevelSucceeded);
+                if (isPrevLevelSucceeded)
+                {
+                    level.IsLocked = false;
+                }
+
+                if(!level.IsLocked)
+                {
+                    CurrentLevelNumber = i;
+                    CurrentLevel = level;
+                    CurrentLevel.PlayingCount++;
+                    SceneManager.LoadScene(cakesScene);
+                }
             }
         }
     }
