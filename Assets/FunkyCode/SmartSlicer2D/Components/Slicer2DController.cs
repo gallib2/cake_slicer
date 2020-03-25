@@ -673,7 +673,7 @@ public class Slicer2DController : MonoBehaviour {
 	private void UpdatePolygon(Vector2D pos) {
 		mouseDown = true;
 
-		if (Input.GetMouseButtonDown (0)) {
+		if (Input.GetMouseButton (0)) {
 			PolygonSlice (pos);
 		}
 	}
