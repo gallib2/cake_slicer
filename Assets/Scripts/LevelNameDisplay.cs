@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class LevelNameDisplay : MonoBehaviour
 {
     [SerializeField]
-    private Text text;
+    private TMPro.TextMeshProUGUI text;
 
     void Start()
     {

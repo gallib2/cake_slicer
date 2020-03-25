@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     //public static event Action OnGameOver;
     public static event Action<int> OnWin;
     public static event Action OnLose;
+    public static event Action<int> OnGameOver;
     public static event Action OnLevelInitialised;
 
     public static string playerName;
@@ -48,7 +49,6 @@ public class GameManager : MonoBehaviour
     {
         isGameOver = true;
         currentLevel.PlayingCount++;
-
         if (score.CurrentStars >= 1/*currentLevel.MinStarsToWin*/) //TODO: hardcoded winning condition(Can be moved to Level)
         {
             currentLevel.LevelSucceeded();
@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviour
         {
             OnLose.Invoke();
         }
+        OnGameOver?.Invoke(Score.score);
     }
 
     public void UnloadScene()

@@ -9,7 +9,7 @@ public class Timer : MonoBehaviour
     [SerializeField]
     private Image timerFillImage;
     [SerializeField]
-    private Text text;
+    private TMPro.TextMeshProUGUI text;
 
     private float timeLeft;
     public bool ToStopTimer { get; set; }

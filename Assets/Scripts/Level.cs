@@ -4,22 +4,24 @@ using UnityEngine;
 using System;
 
 
-[CreateAssetMenu(fileName ="Level", menuName="Level")]
+[CreateAssetMenu(fileName = "Level", menuName = "Level")]
 public class Level : ScriptableObject
 {
     [SerializeField]
     private string displayName;
 
-   [SerializeField]
+    [SerializeField]
     private Cake[] cakes;
-    [Range(0, 1)][SerializeField]
+    [Range(0, 1)] [SerializeField]
     private double[] starRequirements = { 0.6, 0.76, 0.9 };
     [SerializeField]
     private float initialTimeInSeconds = 30f;
-  /*  [Range(1,3)][SerializeField]
-    private int minStarsToWin;//Ori: I thought 1 star guarantees a win*/
+    [SerializeField]
+    private bool isLocked = true;
+    /*  [Range(1,3)][SerializeField]
+      private int minStarsToWin;//Ori: I thought 1 star guarantees a win*/
 
-
+    public bool IsLevelSucceeded { get; set; }
     public bool IsSucceedFirstTry { get; private set; }
     public int PlayingCount { get; set; }
 
@@ -46,6 +48,12 @@ public class Level : ScriptableObject
         set { initialTimeInSeconds = value; }
     }
 
+    public bool IsLocked
+    {
+        get { return isLocked; }
+        set { isLocked = value; }
+    }
+
     /*public int MinStarsToWin
     {
         get { return minStarsToWin; }
@@ -54,7 +62,9 @@ public class Level : ScriptableObject
 
     public void LevelSucceeded()
     {
-        if(PlayingCount == 1)
+        Debug.Log("IsLevelSucceeded " + IsLevelSucceeded);
+        IsLevelSucceeded = true;
+        if (PlayingCount == 1)
         {
             IsSucceedFirstTry = true;
         }
@@ -101,7 +111,7 @@ public class Level : ScriptableObject
                 }
                 if(combinedFractions != 1)
                 {
-                    Debug.LogError("Fractions make up " + combinedFractions + " instead of 1!");
+                    Debug.LogError("Fractions make up " + combinedFractions.ToString() + " instead of 1!");
                     isLegitimate = false;
                 }
             }
