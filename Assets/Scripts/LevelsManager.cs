@@ -28,17 +28,19 @@ public class LevelsManager: MonoBehaviour
         {
             if(level == gameLevels[i])
             {
-                bool isAfterFirstLevel = i > 0;
-                bool isPrevLevelSucceeded = isAfterFirstLevel && gameLevels[i - 1].IsLevelSucceeded;
+                bool isBeforeSecondLevel = i < 2;
+                bool isPrevLevelSucceeded = isBeforeSecondLevel || 
+                    gameLevels[i - 1].IsLevelComplete((int)GetLevelSavedScore(gameLevels[i - 1]));
 
                 Debug.Log("----------------- isPrevLevelSucceeded: " + isPrevLevelSucceeded);
-                Debug.Log("----------------- i: " + isPrevLevelSucceeded);
-                if (isPrevLevelSucceeded)
+                //Debug.Log("----------------- i: " + isPrevLevelSucceeded);
+                /*if (isPrevLevelSucceeded)
                 {
                     level.IsLocked = false;
-                }
-
-                if(!level.IsLocked)
+                }*/
+                bool isLocked = !isPrevLevelSucceeded;
+               // Debug.Log("level.IsLocked: " + level.IsLocked);
+                if (!isLocked)
                 {
                     CurrentLevelNumber = i;
                     CurrentLevel = level;
