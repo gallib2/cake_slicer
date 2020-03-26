@@ -16,6 +16,7 @@ public class GameOverScore : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //TODO: this is inefficient....
         scoreText.text = Score.score.ToString();
     }
 }

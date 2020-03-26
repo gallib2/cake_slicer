@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 49a2e8cfdc8828f40a1813c5e9a88bc1
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Ploni 1.1 AAA
+  fontNames:
+  - Ploni 1.1 AAA
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: e28bcff67b938c544a5f41a316cd0719, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

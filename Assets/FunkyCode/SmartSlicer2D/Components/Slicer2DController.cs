@@ -119,6 +119,10 @@ public class Slicer2DController : MonoBehaviour {
 
 	public void Awake() {
 		instance = this;
+        if (GameManager.FunSlicing)
+        {
+            sliceType = SliceType.ComplexTracked;
+        }
 	}
 	
 	public void Start() {
@@ -580,7 +584,8 @@ public class Slicer2DController : MonoBehaviour {
 			return;
 		}
 		
-		if (Input.GetMouseButton (0)) {
+		if (Input.GetMouseButton (0))
+        {
 			Vector2D posMove = pointsList.Last ().Copy();
 			int loopCount = 0;
 			while ((Vector2D.Distance (posMove, pos) > minVertexDistance * visualScale)) {
@@ -596,7 +601,8 @@ public class Slicer2DController : MonoBehaviour {
 			}
 		}
 
-		if (mouseDown == true && Input.GetMouseButton (0) == false) {
+		if (mouseDown == true && Input.GetMouseButton (0) == false)
+        {
 			ComplexCut complexCutLine = ComplexCut.Create(pointsList, cutSize * visualScale);
 			Slicer2D.ComplexCutSliceAll (complexCutLine, sliceLayer);
 
@@ -667,7 +673,7 @@ public class Slicer2DController : MonoBehaviour {
 	private void UpdatePolygon(Vector2D pos) {
 		mouseDown = true;
 
-		if (Input.GetMouseButtonDown (0)) {
+		if (Input.GetMouseButton (0)) {
 			PolygonSlice (pos);
 		}
 	}
