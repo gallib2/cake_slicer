@@ -53,11 +53,18 @@ public class SlicesManager : MonoBehaviour
     [SerializeField]
     private SliceDemandUI sliceDemandUI;
 
-    private int comboCounter = 0;
+    [SerializeField]
+    private double negligibleSliceSize = 0.01;
+
+
+   private int comboCounter = 0;
 
     private void Awake()
     {
-        currentLevel = LevelsManager.CurrentLevel;
+        if (LevelsManager.CurrentLevel != null)
+        {
+            currentLevel = LevelsManager.CurrentLevel;
+        }
         GameManager.OnLevelInitialised += InitialiseLevel;
     }
 
@@ -78,9 +85,10 @@ public class SlicesManager : MonoBehaviour
     void Update()
     {
 
-       /* Debug.Log("X" + Camera.main.pixelRect.x + "XMax:" + Camera.main.pixelRect.xMax);
-        Debug.Log("Y" + Camera.main.pixelRect.y + "YMax:" + Camera.main.pixelRect.yMax);
-        Debug.Log(Camera.main.ScreenToViewportPoint(Input.mousePosition));*/
+        /* Debug.Log("X" + Camera.main.pixelRect.x + "XMax:" + Camera.main.pixelRect.xMax);
+         Debug.Log("Y" + Camera.main.pixelRect.y + "YMax:" + Camera.main.pixelRect.yMax);
+         Debug.Log(Camera.main.ScreenToViewportPoint(Input.mousePosition));*/
+
         if (!GameManager.isGameOver)
         {
             if (Input.GetMouseButton(0))
@@ -92,7 +100,8 @@ public class SlicesManager : MonoBehaviour
                     if (colliderAtfingerPosition.gameObject.GetComponent<Obstacle>())
                     {
                         //  Debug.Log("Obstacle!!!!1111");
-                        Slicer2DController.ClearPoints();
+
+                        //Slicer2DController.ClearPoints();//TODO: Fix
                         Handheld.Vibrate();
                         BadSlice();
                         NextRound();
@@ -112,7 +121,21 @@ public class SlicesManager : MonoBehaviour
 
     private void CheckSlices()
     {
-        slicesCount = sliceableObjects.GetComponentsInChildren<Transform>().Length - 1;//TODO: this comes out wrong alot
+        //slicesCount = sliceableObjects.GetComponentsInChildren<Transform>().Length - 1;//TODO: this comes out wrong alot
+        List<Polygon2D> polygons = Polygon2DList.CreateFromGameObject(sliceableObjects.transform.GetChild(0).gameObject);
+        for (int i = 0; i < polygons.Count; )//TODO: must be inefficient
+        {
+            if (polygons[i].GetArea() < negligibleSliceSize)
+            {
+                polygons.RemoveAt(i);
+            }
+            else
+            {
+                i++;
+            }
+        }
+   
+        slicesCount = polygons.Count;
         if (slicesCount == slicesToSlice)
         {
             Debug.Log("slicesCount: " + slicesCount+ "goal: " + slicesToSlice);
@@ -156,6 +179,7 @@ public class SlicesManager : MonoBehaviour
             //We get a list of the real sizes of all slices, determine their overall size and then modify the list so that it will contain the percentage rather than real size
             List<double> slicesInPercentage = SlicesSizesInDoubles();
             double overallSize = 0;
+
             // get overall size
             for (int i = 0; i < slicesInPercentage.Count; i++)
             {
@@ -279,12 +303,25 @@ public class SlicesManager : MonoBehaviour
     {
         List<double> slicesSizesInDoubles = new List<double>();
 
-        foreach (Slicer2D slicer in Slicer2D.GetList())
+        //foreach (Slicer2D slicer in Slicer2D.GetList())
+        /*foreach (Destruction2D slicer in Destruction2D.GetList())
         {
-            Polygon2D poly = slicer.GetPolygon().ToWorldSpace(slicer.transform);
+            //Polygon2D poly = slicer.GetPolygon().ToWorldSpace(slicer.transform);
+            Polygon2D poly = slicer.GetBoundPolygon().ToWorldSpace(slicer.transform);
             double size = poly.GetArea(); //(int)poly.GetArea();
             //  Debug.Log("current size : " + currentSizeInt);
             slicesSizesInDoubles.Add(size);
+        }*/
+        List<Polygon2D> polygons = Polygon2DList.CreateFromGameObject(sliceableObjects.transform.GetChild(0).gameObject);
+        for (int i = 0; i < polygons.Count; i++)
+        {
+            //Debug.Log("polygon " + i + "area: " + polygons[i].GetArea());
+            double size = polygons[i].GetArea();
+            Debug.Log("size " + size);
+            if (size > negligibleSliceSize)
+            {
+                slicesSizesInDoubles.Add(polygons[i].GetArea());
+            }
         }
 
         return slicesSizesInDoubles;

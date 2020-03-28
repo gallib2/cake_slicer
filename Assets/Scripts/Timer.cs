@@ -20,7 +20,11 @@ public class Timer : MonoBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
-        currentLevel = LevelsManager.CurrentLevel;
+        if (LevelsManager.CurrentLevel != null)
+        {
+            currentLevel = LevelsManager.CurrentLevel;
+        }
+
         GameManager.OnLevelInitialised += InitialiseLevel;
     }
     private void OnDisable()

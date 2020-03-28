@@ -10,6 +10,10 @@ public class LevelNameDisplay : MonoBehaviour
 
     void Start()
     {
-        text.text = LevelsManager.CurrentLevel.DisplayName;
+        if (LevelsManager.CurrentLevel != null)
+        {
+            text.text = LevelsManager.CurrentLevel.DisplayName;
+        }
+       
     }
 }

@@ -35,7 +35,11 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        currentLevel = LevelsManager.CurrentLevel;
+        if (LevelsManager.CurrentLevel != null)
+        {
+            currentLevel = LevelsManager.CurrentLevel;
+        }
+
         InitialiseLevel();
     }
 
