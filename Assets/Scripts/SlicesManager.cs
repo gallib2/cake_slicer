@@ -56,6 +56,9 @@ public class SlicesManager : MonoBehaviour
     [SerializeField]
     private double negligibleSliceSize = 0.01;
 
+    [SerializeField]
+    private Animator[] swipedDownObjects;
+
 
    private int comboCounter = 0;
 
@@ -122,39 +125,48 @@ public class SlicesManager : MonoBehaviour
     private void CheckSlices()
     {
         //slicesCount = sliceableObjects.GetComponentsInChildren<Transform>().Length - 1;//TODO: this comes out wrong alot
-        List<Polygon2D> polygons = Polygon2DList.CreateFromGameObject(sliceableObjects.transform.GetChild(0).gameObject);
-        for (int i = 0; i < polygons.Count; )//TODO: must be inefficient
+        //if (false)
         {
-            if (polygons[i].GetArea() < negligibleSliceSize)
+            List<Polygon2D> polygons = Polygon2DList.CreateFromGameObject(sliceableObjects.transform.GetChild(0).gameObject);
+            if (polygons.Count > 1)//Optimisation..
             {
-                polygons.RemoveAt(i);
+                //Debug.Log("polygons.Count > 1 ");
+                for (int i = 0; i < polygons.Count;)//TODO: must be inefficient
+                {
+                    if (polygons[i].GetArea() < negligibleSliceSize)
+                    {
+                        polygons.RemoveAt(i);
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+                slicesCount = polygons.Count;
+
+                if (slicesCount == slicesToSlice)
+                {
+                    Debug.Log("slicesCount: " + slicesCount + "goal: " + slicesToSlice);
+                    //slicesSizeList = GetSlicesSizesList();
+
+                    CalculateNewScore();
+                    // TODO :note add a small delay after the cake is cut 
+
+                    NextRound();
+
+                }
+                else if (slicesCount > slicesToSlice)
+                {
+                    Debug.Log("BadSlice slicesCount > goal => slicesCount: " + slicesCount);
+
+                    NextRound();
+
+                    BadSlice(true);
+                }
             }
-            else
-            {
-                i++;
-            }
         }
-   
-        slicesCount = polygons.Count;
-        if (slicesCount == slicesToSlice)
-        {
-            Debug.Log("slicesCount: " + slicesCount+ "goal: " + slicesToSlice);
-            //slicesSizeList = GetSlicesSizesList();
+       
 
-            CalculateNewScore();
-            // TODO :note add a small delay after the cake is cut 
-
-            NextRound();
-
-        }
-        else if (slicesCount > slicesToSlice)
-        {
-            Debug.Log("BadSlice slicesCount > goal => slicesCount: " + slicesCount);
-
-            NextRound();
-
-            BadSlice(true);
-        }
     }
 
     private void BadSlice(bool toManySlices = false)
@@ -330,11 +342,16 @@ public class SlicesManager : MonoBehaviour
     private void NextRound()
     {
         Debug.Log("--------------------- in NextRound!!!");
+
         timer.ToStopTimer = false;
         DestroyAllLeftPieces();
         currentCakeIndex++;
         if (currentCakeIndex < currentLevel.Cakes.Length)
         {
+            for (int i = 0; i < swipedDownObjects.Length; i++)
+            {
+                swipedDownObjects[i].SetTrigger("SwipeDown");
+            }
             slicesToSlice = currentLevel.Cakes[currentCakeIndex].SlicesToSlice();
             // OnGoalChange.Invoke();
 

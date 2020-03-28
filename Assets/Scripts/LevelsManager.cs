@@ -10,7 +10,7 @@ public class LevelsManager: MonoBehaviour
     public static int CurrentLevelNumber { get; set; }
     //Should these not be static?
     public Level[] gameLevels; // TODO - maybe later we can read this from a config file
-    private SavedData savedData;
+    private SaveAndLoadManager.LevelsSavedData savedData;
     public static bool areAllLevelsUnlocked = false;
 
     public void LoadLevel(int levelNumber)
@@ -53,7 +53,7 @@ public class LevelsManager: MonoBehaviour
 
     private void Awake()
     {
-        savedData = SaveAndLoadManager.LoadSavedData();
+        savedData = SaveAndLoadManager.LoadLevelsSavedData();
     }
 
     public System.UInt32? GetLevelSavedScore(Level level)

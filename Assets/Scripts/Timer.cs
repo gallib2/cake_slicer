@@ -51,6 +51,12 @@ public class Timer : MonoBehaviour
             }
         }
     }
+
+    public void AddTime(float timeToAdd)
+    {
+        timeLeft += timeToAdd;
+    }
+
     private void TimerGraphicsUpdate()
     {
         text.text = (Mathf.CeilToInt( timeLeft)).ToString();

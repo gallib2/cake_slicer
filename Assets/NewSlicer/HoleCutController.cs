@@ -16,7 +16,7 @@ public class HoleCutController : MonoBehaviour {
 
     public void Initialize() {
 		Polygon2D.defaultCircleVerticesCount = circleVerticesCount;
-		Polygon2D circlePolygon = Polygon2D.Create (Polygon2D.PolygonType.Octagon, size);
+		Polygon2D circlePolygon = Polygon2D.Create (Polygon2D.PolygonType.Hexagon, size);
 
 		eraseBrushStart.SetBrush(circlePolygon.Copy());
 	}
@@ -84,7 +84,7 @@ public class HoleCutController : MonoBehaviour {
         Vector2D pos = new Vector2D(GetMousePosition());
         Vector2D oldPos = new Vector2D(oldPosition);
 
-        if (Vector2D.Distance(pos, oldPos) < 1) {
+        if (Vector2D.Distance(pos, oldPos) < size) {
             return(false);
         }
 
