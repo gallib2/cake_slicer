@@ -127,10 +127,10 @@ public class SlicesManager : MonoBehaviour
         //slicesCount = sliceableObjects.GetComponentsInChildren<Transform>().Length - 1;//TODO: this comes out wrong alot
         //if (false)
         {
-            List<Polygon2D> polygons = Polygon2DList.CreateFromGameObject(sliceableObjects.transform.GetChild(0).gameObject);
+            List<Polygon2D> polygons = Polygon2DList.CreateFromGameObject(sliceableObjects.transform.GetChild(0).gameObject,Polygon2D.ColliderType.Polygon);
             if (polygons.Count > 1)//Optimisation..
             {
-                //Debug.Log("polygons.Count > 1 ");
+                Debug.Log("polygons.Count > 1 ");
                 for (int i = 0; i < polygons.Count;)//TODO: must be inefficient
                 {
                     if (polygons[i].GetArea() < negligibleSliceSize)
@@ -324,7 +324,7 @@ public class SlicesManager : MonoBehaviour
             //  Debug.Log("current size : " + currentSizeInt);
             slicesSizesInDoubles.Add(size);
         }*/
-        List<Polygon2D> polygons = Polygon2DList.CreateFromGameObject(sliceableObjects.transform.GetChild(0).gameObject);
+        List<Polygon2D> polygons = Polygon2DList.CreateFromGameObject(sliceableObjects.transform.GetChild(0).gameObject,Polygon2D.ColliderType.Polygon);
         for (int i = 0; i < polygons.Count; i++)
         {
             //Debug.Log("polygon " + i + "area: " + polygons[i].GetArea());

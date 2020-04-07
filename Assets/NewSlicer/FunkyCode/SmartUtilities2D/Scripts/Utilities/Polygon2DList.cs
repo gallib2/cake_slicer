@@ -40,7 +40,8 @@ public class Polygon2DList : Polygon2D {
 	static public List<Polygon2D> CreateFromPolygonColliderToLocalSpace(PolygonCollider2D collider) {
 		List<Polygon2D> result = new List<Polygon2D>();
 
-		if (collider != null && collider.pathCount > 0) {
+		if (collider != null && collider.pathCount > 0)
+        {
 			Polygon2D newPolygon = new Polygon2D ();
 
 			foreach (Vector2 p in collider.GetPath (0)) {
@@ -55,9 +56,12 @@ public class Polygon2DList : Polygon2D {
 					hole.AddPoint (p + collider.offset);
 				}
 
-				if (newPolygon.PolyInPoly (hole) == true) {
+				if (newPolygon.PolyInPoly (hole) == true)
+                {
 					newPolygon.AddHole (hole);
-				} else {
+				}
+                else
+                {
 					result.Add(hole);
 				}
 			}
@@ -76,11 +80,11 @@ public class Polygon2DList : Polygon2D {
 	public static List<Polygon2D> CreateFromGameObject(GameObject gameObject, ColliderType colliderType) {
 		List<Polygon2D> result = new List<Polygon2D>();
 		switch (colliderType) {
-			case ColliderType.Edge:
+            case ColliderType.Polygon:
+                result = CreateFromPolygonColliderToLocalSpace(gameObject.GetComponent<PolygonCollider2D>());
+                break;
+            case ColliderType.Edge:
 				result.Add(CreateFromEdgeCollider (gameObject.GetComponent<EdgeCollider2D> ()));
-				break;
-			case ColliderType.Polygon:
-				result = CreateFromPolygonColliderToLocalSpace(gameObject.GetComponent<PolygonCollider2D> ());
 				break;
 			case ColliderType.Box:
 				result.Add(CreateFromBoxCollider (gameObject.GetComponent<BoxCollider2D> ()));

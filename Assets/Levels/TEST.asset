@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Level
   displayName: TEST
   cakes:
-  - cakePrefab: {fileID: 2935677715139052978, guid: 221d36b24842e6b488078eed48997e8f,
+  - cakePrefab: {fileID: 2935677715139052978, guid: cdeaf0f5939b3e0409d101774ec4ae22,
       type: 3}
     numberOfSlices: 8
     fractions:

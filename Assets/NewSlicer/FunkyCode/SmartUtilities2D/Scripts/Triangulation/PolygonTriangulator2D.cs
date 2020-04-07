@@ -111,7 +111,7 @@ public class PolygonTriangulator2D : MonoBehaviour {
 		Mesh result = null;
 		switch (triangulation) {
 			case Triangulation.Advanced:
-				if (garbageCollector == true & polygon.GetArea() < 0.005f) {
+				if (garbageCollector == true & polygon.GetArea() < 0.001f) {//Ori Changed from 0.005
 					Debug.LogWarning("SmartUtilities2D: Garbage Collector Removed Object Because it was too small");
 					
 					return(null);
