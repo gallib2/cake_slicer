@@ -20,7 +20,11 @@ public class Timer : MonoBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
-        currentLevel = LevelsManager.CurrentLevel;
+        if (LevelsManager.CurrentLevel != null)
+        {
+            currentLevel = LevelsManager.CurrentLevel;
+        }
+
         GameManager.OnLevelInitialised += InitialiseLevel;
     }
     private void OnDisable()
@@ -47,6 +51,12 @@ public class Timer : MonoBehaviour
             }
         }
     }
+
+    public void AddTime(float timeToAdd)
+    {
+        timeLeft += timeToAdd;
+    }
+
     private void TimerGraphicsUpdate()
     {
         text.text = (Mathf.CeilToInt( timeLeft)).ToString();
