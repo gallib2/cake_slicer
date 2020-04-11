@@ -52,8 +52,8 @@ public class Destruction2D : MonoBehaviour {
 
 	public Polygon2D customPolygon = null;
 
-	public float pixelsPerUnit = 100f;
-	public float scaledPixelsPerUnit = 100f;
+	public float pixelsPerUnit = 20f;//100f
+	public float scaledPixelsPerUnit = 20f;
 
 	public bool init = false;
 
@@ -123,8 +123,9 @@ public class Destruction2D : MonoBehaviour {
 		} else {
 			Sprite sprite = spriteRenderer.sprite;
 			pixelsPerUnit = sprite.pixelsPerUnit;
+            Debug.LogError("sprite.pixelsPerUnit");
 
-			if (originalSprite == null){
+            if (originalSprite == null){
 				originalSprite = sprite;
 			}
 

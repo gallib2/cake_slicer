@@ -87,7 +87,10 @@ public class SlicesManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (GameManager.GameIsPaused)
+        {
+            return;
+        }
         /* Debug.Log("X" + Camera.main.pixelRect.x + "XMax:" + Camera.main.pixelRect.xMax);
          Debug.Log("Y" + Camera.main.pixelRect.y + "YMax:" + Camera.main.pixelRect.yMax);
          Debug.Log(Camera.main.ScreenToViewportPoint(Input.mousePosition));*/
@@ -130,7 +133,7 @@ public class SlicesManager : MonoBehaviour
             List<Polygon2D> polygons = Polygon2DList.CreateFromGameObject(sliceableObjects.transform.GetChild(0).gameObject,Polygon2D.ColliderType.Polygon);
             if (polygons.Count > 1)//Optimisation..
             {
-                Debug.Log("polygons.Count > 1 ");
+                //Debug.Log("polygons.Count > 1 ");
                 for (int i = 0; i < polygons.Count;)//TODO: must be inefficient
                 {
                     if (polygons[i].GetArea() < negligibleSliceSize)

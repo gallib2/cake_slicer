@@ -12,9 +12,20 @@ public class GameManager : MonoBehaviour
     public static event Action OnLose;
     public static event Action<int> OnGameOver;
     public static event Action OnLevelInitialised;
+    public static event Action<bool> OnPauseChanged;
 
     public static string playerName;
     public static bool isGameOver = false;
+    public static bool GameIsPaused
+    {
+        get
+        {
+            return gameIsPaused;
+        }
+    }
+    private static bool gameIsPaused = false;
+    [SerializeField]
+    private GameObject pauseMenuPopUp;
     public Score score;
 
     public static bool FunSlicing = false;
@@ -43,8 +54,21 @@ public class GameManager : MonoBehaviour
         InitialiseLevel();
     }
 
+    /*public void SwitchPauseState()
+    {
+        gameIsPaused = !gameIsPaused;
+    }*/
+
+    public void SetPause(bool to)
+    {
+        //pauseMenuPopUp.SetActive(to);
+        OnPauseChanged(to);
+        gameIsPaused = to;
+    }
+
     public void InitialiseLevel()
     {
+        SetPause(false);
         isGameOver = false;
         OnLevelInitialised.Invoke();
     }

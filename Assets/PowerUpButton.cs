@@ -11,6 +11,10 @@ public class PowerUpButton : MonoBehaviour
 
     public void UsePowerUp()
     {
+        if (GameManager.GameIsPaused)
+        {
+            return;
+        }
         if (PlayerStats.UsePowerUp(powerUp))
         {
             PowerUps.instance.UsePowerUp(powerUp);
