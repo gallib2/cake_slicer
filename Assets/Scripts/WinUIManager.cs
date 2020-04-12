@@ -20,11 +20,17 @@ public class WinUIManager : MonoBehaviour
     [SerializeField]
     private GameOverScoreDisplay scoreDisplay;
 
-   private void Awake()
+    private void Awake()
     {
         GameManager.OnWin += ShowFinalScoreAndStars;
         GameManager.OnLevelInitialised += HideWinScreen;
        // HideWinScreen();//Should be called by OnLevelInitialised though
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnWin -= ShowFinalScoreAndStars;
+        GameManager.OnLevelInitialised -= HideWinScreen;
     }
 
     private void HideWinScreen()
@@ -47,15 +53,11 @@ public class WinUIManager : MonoBehaviour
         }
     }
 
-    private void OnDisable()
-    {
-        GameManager.OnWin -= ShowFinalScoreAndStars;
-        GameManager.OnLevelInitialised -= HideWinScreen;
-    }
+
 
     private void ShowFinalScoreAndStars(int numberOfStars)
     {
-        scoreDisplay.SetText(Score.score.ToString());//Turn into an event maybe?
+        //scoreDisplay.SetText(Score.score.ToString());//Turn into an event maybe?
         for (int i = 0; i < elementsToAppearOnWin.Length; i++)
         {
             elementsToAppearOnWin[i].SetActive(true);

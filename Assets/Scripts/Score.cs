@@ -64,6 +64,10 @@ public class Score : MonoBehaviour
 
     private void CreateUIStarsBar()
     {
+        if (LevelsManager.CurrentLevel == null)
+        {
+            return;
+        }
         if (UIStars != null)
         {
             //TODO: this part can be avoided by reusing stars that had been created, (We're better off not creating and destroying objects willy-nilly )
@@ -170,6 +174,10 @@ public class Score : MonoBehaviour
 
     private void SetScore(int scoreToSet)
     {
+        if (LevelsManager.CurrentLevel == null)
+        {
+            return;
+        }
         score = scoreToSet;
         scoreText.text = score.ToString();
         Level currentLevel = LevelsManager.CurrentLevel;

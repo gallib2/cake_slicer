@@ -10,10 +10,22 @@ public class GameManager : MonoBehaviour
     //public static event Action OnGameOver;
     public static event Action<int> OnWin;
     public static event Action OnLose;
+    public static event Action<int> OnGameOver;
     public static event Action OnLevelInitialised;
+    public static event Action<bool> OnPauseChanged;
 
     public static string playerName;
     public static bool isGameOver = false;
+    public static bool GameIsPaused
+    {
+        get
+        {
+            return gameIsPaused;
+        }
+    }
+    private static bool gameIsPaused = false;
+    [SerializeField]
+    private GameObject pauseMenuPopUp;
     public Score score;
 
     public static bool FunSlicing = false;
@@ -34,12 +46,29 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        currentLevel = LevelsManager.CurrentLevel;
+        if (LevelsManager.CurrentLevel != null)
+        {
+            currentLevel = LevelsManager.CurrentLevel;
+        }
+
         InitialiseLevel();
+    }
+
+    /*public void SwitchPauseState()
+    {
+        gameIsPaused = !gameIsPaused;
+    }*/
+
+    public void SetPause(bool to)
+    {
+        //pauseMenuPopUp.SetActive(to);
+        OnPauseChanged(to);
+        gameIsPaused = to;
     }
 
     public void InitialiseLevel()
     {
+        SetPause(false);
         isGameOver = false;
         OnLevelInitialised.Invoke();
     }
@@ -48,7 +77,6 @@ public class GameManager : MonoBehaviour
     {
         isGameOver = true;
         currentLevel.PlayingCount++;
-
         if (score.CurrentStars >= 1/*currentLevel.MinStarsToWin*/) //TODO: hardcoded winning condition(Can be moved to Level)
         {
             currentLevel.LevelSucceeded();
@@ -59,6 +87,7 @@ public class GameManager : MonoBehaviour
         {
             OnLose.Invoke();
         }
+        OnGameOver?.Invoke(Score.score);
     }
 
     public void UnloadScene()

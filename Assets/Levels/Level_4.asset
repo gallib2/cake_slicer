@@ -18,11 +18,11 @@ MonoBehaviour:
       type: 3}
     numberOfSlices: 5
     fractions: []
-  - cakePrefab: {fileID: 3160547572476184343, guid: 1a92ec09dec9e44b9ba4e2a6ed22e46c,
+  - cakePrefab: {fileID: 3160547572476184343, guid: f771dc6483aabaa47a3ef32005af57be,
       type: 3}
     numberOfSlices: 4
     fractions: []
-  - cakePrefab: {fileID: 4985836295831633166, guid: ecd991d16dcbc44ec9f4caaae81aaf9c,
+  - cakePrefab: {fileID: 4985836295831633166, guid: 4f71c336440763e4990c92779044c650,
       type: 3}
     numberOfSlices: 6
     fractions: []

@@ -16,12 +16,12 @@ public class Level : ScriptableObject
     private double[] starRequirements = { 0.6, 0.76, 0.9 };
     [SerializeField]
     private float initialTimeInSeconds = 30f;
-    [SerializeField]
-    private bool isLocked = true;
+    //[SerializeField]
+    //private bool isLocked = true;
     /*  [Range(1,3)][SerializeField]
       private int minStarsToWin;//Ori: I thought 1 star guarantees a win*/
 
-    public bool IsLevelSucceeded { get; set; }
+    //public bool IsLevelSucceeded { get; set; }
     public bool IsSucceedFirstTry { get; private set; }
     public int PlayingCount { get; set; }
 
@@ -48,11 +48,11 @@ public class Level : ScriptableObject
         set { initialTimeInSeconds = value; }
     }
 
-    public bool IsLocked
+    /*public bool IsLocked
     {
         get { return isLocked; }
         set { isLocked = value; }
-    }
+    }*/
 
     /*public int MinStarsToWin
     {
@@ -62,12 +62,18 @@ public class Level : ScriptableObject
 
     public void LevelSucceeded()
     {
-        Debug.Log("IsLevelSucceeded " + IsLevelSucceeded);
-        IsLevelSucceeded = true;
+        /*Debug.Log("IsLevelSucceeded " + IsLevelSucceeded);
+        IsLevelSucceeded = true;*/
         if (PlayingCount == 1)
         {
             IsSucceedFirstTry = true;
         }
+    }
+
+    public bool IsLevelComplete(int score)
+    {
+        double ScoreDividedByMaxScore = ((double)score / MaximumScore());
+        return (ScoreDividedByMaxScore >= StarRequirements[0]);
     }
 
     public int MaximumScore()

@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
 {
-    //public Slider sliderTimer;
     [SerializeField]
     private Image timerFillImage;
     [SerializeField]
@@ -17,10 +16,13 @@ public class Timer : MonoBehaviour
     [SerializeField]
     private Level currentLevel;
 
-    // Start is called before the first frame update
     private void Awake()
     {
-        currentLevel = LevelsManager.CurrentLevel;
+        if (LevelsManager.CurrentLevel != null)
+        {
+            currentLevel = LevelsManager.CurrentLevel;
+        }
+
         GameManager.OnLevelInitialised += InitialiseLevel;
     }
     private void OnDisable()
@@ -33,8 +35,13 @@ public class Timer : MonoBehaviour
         ToStopTimer = false;
         timeLeft = currentLevel.InitialTimeInSeconds;
     }
+
     void Update()
     {
+        if (GameManager.GameIsPaused)
+        {
+            return;
+        }
         if (!ToStopTimer)
         {
             timeLeft -= Time.deltaTime;
@@ -47,6 +54,12 @@ public class Timer : MonoBehaviour
             }
         }
     }
+
+    public void AddTime(float timeToAdd)
+    {
+        timeLeft += timeToAdd;
+    }
+
     private void TimerGraphicsUpdate()
     {
         text.text = (Mathf.CeilToInt( timeLeft)).ToString();

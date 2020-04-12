@@ -10,7 +10,8 @@ public class LevelsManager: MonoBehaviour
     public static int CurrentLevelNumber { get; set; }
     //Should these not be static?
     public Level[] gameLevels; // TODO - maybe later we can read this from a config file
-    private SavedData savedData;
+    private SaveAndLoadManager.LevelsSavedData savedData;
+    public static bool areAllLevelsUnlocked = false;
 
     public void LoadLevel(int levelNumber)
     {
@@ -28,17 +29,18 @@ public class LevelsManager: MonoBehaviour
         {
             if(level == gameLevels[i])
             {
-                bool isAfterFirstLevel = i > 0;
-                bool isPrevLevelSucceeded = isAfterFirstLevel && gameLevels[i - 1].IsLevelSucceeded;
-
+                bool isBeforeSecondLevel = i < 2;
+                bool isPrevLevelSucceeded = isBeforeSecondLevel || 
+                    gameLevels[i - 1].IsLevelComplete((int)GetLevelSavedScore(gameLevels[i - 1]));
                 Debug.Log("----------------- isPrevLevelSucceeded: " + isPrevLevelSucceeded);
-                Debug.Log("----------------- i: " + isPrevLevelSucceeded);
-                if (isPrevLevelSucceeded)
+                //Debug.Log("----------------- i: " + isPrevLevelSucceeded);
+                /*if (isPrevLevelSucceeded)
                 {
                     level.IsLocked = false;
-                }
-
-                if(!level.IsLocked)
+                }*/
+                bool isLocked = !isPrevLevelSucceeded;
+               // Debug.Log("level.IsLocked: " + level.IsLocked);
+                if (!isLocked || areAllLevelsUnlocked)
                 {
                     CurrentLevelNumber = i;
                     CurrentLevel = level;
@@ -51,10 +53,10 @@ public class LevelsManager: MonoBehaviour
 
     private void Awake()
     {
-        savedData = SaveAndLoadManager.LoadSavedData();
+        savedData = SaveAndLoadManager.LoadLevelsSavedData();
     }
 
-    public System.UInt32 GetLevelSavedScore(Level level)
+    public System.UInt32? GetLevelSavedScore(Level level)
     {
         for (int i = 0; i < gameLevels.Length; i++)
         {
@@ -64,6 +66,6 @@ public class LevelsManager: MonoBehaviour
             }
         }
         Debug.Log("Level was not found!");
-        return 666;
+        return null;
     }
 }

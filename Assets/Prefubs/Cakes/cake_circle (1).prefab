@@ -11,11 +11,8 @@ GameObject:
   - component: {fileID: 4203801516081614382}
   - component: {fileID: 4203801516081614389}
   - component: {fileID: 4203801516081614387}
-  - component: {fileID: 4203801516081614386}
-  - component: {fileID: 4203801516081614384}
-  - component: {fileID: 4203801516081614383}
   - component: {fileID: 4203801516081614379}
-  - component: {fileID: 4203801516081614378}
+  - component: {fileID: 5199567444272184671}
   m_Layer: 8
   m_Name: cake_circle (1)
   m_TagString: Untagged
@@ -108,60 +105,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
---- !u!114 &4203801516081614386
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4203801516081614381}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13d57bfb5a556c741a71b82d65a1e10e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textureType: 0
-  slicingLayer: 0
-  colliderType: 0
-  triangulation: 0
-  material: {fileID: 0}
-  materialScale: {x: 1, y: 1}
-  materialOffset: {x: 0, y: 0}
-  slicingLimit: 0
-  sliceCounter: 0
-  maxSlices: 10
-  supportJoints: 0
-  centerOfMass: 0
-  recalculateMass: 0
-  anchors: 0
-  anchorsList:
-  - {fileID: 0}
-  anchorType: 0
---- !u!114 &4203801516081614384
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4203801516081614381}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff7a54319c2c8e84a8d5f7ecb7b0d2ac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  originalSize: 0
---- !u!114 &4203801516081614383
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4203801516081614381}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea9ba052b7c32e74a9d05eb87c3e253f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!60 &4203801516081614379
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -342,7 +285,7 @@ PolygonCollider2D:
       - {x: 0.305, y: -4.21}
       - {x: 0.415, y: -4.2}
       - {x: 0.575, y: -4.18}
---- !u!114 &4203801516081614378
+--- !u!114 &5199567444272184671
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -351,10 +294,38 @@ MonoBehaviour:
   m_GameObject: {fileID: 4203801516081614381}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d86efaf27d650ab4599d34b8ce6184af, type: 3}
+  m_Script: {fileID: 11500000, guid: 62b06ecd429b51c4688fa0f1fcb58e3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customColor: 1
-  color: {r: 1, g: 1, b: 1, a: 1}
-  lineWidth: 0.13
-  orderInLayer: 0
+  textureType: 0
+  destructionLayer: 0
+  centerOfMass: 0
+  spriteShapeBounds: 0
+  split:
+    enabled: 0
+    splitLimit: 0
+    splitCount: 0
+    maxSplits: 10
+  filterMode: 0
+  gridSize: {x: 1, y: 1}
+  chunks:
+    enabled: 0
+    chunksRows: 2
+    chunksColumns: 2
+    chunkOffset: 0
+  buffer: {fileID: 0}
+  renderTexture: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  outputSprite: {fileID: 0}
+  outputMaterial: {fileID: 0}
+  outputTexture: {fileID: 0}
+  originalSpriteOffSet: {x: 0, y: 0}
+  originalSprite: {fileID: 0}
+  originalSpriteMaterial: {fileID: 0}
+  modifiersAdded: 0
+  replaceSprite: 0
+  initialized: 0
+  pixelsPerUnit: 100
+  scaledPixelsPerUnit: 100
+  init: 0
+  anchorColliders: []
