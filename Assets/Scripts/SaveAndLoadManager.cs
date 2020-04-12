@@ -9,34 +9,63 @@ using System.Threading;
 
 public static class SaveAndLoadManager 
 {
-    public static string BuildSaveFileName()
+    #region Levels:
+
+    [Serializable]
+    public class LevelsSavedData
     {
-        return (Application.persistentDataPath + "/savedata" + ".dat");
+        [Serializable]
+        public class SavedLevelData
+        {
+            public UInt32 score;
+
+            public SavedLevelData(UInt32 score)
+            {
+                this.score = score;
+            }
+        }
+        public SavedLevelData[] savedLevelsData;
+
+        public LevelsSavedData() { }
+
+        public LevelsSavedData(int numberOfLevels)
+        {
+            savedLevelsData = new SavedLevelData[numberOfLevels];
+            for (int i = 0; i < savedLevelsData.Length; i++)
+            {
+                savedLevelsData[i] = new SavedLevelData(0);
+            }
+        }
     }
 
-    public static SavedData LoadSavedData()
+    public static string BuildLevelsSaveFileName()
     {
-        string fileName = BuildSaveFileName();
+        return (Application.persistentDataPath + "/levels_save" + ".dat");
+    }
+
+    public static LevelsSavedData LoadLevelsSavedData()
+    {
+        string fileName = BuildLevelsSaveFileName();
         if (File.Exists(fileName))
         {
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             FileStream fileStream = File.Open(fileName, FileMode.Open);
-            SavedData savedData = new SavedData();
-            savedData = (SavedData)binaryFormatter.Deserialize(fileStream);
+            LevelsSavedData savedData = new LevelsSavedData();
+            savedData = (LevelsSavedData)binaryFormatter.Deserialize(fileStream);
             fileStream.Close();
             Debug.Log("Loading from " + fileName);
             return savedData;
         }
         else
         {
-            return new SavedData(5);//TODO: Should not stay hardcoded...
+            return new LevelsSavedData(5);//TODO: Should not stay hardcoded...
         }
        // return null;
     }
 
-    public static void SaveData(SavedData savedData)
+    public static void SaveLevelsData(LevelsSavedData savedData)
     {
-        string fileName = BuildSaveFileName();
+        string fileName = BuildLevelsSaveFileName();
         if (!File.Exists(fileName))
         {
             Directory.CreateDirectory(Path.GetDirectoryName(fileName));
@@ -50,44 +79,75 @@ public static class SaveAndLoadManager
 
     public static void TrySaveLevelData(int levelIndex, UInt32 newScore)
     {
-        SavedData loadedSavedData = LoadSavedData();
+        LevelsSavedData loadedSavedData = LoadLevelsSavedData();
         UInt32 oldScore = loadedSavedData.savedLevelsData[levelIndex].score;
         if (oldScore < newScore)
         {
             loadedSavedData.savedLevelsData[levelIndex].score = newScore;
             Debug.Log(oldScore + " is  smaller than " + newScore + ". Saving!");
-            SaveData(loadedSavedData);
+            SaveLevelsData(loadedSavedData);
         }
         else
         {
             Debug.Log(oldScore+" is not smaller than "+ newScore+ ". No need to save");
         }
     }
-}
-
-[Serializable]
-public class SavedData
-{
+    #endregion
+    #region Player:
     [Serializable]
-    public class SavedLevelData
+    public class PlayerSavedData
     {
-        public UInt32 score;
+        public string name;
+        public UInt32 lives;
+        public Dictionary<PowerUpTypes, UInt32> powerUps;
 
-        public SavedLevelData(UInt32 score)
+        public PlayerSavedData() { }
+
+        public PlayerSavedData(string name, UInt32 lives, Dictionary<PowerUpTypes, UInt32> powerUps)
         {
-            this.score = score;
+            this.name = name;
+            this.lives = lives;
+            this.powerUps = powerUps;
         }
     }
-    public SavedLevelData[] savedLevelsData;
-
-    public SavedData() { }
-
-    public SavedData(int numberOfLevels)
+    public static string BuildPlayerSaveFileName()
     {
-        savedLevelsData = new SavedLevelData[numberOfLevels];
-        for (int i = 0; i < savedLevelsData.Length; i++)
-        {
-            savedLevelsData[i] = new SavedLevelData(0);
-        }
+        return (Application.persistentDataPath + "/player_save" + ".dat");
     }
+
+    public static PlayerSavedData LoadPlayerSavedData()
+    {
+        string fileName = BuildPlayerSaveFileName();
+        if (File.Exists(fileName))
+        {
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            FileStream fileStream = File.Open(fileName, FileMode.Open);
+            PlayerSavedData savedData = new PlayerSavedData();
+            savedData = (PlayerSavedData)binaryFormatter.Deserialize(fileStream);
+            fileStream.Close();
+            Debug.Log("Loading from " + fileName);
+            return savedData;
+        }
+        return null;
+    }
+
+    public static void SavePlayerData(string name, UInt32 lives, Dictionary<PowerUpTypes, UInt32> powerUps)
+    {
+        string fileName = BuildPlayerSaveFileName();
+        if (!File.Exists(fileName))
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(fileName));
+        }
+        BinaryFormatter BF = new BinaryFormatter();
+        FileStream fileStream = File.Open(fileName, FileMode.OpenOrCreate);
+        PlayerSavedData savedData = new PlayerSavedData(name, lives, powerUps);
+        BF.Serialize(fileStream, savedData);
+        Debug.Log("Saving to " + fileName);
+        fileStream.Close();
+    }
+
+    #endregion
 }
+
+
+
