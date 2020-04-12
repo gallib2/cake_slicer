@@ -59,8 +59,11 @@ public class SlicesManager : MonoBehaviour
     [SerializeField]
     private Animator[] swipedDownObjects;
 
+    public static bool allowToSlice;
+    private Obstacle[] obstacles;
+    private List<Obstacle> candleObstacles;
 
-   private int comboCounter = 0;
+    private int comboCounter = 0;
 
     private void Awake()
     {
@@ -91,26 +94,37 @@ public class SlicesManager : MonoBehaviour
         {
             return;
         }
-        /* Debug.Log("X" + Camera.main.pixelRect.x + "XMax:" + Camera.main.pixelRect.xMax);
-         Debug.Log("Y" + Camera.main.pixelRect.y + "YMax:" + Camera.main.pixelRect.yMax);
-         Debug.Log(Camera.main.ScreenToViewportPoint(Input.mousePosition));*/
 
         if (!GameManager.isGameOver)
         {
             if (Input.GetMouseButton(0))
             {
-                Vector2 fingerPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Collider2D colliderAtfingerPosition = Physics2D.OverlapPoint(fingerPosition, obstacleLayerMask);
-                if (colliderAtfingerPosition != null)
+                bool isHaveDecorators = obstacles.Length > 0;
+                Collider2D collider = isHaveDecorators ? CheckClicksByLayer(obstacleLayerMask) : null;
+                Obstacle decorator = collider ? collider.gameObject.GetComponent<Obstacle>() : null;
+                if (decorator != null)
                 {
-                    if (colliderAtfingerPosition.gameObject.GetComponent<Obstacle>())
+                    if (decorator.Type == ObstacleType.CHERRY)
                     {
                         //  Debug.Log("Obstacle!!!!1111");
-
                         //Slicer2DController.ClearPoints();//TODO: Fix
                         Handheld.Vibrate();
                         BadSlice();
                         NextRound();
+                        return;
+                    }
+                    else if (decorator.Type == ObstacleType.CANDLE)
+                    {
+                        Debug.Log(" decorator:  caandlleeeee ");
+
+                        candleObstacles.RemoveAt(0);
+                        Destroy(collider.gameObject);
+                        if (candleObstacles.Count == 0)
+                        {
+                            allowToSlice = true;
+                            Debug.Log(" allowToSlice: " + allowToSlice);
+                        }
+
                         return;
                     }
                 }
@@ -123,6 +137,21 @@ public class SlicesManager : MonoBehaviour
             }
         }
 
+    }
+
+    private Collider2D CheckClicksByLayer(int layer)
+    {
+        if (Input.GetMouseButton(0))
+        {
+            Vector2 fingerPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Collider2D colliderAtfingerPosition = Physics2D.OverlapPoint(fingerPosition, layer);
+            if (colliderAtfingerPosition != null)
+            {
+                return colliderAtfingerPosition;
+            }
+        }
+
+        return null;
     }
 
     private void CheckSlices()
@@ -360,11 +389,10 @@ public class SlicesManager : MonoBehaviour
 
             Cake newCake = currentLevel.Cakes[currentCakeIndex];
             GameObject cakeGameObject = Instantiate(newCake.cakePrefab, sliceableObjects.transform, true); // create new cake
-            Obstacle[] obstacles = cakeGameObject.GetComponentsInChildren<Obstacle>();
-            for (int i = 0; i < obstacles.Length; i++)
-            {
-                obstacles[i].transform.parent = obstacleObjects.transform;
-            }
+            obstacles = cakeGameObject.GetComponentsInChildren<Obstacle>();
+            candleObstacles = obstacles.Where(dec => dec.Type == ObstacleType.CANDLE).ToList();
+            allowToSlice = candleObstacles.Count == 0;
+
             cakesLeftText.text =
                 (currentLevel.Cakes.Length - currentCakeIndex).ToString();
             UpdateSliceDemandGraphics();
