@@ -30,6 +30,10 @@ public class HoleCutController : MonoBehaviour {
     }
 
     void Update() {
+        if(!SlicesManager.allowToSlice)
+        {
+            return;
+        }
         Vector2 pos = GetMousePosition();
 
         if (Input.GetMouseButtonDown(0)) {

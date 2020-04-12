@@ -56,8 +56,12 @@ public class SlicesManager : MonoBehaviour
     [SerializeField]
     private double negligibleSliceSize = 0.01;
 
+    public static bool allowToSlice;
+    private Decorator[] decorators;
+    private List<Decorator> candleDecorators;
 
-   private int comboCounter = 0;
+
+    private int comboCounter = 0;
 
     private void Awake()
     {
@@ -84,39 +88,61 @@ public class SlicesManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        /* Debug.Log("X" + Camera.main.pixelRect.x + "XMax:" + Camera.main.pixelRect.xMax);
-         Debug.Log("Y" + Camera.main.pixelRect.y + "YMax:" + Camera.main.pixelRect.yMax);
-         Debug.Log(Camera.main.ScreenToViewportPoint(Input.mousePosition));*/
-
         if (!GameManager.isGameOver)
         {
-            if (Input.GetMouseButton(0))
+            bool isHaveDecorators = decorators.Length > 0;
+            Collider2D collider = isHaveDecorators ? CheckClicksByLayer(obstacleLayerMask) : null;
+            Decorator decorator = collider ? collider.gameObject.GetComponent<Decorator>() : null;
+            if (decorator != null)
             {
-                Vector2 fingerPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Collider2D colliderAtfingerPosition = Physics2D.OverlapPoint(fingerPosition, obstacleLayerMask);
-                if (colliderAtfingerPosition != null)
+                if (decorator.Type == DecoratorType.CHERRY)
                 {
-                    if (colliderAtfingerPosition.gameObject.GetComponent<Obstacle>())
-                    {
-                        //  Debug.Log("Obstacle!!!!1111");
+                    //  Debug.Log("Obstacle!!!!1111");
+                    //Slicer2DController.ClearPoints();//TODO: Fix
+                    Handheld.Vibrate();
+                    BadSlice();
+                    NextRound();
+                    return;
+                }
+                else if (decorator.Type == DecoratorType.CANDLE)
+                {
+                    Debug.Log(" decorator:  caandlleeeee ");
 
-                        //Slicer2DController.ClearPoints();//TODO: Fix
-                        Handheld.Vibrate();
-                        BadSlice();
-                        NextRound();
-                        return;
+                    candleDecorators.RemoveAt(0);
+                    Destroy(collider.gameObject);
+                    if (candleDecorators.Count == 0)
+                    {
+                        allowToSlice = true;
+                        Debug.Log(" allowToSlice: " + allowToSlice);
                     }
+
+                    return;
                 }
             }
 
             CheckSlices();//TODO: We don't have to do this every frame.
+            
             if (timer.ToStopTimer && !GameManager.isGameOver)//the reason !GameManager.isGameOver is checked is that CheckSlices() can lead to a GameOver()
             {
                 GameOver();
             }
         }
 
+    }
+
+    private Collider2D CheckClicksByLayer(int layer)
+    {
+        if(Input.GetMouseButton(0))
+        {
+            Vector2 fingerPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Collider2D colliderAtfingerPosition = Physics2D.OverlapPoint(fingerPosition, layer);
+            if (colliderAtfingerPosition != null)
+            {
+                return colliderAtfingerPosition;
+            }
+        }
+
+        return null;
     }
 
     private void CheckSlices()
@@ -231,7 +257,7 @@ public class SlicesManager : MonoBehaviour
             else
             {
                 double sliceSupposedToBeInPercentage = ((1 / (double)currentLevel.Cakes[currentCakeIndex].numberOfSlices) * 100);
-                Debug.Log("sliceSupposedToBeInPercentage = " + sliceSupposedToBeInPercentage);
+                //Debug.Log("sliceSupposedToBeInPercentage = " + sliceSupposedToBeInPercentage);
                 for (int i = 0; i < slicesInPercentage.Count; i++)
                 {
                     differences.Add (Math.Abs(slicesInPercentage[i] - sliceSupposedToBeInPercentage));
@@ -244,7 +270,7 @@ public class SlicesManager : MonoBehaviour
                 differencesAverage += differences[i];
             }
             differencesAverage /= differences.Count;
-            Debug.Log("differencesAverage = " + differencesAverage);
+            //Debug.Log("differencesAverage = " + differencesAverage);
 
             ScoreData.ScoreLevel[] ScoreLevelArr = (ScoreData.ScoreLevel[])Enum.GetValues(typeof(ScoreData.ScoreLevel));
             foreach (ScoreData.ScoreLevel possibleScoreLevel in ScoreLevelArr)
@@ -261,7 +287,7 @@ public class SlicesManager : MonoBehaviour
                 //Phew....
         }
 
-        Debug.Log(playerScoreLevel.ToString());
+        //Debug.Log(playerScoreLevel.ToString());
         int bonuslessScoreToAdd = (int)Enum.Parse(typeof(ScoreData.ScorePointsByLevel), playerScoreLevel.ToString());
         bonuslessScoreToAdd = (int)((double)bonuslessScoreToAdd * (ScoreData.NumberOfSlicesScoreNormaliser * slicesToSlice));
         int bonus = 0;
@@ -276,8 +302,8 @@ public class SlicesManager : MonoBehaviour
         }
         OnScoreChange?.Invoke(bonuslessScoreToAdd,bonus, playerScoreLevel);
         //comboCounter = (playerScoreLevel == ScoreData.ScoreLevel.Awesome ? (comboCounter + 1) : 0);
-        Debug.Log("comboCounter = " + comboCounter);
-        Debug.Log("scoreToAdd = " + bonuslessScoreToAdd+bonus);
+       // Debug.Log("comboCounter = " + comboCounter);
+     //   Debug.Log("scoreToAdd = " + bonuslessScoreToAdd+bonus);
     }
 
     private void GameOver()
@@ -339,12 +365,16 @@ public class SlicesManager : MonoBehaviour
             // OnGoalChange.Invoke();
 
             Cake newCake = currentLevel.Cakes[currentCakeIndex];
+
             GameObject cakeGameObject = Instantiate(newCake.cakePrefab, sliceableObjects.transform, true); // create new cake
-            Obstacle[] obstacles = cakeGameObject.GetComponentsInChildren<Obstacle>();
-            for (int i = 0; i < obstacles.Length; i++)
+            decorators = cakeGameObject.GetComponentsInChildren<Decorator>();
+            candleDecorators = decorators.Where(dec => dec.Type == DecoratorType.CANDLE).ToList();
+            allowToSlice = candleDecorators.Count == 0;
+            for (int i = 0; i < decorators.Length; i++)
             {
-                obstacles[i].transform.parent = obstacleObjects.transform;
+                decorators[i].transform.parent = obstacleObjects.transform;
             }
+
             cakesLeftText.text =
                 (currentLevel.Cakes.Length - currentCakeIndex).ToString();
             UpdateSliceDemandGraphics();

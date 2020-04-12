@@ -9,6 +9,8 @@ TagManager:
   - Goal
   - Timer
   - Refresh
+  - Candle
+  - Cherry
   layers:
   - Default
   - TransparentFX

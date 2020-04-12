@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7350961220576123592}
   - component: {fileID: 5126675802662358612}
   m_Layer: 8
-  m_Name: cake_circle 1 Cherry 1
+  m_Name: Cake5Cherries0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -224,6 +224,19 @@ MonoBehaviour:
   scaledPixelsPerUnit: 100
   init: 0
   anchorColliders: []
+--- !u!114 &4255668006972393606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6094175270150507552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fe9e338f9d768f4c8038fd657f8795f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 0
 --- !u!1001 &3715381108375835530
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -396,8 +409,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cherry
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7378167801371608929, guid: 302f07f0483f4f241b674ec63312a621, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 302f07f0483f4f241b674ec63312a621, type: 3}
+--- !u!1 &6094175270150507552 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 451089277215645287, guid: 302f07f0483f4f241b674ec63312a621,
+    type: 3}
+  m_PrefabInstance: {fileID: 5967352315150570055}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6094175270150507559 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 451089277215645280, guid: 302f07f0483f4f241b674ec63312a621,
