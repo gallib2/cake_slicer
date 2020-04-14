@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 451089277215645280}
   - component: {fileID: 451089277215645283}
-  - component: {fileID: 451089277215645282}
   - component: {fileID: 451089277215645281}
+  - component: {fileID: 3447827578201762040}
   m_Layer: 9
-  m_Name: Cherry
+  m_Name: Candle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 7
-  m_Sprite: {fileID: 21300000, guid: e542aa89207c8404e84fc1a43d5c2bfe, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b29cc9c20ba956a4e90c5e91238e5020, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -83,22 +83,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &451089277215645282
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 451089277215645287}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.66
 --- !u!114 &451089277215645281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,3 +95,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e554393412fa8eb45807b3068095572f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 1
+--- !u!61 &3447827578201762040
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 451089277215645287}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.2835245, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.8, y: 3.08}
+    newSize: {x: 1.66, y: 2}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.0911888, y: 3.08}
+  m_EdgeRadius: 0
