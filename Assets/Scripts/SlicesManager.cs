@@ -119,6 +119,7 @@ public class SlicesManager : MonoBehaviour
 
                         candleObstacles.RemoveAt(0);
                         Destroy(collider.gameObject);
+
                         return;
                     }
                 }
