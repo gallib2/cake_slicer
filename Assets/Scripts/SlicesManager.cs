@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+
 public class SlicesManager : MonoBehaviour
 {
     public delegate void ScoreChange(int bonuslessScoreToAdd,int bonus, ScoreData.ScoreLevel scoreLevel);
@@ -97,26 +98,26 @@ public class SlicesManager : MonoBehaviour
 
         if (!GameManager.isGameOver)
         {
-            if (Input.GetMouseButton(0))
+            bool isMouseButtonClick = Input.GetMouseButton(0);
+            bool isMouseDown = Input.GetMouseButtonDown(0);
+            if (isMouseButtonClick || isMouseDown)
             {
                 bool isHaveDecorators = obstacles.Length > 0;
                 Collider2D collider = isHaveDecorators ? CheckClicksByLayer(obstacleLayerMask) : null;
                 Obstacle decorator = collider ? collider.gameObject.GetComponent<Obstacle>() : null;
                 if (decorator != null)
                 {
-                    if (decorator.Type == ObstacleType.CHERRY)
+                    bool isTouchCherry = isMouseButtonClick && decorator.Type == ObstacleType.CHERRY;
+                    bool isTouchCandle = isMouseDown && decorator.Type == ObstacleType.CANDLE;
+                    if (isTouchCherry)
                     {
-                        //  Debug.Log("Obstacle!!!!1111");
-                        //Slicer2DController.ClearPoints();//TODO: Fix
                         Handheld.Vibrate();
                         BadSlice();
                         NextRound();
                         return;
                     }
-                    else if (decorator.Type == ObstacleType.CANDLE)
+                    else if (isTouchCandle)
                     {
-                        Debug.Log(" decorator:  caandlleeeee ");
-
                         candleObstacles.RemoveAt(0);
                         Destroy(collider.gameObject);
 
@@ -125,13 +126,7 @@ public class SlicesManager : MonoBehaviour
                 }
             }
 
-            if(Input.GetMouseButtonUp(0))
-            {
-                if (candleObstacles.Count == 0)
-                {
-                    allowToSlice = true;
-                }
-            }
+            allowToSlice |= !allowToSlice && Input.GetMouseButtonUp(0) && candleObstacles.IsEmpty();
 
             CheckSlices();//TODO: We don't have to do this every frame.
             if (timer.ToStopTimer && !GameManager.isGameOver)//the reason !GameManager.isGameOver is checked is that CheckSlices() can lead to a GameOver()
@@ -144,14 +139,11 @@ public class SlicesManager : MonoBehaviour
 
     private Collider2D CheckClicksByLayer(int layer)
     {
-        if (Input.GetMouseButton(0))
+        Vector2 fingerPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Collider2D colliderAtfingerPosition = Physics2D.OverlapPoint(fingerPosition, layer);
+        if (colliderAtfingerPosition != null)
         {
-            Vector2 fingerPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Collider2D colliderAtfingerPosition = Physics2D.OverlapPoint(fingerPosition, layer);
-            if (colliderAtfingerPosition != null)
-            {
-                return colliderAtfingerPosition;
-            }
+            return colliderAtfingerPosition;
         }
 
         return null;

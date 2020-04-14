@@ -11,6 +11,11 @@ public class Obstacle : MonoBehaviour
     {
         get { return type; }
     }
+
+    private void OnMouseDown()
+    {
+        Debug.Log("koko ko ko ko type: " + type);
+    }
 }
 
 public enum ObstacleType
