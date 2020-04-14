@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc59fab1ece227847ab227fcf9a752d0, type: 3}
+  m_Name: TEST
+  m_EditorClassIdentifier: Assembly-CSharp::Level
+  displayName: TEST
+  cakes:
+  - cakePrefab: {fileID: 2935677715139052978, guid: cdeaf0f5939b3e0409d101774ec4ae22,
+      type: 3}
+    numberOfSlices: 8
+    fractions:
+    - numerator: 2
+      denominator: 3
+    - numerator: 1
+      denominator: 3
+  - cakePrefab: {fileID: 4429666012074374676, guid: f3354f85f3900ac49afec2d0c6574d8f,
+      type: 3}
+    numberOfSlices: 4
+    fractions:
+    - numerator: 2
+      denominator: 4
+    - numerator: 1
+      denominator: 2
+  - cakePrefab: {fileID: 4203801516081614381, guid: f2b9d9262839db64f9f0b4df2d3826b6,
+      type: 3}
+    numberOfSlices: 6
+    fractions:
+    - numerator: 1
+      denominator: 2
+    - numerator: 1
+      denominator: 6
+    - numerator: 1
+      denominator: 6
+    - numerator: 1
+      denominator: 6
+  - cakePrefab: {fileID: 4203801516081614381, guid: f2b9d9262839db64f9f0b4df2d3826b6,
+      type: 3}
+    numberOfSlices: 8
+    fractions: []
+  - cakePrefab: {fileID: 4203801516081614381, guid: f2b9d9262839db64f9f0b4df2d3826b6,
+      type: 3}
+    numberOfSlices: 8
+    fractions: []
+  - cakePrefab: {fileID: 4203801516081614381, guid: f2b9d9262839db64f9f0b4df2d3826b6,
+      type: 3}
+    numberOfSlices: 8
+    fractions:
+    - numerator: 1
+      denominator: 3
+    - numerator: 1
+      denominator: 3
+    - numerator: 1
+      denominator: 6
+    - numerator: 1
+      denominator: 6
+  - cakePrefab: {fileID: 8200570759069020071, guid: 9e8e89e540c26c94a921021a98c58a04,
+      type: 3}
+    numberOfSlices: 8
+    fractions:
+    - numerator: 3
+      denominator: 4
+    - numerator: 1
+      denominator: 4
+  - cakePrefab: {fileID: 26350562484668360, guid: 75cec3840c5ea254d8a35463eb1be124,
+      type: 3}
+    numberOfSlices: 8
+    fractions:
+    - numerator: 1
+      denominator: 2
+    - numerator: 1
+      denominator: 4
+    - numerator: 1
+      denominator: 4
+  - cakePrefab: {fileID: 3160547572476184343, guid: f771dc6483aabaa47a3ef32005af57be,
+      type: 3}
+    numberOfSlices: 8
+    fractions:
+    - numerator: 1
+      denominator: 4
+    - numerator: 1
+      denominator: 4
+    - numerator: 1
+      denominator: 6
+    - numerator: 1
+      denominator: 6
+    - numerator: 1
+      denominator: 6
+  - cakePrefab: {fileID: 4203801516081614381, guid: ece24715fa60f44fe8c0794eac32d649,
+      type: 3}
+    numberOfSlices: 7
+    fractions: []
+  starRequirements:
+  - 0.4000000059604645
+  - 0.75
+  - 1
+  initialTimeInSeconds: 450

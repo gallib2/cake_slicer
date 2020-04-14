@@ -3,116 +3,100 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static event Action OnNextLevel;
-    public static event Action OnGameOver;
+    //public static event Action OnGameOver;
+    public static event Action<int> OnWin;
+    public static event Action OnLose;
+    public static event Action<int> OnGameOver;
+    public static event Action OnLevelInitialised;
+    public static event Action<bool> OnPauseChanged;
 
-    public delegate void GoalChange(int goal);
-
-    public static event GoalChange OnGoalChange;
     public static string playerName;
-
-    //TimerHelper timer;
-    //float timerRequired = 1f;
-
-    public List<int> slicesSizeList;
-    public static List<int> goals = new List<int>();
-    public static int currentGoal;
-    public static int score = 0;
     public static bool isGameOver = false;
-
-    private static int minSliceGoal = 2;
-    private static int maxSliceGoal = 6;
-
-    public static int currentLevel = 0;
-
-    TimerHelper timer;
-    static public GameManager instance;
-
-    // Start is called before the first frame update
-    void Start()
+    public static bool GameIsPaused
     {
-        instance = this;
-        //timer = TimerHelper.Create();
+        get
+        {
+            return gameIsPaused;
+        }
+    }
+    private static bool gameIsPaused = false;
+    [SerializeField]
+    private GameObject pauseMenuPopUp;
+    public Score score;
 
-        StartGameSettings();
+    public static bool FunSlicing = false;
+
+    [SerializeField]
+    private Level currentLevel;
+
+    private void OnEnable()
+    {
+        SlicesManager.OnGameOver += GameOver;
     }
 
     private void OnDisable()
     {
-        score = 0;
+        SlicesManager.OnGameOver -= GameOver;
         isGameOver = false;
-        goals.Clear();
     }
 
-    private void StartGameSettings()
+    void Start()
     {
-        timer = TimerHelper.Create();
-        goals.Add(2);
-        currentGoal = goals.Last();
-        score = 0;
-        currentLevel = 0;
-        maxSliceGoal = 6;
-        OnNextLevel?.Invoke();
-        OnGoalChange?.Invoke(currentGoal);
+        if (LevelsManager.CurrentLevel != null)
+        {
+            currentLevel = LevelsManager.CurrentLevel;
+        }
+
+        InitialiseLevel();
     }
 
-    // TODO event
-    public static void NextLevel()
+    /*public void SwitchPauseState()
     {
-        int nextGoal = GetNextGoal();
+        gameIsPaused = !gameIsPaused;
+    }*/
 
-        goals.Add(nextGoal);
-
-        currentGoal = goals.Last();
-        score = goals.Count - 1;
-        currentLevel++;
-
-        OnNextLevel?.Invoke();
-
-        OnGoalChange?.Invoke(currentGoal);
+    public void SetPause(bool to)
+    {
+        //pauseMenuPopUp.SetActive(to);
+        OnPauseChanged(to);
+        gameIsPaused = to;
     }
 
-    public static void GameOver()
+    public void InitialiseLevel()
+    {
+        SetPause(false);
+        isGameOver = false;
+        OnLevelInitialised.Invoke();
+    }
+
+    public void GameOver()
     {
         isGameOver = true;
-        OnGameOver?.Invoke();
-        //OnNextLevel?.Invoke();
-    }
-
-    public void PlayAgain()
-    {
-        isGameOver = false;
-        goals.Clear();
-        
-        StartGameSettings();
-
-
-        //if (gameOverScreenPrefub != null)
-        //{
-        //    Destroy(gameOverScreenPrefub.gameObject);
-        //}
-    }
-
-    // goal need to be even
-    private static int GetNextGoal()
-    {
-        int goal = UnityEngine.Random.Range(minSliceGoal, maxSliceGoal);
-        bool isGoalOdd = goal % 2 != 0;
-        if (isGoalOdd)
+        currentLevel.PlayingCount++;
+        if (score.CurrentStars >= 1/*currentLevel.MinStarsToWin*/) //TODO: hardcoded winning condition(Can be moved to Level)
         {
-            goal += 1;
+            currentLevel.LevelSucceeded();
+            SaveAndLoadManager.TrySaveLevelData(LevelsManager.CurrentLevelNumber, (UInt32)Score.score);
+            OnWin?.Invoke(score.CurrentStars);//TODO: Record the number of stars or/and score if it's larger than it was previously
         }
-
-        Debug.Log("currentLevel: " + currentLevel);
-
-        if(maxSliceGoal < 8 && (currentLevel % 5 == 0))
+        else
         {
-            maxSliceGoal += 2; 
+            OnLose.Invoke();
         }
-
-        return goal;
+        OnGameOver?.Invoke(Score.score);
     }
+
+    public void UnloadScene()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+   /* public void SetFunSlicing(bool to)
+    {
+        FunSlicing = to;
+    }*/
 }
