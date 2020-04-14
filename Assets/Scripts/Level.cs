@@ -149,7 +149,7 @@ public class Cake
 {
     [SerializeField]
     public GameObject cakePrefab;
-    [SerializeField][Range(2,8)]
+    [SerializeField][Range(2,20)]
     public byte numberOfSlices;
     public Fraction[] fractions;
 
