@@ -119,14 +119,16 @@ public class SlicesManager : MonoBehaviour
 
                         candleObstacles.RemoveAt(0);
                         Destroy(collider.gameObject);
-                        if (candleObstacles.Count == 0)
-                        {
-                            allowToSlice = true;
-                            Debug.Log(" allowToSlice: " + allowToSlice);
-                        }
-
                         return;
                     }
+                }
+            }
+
+            if(Input.GetMouseButtonUp(0))
+            {
+                if (candleObstacles.Count == 0)
+                {
+                    allowToSlice = true;
                 }
             }
 
