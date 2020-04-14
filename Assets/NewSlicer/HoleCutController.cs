@@ -14,8 +14,6 @@ public class HoleCutController : MonoBehaviour {
 
     public int circleVerticesCount = 15;
 
-    private bool skipedFrame;
-
     public void Initialize() {
 		Polygon2D.defaultCircleVerticesCount = circleVerticesCount;
 		Polygon2D circlePolygon = Polygon2D.Create (Polygon2D.PolygonType.Hexagon, size);
@@ -39,7 +37,6 @@ public class HoleCutController : MonoBehaviour {
 
         if(!SlicesManager.allowToSlice)
         {
-            skipedFrame = false;
             return;
         }
 
