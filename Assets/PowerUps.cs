@@ -17,7 +17,13 @@ public class PowerUps : MonoBehaviour
     private Timer timer;
     [Header("Golden Knife")]
     [SerializeField]
-    private float time = 5f;
+    private float goldenKnifeInitialTime = 5f;
+    public static bool goldenKnifeIsActive
+    {
+        get; private set;
+    }
+    private float goldenKnifeIsTimeLeft;
+
 
     private void Awake()
     {
@@ -38,12 +44,43 @@ public class PowerUps : MonoBehaviour
         {
             case PowerUpTypes.EXTRA_TIME:
                 ExtraTime();break;
+            case PowerUpTypes.GOLDEN_KNIFE:
+                GoldenKnife(); break;
         }
+        
     }
 
     private void ExtraTime()
     {
         timer.AddTime(timeToAdd);
+    }
+
+    private void GoldenKnife()
+    {
+        Debug.Log("Golden Knife is active!");
+
+        goldenKnifeIsActive = true;
+        goldenKnifeIsTimeLeft = goldenKnifeInitialTime;
+    }
+
+    private void Update()
+    {
+        if (!GameManager.GameIsPaused)
+        {
+            if (goldenKnifeIsTimeLeft > 0)
+            {
+                if (!goldenKnifeIsActive)
+                {
+                    Debug.LogError("Golden knife is not active despite goldenKnifeIsTimeLeft being larger than 0!");
+                }
+                goldenKnifeIsTimeLeft -= Time.deltaTime;
+                if(goldenKnifeIsTimeLeft <= 0)
+                {
+                    goldenKnifeIsActive = false;
+                    Debug.Log("Golden Knife aint active no more!");
+                }
+            }
+        }
     }
 
 }

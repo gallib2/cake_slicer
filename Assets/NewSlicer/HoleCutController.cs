@@ -16,6 +16,10 @@ public class HoleCutController : MonoBehaviour {
 
     private bool skipedFrame;
 
+    /* [SerializeField]
+     private CrumbsEffect crumbs;*/
+    public static bool isSlicing;
+
     public void Initialize() {
 		Polygon2D.defaultCircleVerticesCount = circleVerticesCount;
 		Polygon2D circlePolygon = Polygon2D.Create (Polygon2D.PolygonType.Hexagon, size);
@@ -31,7 +35,9 @@ public class HoleCutController : MonoBehaviour {
         Initialize();
     }
 
-    void Update() {
+    void Update()
+    {
+        isSlicing = false;
         if (GameManager.GameIsPaused)
         {
             return;
@@ -49,35 +55,51 @@ public class HoleCutController : MonoBehaviour {
             oldPosition = new Vector2D(pos);
         }
 
-        if (Input.GetMouseButton (0)) {
+        bool slicingDetected = false;
+
+        if (Input.GetMouseButton (0))
+        {
 			eraseBrushStart.SetPosition(new Vector2D(pos));
 
-			Destruction2D.DestroyByPolygonAll(eraseBrushStart);
+			if(Destruction2D.DestroyByPolygonAll(eraseBrushStart))
+            {
+                slicingDetected = true;
+            }
 
-            if (oldPosition != null) {
-                if (UpdateMiddleEraseMesh()) {
-                    Destruction2D.DestroyByPolygonAll(eraseBrushMiddle);
+            if (oldPosition != null)
+            {
+                if (UpdateMiddleEraseMesh())
+                {
+                    if (Destruction2D.DestroyByPolygonAll(eraseBrushMiddle))
+                    {
+                        slicingDetected = true;
+                    }
 
                     oldPosition = new Vector2D(pos);
                 }
             }
-		} else {
+        }
+        else
+        {
             oldPosition = new Vector2D(pos);
         }
-
+        isSlicing = slicingDetected;
         Draw(transform, pos);
     }
 
     public void Draw(Transform transform, Vector2 pos) {
         eraseBrushStart.SetPosition(new Vector2D(pos));
 
-		if (eraseBrushStart.GetWorldShape() != null) {
+		if (eraseBrushStart.GetWorldShape() != null)
+        {
             visuals.Clear();
         
 			visuals.GenerateComplexMesh(eraseBrushStart.GetWorldShape().pointsList, transform);
 
-            if (oldPosition != null) {
-                if (UpdateMiddleEraseMesh()) {
+            if (oldPosition != null)
+            {
+                if (UpdateMiddleEraseMesh())
+                {
                     visuals.GenerateComplexMesh(eraseBrushMiddle.GetWorldShape().pointsList, transform);
                 }
 
