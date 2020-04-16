@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HoleCutController : MonoBehaviour {
+public class HoleCutController : MonoBehaviour
+{
     public Destruction2DVisuals visuals = new Destruction2DVisuals();
 
     EraseBrush eraseBrushStart = new EraseBrush(null, null);
@@ -14,20 +15,16 @@ public class HoleCutController : MonoBehaviour {
 
     public int circleVerticesCount = 15;
 
-    private bool skipedFrame;
+    public void Initialize()
+    {
+        Polygon2D.defaultCircleVerticesCount = circleVerticesCount;
+        Polygon2D circlePolygon = Polygon2D.Create(Polygon2D.PolygonType.Hexagon, size);
 
-    /* [SerializeField]
-     private CrumbsEffect crumbs;*/
-    public static bool isSlicing;
+        eraseBrushStart.SetBrush(circlePolygon.Copy());
+    }
 
-    public void Initialize() {
-		Polygon2D.defaultCircleVerticesCount = circleVerticesCount;
-		Polygon2D circlePolygon = Polygon2D.Create (Polygon2D.PolygonType.Hexagon, size);
-
-		eraseBrushStart.SetBrush(circlePolygon.Copy());
-	}
-
-    void Start() {
+    void Start()
+    {
         visuals.Initialize();
 
         visuals.SetGameObject(gameObject);
@@ -37,43 +34,34 @@ public class HoleCutController : MonoBehaviour {
 
     void Update()
     {
-        isSlicing = false;
         if (GameManager.GameIsPaused)
         {
             return;
         }
 
-        if(!SlicesManager.allowToSlice)
+        if (!SlicesManager.allowToSlice)
         {
-            skipedFrame = false;
             return;
         }
 
         Vector2 pos = GetMousePosition();
 
-        if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetMouseButtonDown(0))
+        {
             oldPosition = new Vector2D(pos);
         }
 
-        bool slicingDetected = false;
-
-        if (Input.GetMouseButton (0))
+        if (Input.GetMouseButton(0))
         {
-			eraseBrushStart.SetPosition(new Vector2D(pos));
+            eraseBrushStart.SetPosition(new Vector2D(pos));
 
-			if(Destruction2D.DestroyByPolygonAll(eraseBrushStart))
-            {
-                slicingDetected = true;
-            }
+            Destruction2D.DestroyByPolygonAll(eraseBrushStart);
 
             if (oldPosition != null)
             {
                 if (UpdateMiddleEraseMesh())
                 {
-                    if (Destruction2D.DestroyByPolygonAll(eraseBrushMiddle))
-                    {
-                        slicingDetected = true;
-                    }
+                    Destruction2D.DestroyByPolygonAll(eraseBrushMiddle);
 
                     oldPosition = new Vector2D(pos);
                 }
@@ -83,18 +71,19 @@ public class HoleCutController : MonoBehaviour {
         {
             oldPosition = new Vector2D(pos);
         }
-        isSlicing = slicingDetected;
+
         Draw(transform, pos);
     }
 
-    public void Draw(Transform transform, Vector2 pos) {
+    public void Draw(Transform transform, Vector2 pos)
+    {
         eraseBrushStart.SetPosition(new Vector2D(pos));
 
-		if (eraseBrushStart.GetWorldShape() != null)
+        if (eraseBrushStart.GetWorldShape() != null)
         {
             visuals.Clear();
-        
-			visuals.GenerateComplexMesh(eraseBrushStart.GetWorldShape().pointsList, transform);
+
+            visuals.GenerateComplexMesh(eraseBrushStart.GetWorldShape().pointsList, transform);
 
             if (oldPosition != null)
             {
@@ -103,24 +92,29 @@ public class HoleCutController : MonoBehaviour {
                     visuals.GenerateComplexMesh(eraseBrushMiddle.GetWorldShape().pointsList, transform);
                 }
 
-            } else {
+            }
+            else
+            {
                 oldPosition = new Vector2D(pos);
-            }   
-                    
-			visuals.Draw();
-		}
-	}
+            }
 
-    bool UpdateMiddleEraseMesh() {
-        if (oldPosition == null) {
-            return(false);
+            visuals.Draw();
+        }
+    }
+
+    bool UpdateMiddleEraseMesh()
+    {
+        if (oldPosition == null)
+        {
+            return (false);
         }
 
         Vector2D pos = new Vector2D(GetMousePosition());
         Vector2D oldPos = new Vector2D(oldPosition);
 
-        if (Vector2D.Distance(pos, oldPos) < size) {
-            return(false);
+        if (Vector2D.Distance(pos, oldPos) < size)
+        {
+            return (false);
         }
 
         Polygon2D middlePolygon = new Polygon2D();
@@ -137,10 +131,11 @@ public class HoleCutController : MonoBehaviour {
 
         eraseBrushMiddle = new EraseBrush(null, middlePolygon);
 
-        return(true);
+        return (true);
     }
 
-    public static Vector2 GetMousePosition() {
-		return(Camera.main.ScreenToWorldPoint (Input.mousePosition));
-	}
+    public static Vector2 GetMousePosition()
+    {
+        return (Camera.main.ScreenToWorldPoint(Input.mousePosition));
+    }
 }
