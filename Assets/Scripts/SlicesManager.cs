@@ -313,10 +313,16 @@ public class SlicesManager : MonoBehaviour
         {
             comboCounter = 0;
         }
+        if (PowerUps.goldenKnifeIsActive)
+        {
+            Debug.Log("goldenKnifeIsActive, multiplyin score." );
+            bonuslessScoreToAdd *= 2;//TODO: do we care whter this is hardcoded or not?
+            bonus *= 2;//TODO: do we care whter this is hardcoded or not?
+        }
         OnScoreChange?.Invoke(bonuslessScoreToAdd,bonus, playerScoreLevel);
         //comboCounter = (playerScoreLevel == ScoreData.ScoreLevel.Awesome ? (comboCounter + 1) : 0);
         Debug.Log("comboCounter = " + comboCounter);
-        Debug.Log("scoreToAdd = " + bonuslessScoreToAdd+bonus);
+        Debug.Log("scoreToAdd = " + (bonuslessScoreToAdd+bonus));
     }
 
     private void GameOver()

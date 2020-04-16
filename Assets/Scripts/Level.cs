@@ -72,11 +72,11 @@ public class Level : ScriptableObject
 
     public bool IsLevelComplete(int score)
     {
-        double ScoreDividedByMaxScore = ((double)score / MaximumScore());
+        double ScoreDividedByMaxScore = ((double)score / MaximumScoreWithouPowerUps());
         return (ScoreDividedByMaxScore >= StarRequirements[0]);
     }
 
-    public int MaximumScore()
+    public int MaximumScoreWithouPowerUps()
     {
         int maximumScore = 0;
         for (int i = 0; i < Cakes.Length; i++)

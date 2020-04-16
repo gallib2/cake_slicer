@@ -24,8 +24,6 @@ public class GameManager : MonoBehaviour
         }
     }
     private static bool gameIsPaused = false;
-    [SerializeField]
-    private GameObject pauseMenuPopUp;
     public Score score;
 
     public static bool FunSlicing = false;

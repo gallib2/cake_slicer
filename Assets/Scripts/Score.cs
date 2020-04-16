@@ -181,7 +181,7 @@ public class Score : MonoBehaviour
         score = scoreToSet;
         scoreText.text = score.ToString();
         Level currentLevel = LevelsManager.CurrentLevel;
-        int levelMaxScore = currentLevel.MaximumScore();
+        int levelMaxScore = currentLevel.MaximumScoreWithouPowerUps();
         double ScoreDividedByMaxScore = ((double)score / levelMaxScore);
         scoreSliderFill.fillAmount = (float)ScoreDividedByMaxScore;
         for (int i = 0; i < currentLevel.StarRequirements.Length; i++)
