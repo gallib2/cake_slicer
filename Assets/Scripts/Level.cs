@@ -167,8 +167,8 @@ public class Cake
 [Serializable]
 public struct Fraction
 {
-    [SerializeField][Range(1, 10)]
+    [SerializeField][Range(1, 300)]
     public byte numerator;
-    [SerializeField] [Range(1, 10)]
+    [SerializeField] [Range(1, 300)]
     public byte denominator;
 }
