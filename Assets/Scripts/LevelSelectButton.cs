@@ -5,36 +5,51 @@ using UnityEngine.UI;
 
 public class LevelSelectButton : MonoBehaviour
 {
-    [SerializeField]
-    private Level level;
-    [SerializeField]
-    private Text text;
-    [SerializeField]
-    private LevelsManager levelsManager;
 
-    void Start()
+
+    [SerializeField] private int levelIndex;
+    [SerializeField] private TMPro.TextMeshProUGUI indexText;
+    [SerializeField] private Image lockedImage;
+    [SerializeField] private Image starsImage;
+    [SerializeField] private GameObject starsPannel;
+    // [SerializeField] private Level level;
+    //[SerializeField] private Text text;
+
+    [SerializeField] private LevelsManager levelsManager;
+    //TODO: if we see that all these refferences flood our RAM, we can easily get rid of em.
+
+    private void Start()
     {
-        System.UInt32? savedScore = levelsManager.GetLevelSavedScore(level);
-        if (savedScore == null)
+        Draw(false);
+    }
+
+
+    public void Draw( bool areAllLevelsUnlocked = false)
+    {
+        //TODO: I think this class knows too much for its own good
+
+        bool isLocked = levelsManager.IsLevelLocked(levelIndex) && !areAllLevelsUnlocked;
+        lockedImage.gameObject.SetActive(isLocked);
+        starsPannel.SetActive(!isLocked);
+
+        if (!isLocked)
         {
-            Debug.LogError("Something's wrong!");
-            return;
-        }
-        text.text = level.DisplayName+"\n SCORE "+ savedScore.ToString() + "\n";
-        double ScoreDividedByMaxScore = ((double)savedScore / level.MaximumScoreWithouPowerUps());
-        for (int i = 0; i < level.StarRequirements.Length; i++)//TODO: copied from SetScore.. this piece of code should reside somewhere else
-        {
-            bool shouldGetStar = (ScoreDividedByMaxScore >= level.StarRequirements[i]);
-            if (shouldGetStar)
+            System.UInt32? savedScore = levelsManager.GetLevelSavedScore(levelIndex);
+            if (savedScore == null)
             {
-                text.text += (i == 0 ? "*":" *");
+                Debug.LogError("Something's wrong!");
+                return;
             }
+            Level level = levelsManager.GetLevel(levelIndex);
+            indexText.text = levelIndex.ToString();
+            // text.text = level.DisplayName + "\n SCORE " + savedScore.ToString() + "\n";
+            starsImage.sprite = SpriteHolder.GetStarsSprite(level.GetNumberOfStars((int)savedScore));
         }
     }
 
     public void LoadLevel()
     {
-        levelsManager.LoadLevel(level);//LevelsManager can be turned into a singleton
+        levelsManager.LoadLevel(levelIndex);//LevelsManager can be turned into a singleton
     }
 
 }

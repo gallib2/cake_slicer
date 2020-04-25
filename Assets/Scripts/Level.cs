@@ -76,6 +76,25 @@ public class Level : ScriptableObject
         return (ScoreDividedByMaxScore >= StarRequirements[0]);
     }
 
+    public int GetNumberOfStars(int score)//TODO: SetScore might not be using this yet
+    {
+        double ScoreDividedByMaxScore = ((double)score / MaximumScoreWithouPowerUps());
+        int numberOfStars = 0;
+        for (int i = 0; i < StarRequirements.Length; i++)
+        {
+            bool shouldGetStar = (ScoreDividedByMaxScore >= StarRequirements[i]);
+            if (shouldGetStar)
+            {
+                numberOfStars += 1;
+            }
+            else
+            {
+                break;
+            }
+        }
+        return numberOfStars;
+    }
+
     public int MaximumScoreWithouPowerUps()
     {
         int maximumScore = 0;
