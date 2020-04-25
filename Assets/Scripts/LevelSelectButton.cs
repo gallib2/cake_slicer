@@ -21,7 +21,7 @@ public class LevelSelectButton : MonoBehaviour
             return;
         }
         text.text = level.DisplayName+"\n SCORE "+ savedScore.ToString() + "\n";
-        double ScoreDividedByMaxScore = ((double)savedScore / level.MaximumScore());
+        double ScoreDividedByMaxScore = ((double)savedScore / level.MaximumScoreWithouPowerUps());
         for (int i = 0; i < level.StarRequirements.Length; i++)//TODO: copied from SetScore.. this piece of code should reside somewhere else
         {
             bool shouldGetStar = (ScoreDividedByMaxScore >= level.StarRequirements[i]);
