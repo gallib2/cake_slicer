@@ -6,11 +6,13 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 
-
+public enum LevelStates : byte
+{
+    UNTOUCHED = 0, WON_ON_FIRST_TRY = 1, LOST_ON_FIRST_TRY = 2
+}
 public static class SaveAndLoadManager 
 {
     #region Levels:
-
     [Serializable]
     public class LevelsSavedData
     {
@@ -18,10 +20,12 @@ public static class SaveAndLoadManager
         public class SavedLevelData
         {
             public UInt32 score;
-
-            public SavedLevelData(UInt32 score)
+            public LevelStates state;
+            public SavedLevelData(/*UInt32 score*/)
             {
-                this.score = score;
+                //this.score = score;
+                score = 0;
+                state = LevelStates.UNTOUCHED;
             }
         }
         public SavedLevelData[] savedLevelsData;
@@ -33,7 +37,7 @@ public static class SaveAndLoadManager
             savedLevelsData = new SavedLevelData[numberOfLevels];
             for (int i = 0; i < savedLevelsData.Length; i++)
             {
-                savedLevelsData[i] = new SavedLevelData(0);
+                savedLevelsData[i] = new SavedLevelData();
             }
         }
     }
@@ -58,7 +62,7 @@ public static class SaveAndLoadManager
         }
         else
         {
-            return new LevelsSavedData(5);//TODO: Should not stay hardcoded...
+            return new LevelsSavedData(LevelsManager.instance.NumberOfLevels);//TODO: Should not stay hardcoded...
         }
        // return null;
     }
@@ -77,19 +81,35 @@ public static class SaveAndLoadManager
         fileStream.Close();
     }
 
-    public static void TrySaveLevelData(int levelIndex, UInt32 newScore)
+    public static void TrySaveLevelData(int levelIndex, UInt32 newScore, bool won)
     {
-        LevelsSavedData loadedSavedData = LoadLevelsSavedData();
-        UInt32 oldScore = loadedSavedData.savedLevelsData[levelIndex].score;
-        if (oldScore < newScore)
+        LevelsSavedData loadedLevelsSavedData = LoadLevelsSavedData();//new
+        LevelsSavedData.SavedLevelData loadedLevelData = loadedLevelsSavedData.savedLevelsData[levelIndex];
+        if (loadedLevelData.state == LevelStates.UNTOUCHED)
         {
-            loadedSavedData.savedLevelsData[levelIndex].score = newScore;
-            Debug.Log(oldScore + " is  smaller than " + newScore + ". Saving!");
-            SaveLevelsData(loadedSavedData);
+            loadedLevelData.score = newScore;
+            loadedLevelData.state = 
+                (won ? LevelStates.WON_ON_FIRST_TRY : LevelStates.LOST_ON_FIRST_TRY);
+            SaveLevelsData(loadedLevelsSavedData);
+            Debug.Log("You " + (won? "won ":"lost ") + "on your first try!");
+
+
         }
-        else
+        else 
         {
-            Debug.Log(oldScore+" is not smaller than "+ newScore+ ". No need to save");
+            UInt32 oldScore = loadedLevelData.score;
+            if (oldScore < newScore)
+            {
+                loadedLevelData.score = newScore;
+                Debug.Log(oldScore + " is  smaller than " + newScore + ". Saving!");
+                SaveLevelsData(loadedLevelsSavedData);
+            }
+            else
+            {
+                Debug.Log(oldScore + " is not smaller than " + newScore + ". No need to save");
+
+            }
+
         }
     }
     #endregion

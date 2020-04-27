@@ -27,10 +27,11 @@ public class LevelsManager: MonoBehaviour
     }
 
     //Should these not be static?
-    public Level[] gameLevels; // TODO - maybe later we can read this from a config file
+    [SerializeField]private Level[] gameLevels; // TODO - maybe later we can read this from a config file
     private SaveAndLoadManager.LevelsSavedData savedData;
     private static bool areAllLevelsUnlocked = false;
 
+    public static LevelsManager instance;
     /*public void LoadLevel(int levelNumber)
     {
         //SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
@@ -39,39 +40,58 @@ public class LevelsManager: MonoBehaviour
         CurrentLevel.PlayingCount++;
         SceneManager.LoadScene(cakesScene);
     }*/
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+            Debug.LogWarning("Tried to create more than one singleton");
+        }
+
+        savedData = SaveAndLoadManager.LoadLevelsSavedData();
+    }
+
+    public int NumberOfLevels
+    {
+        get
+        {
+            return gameLevels.Length;
+        }
+    }
 
     public void LoadLevel(int levelIndex)
     {
-        //SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
-       // for (int i = 0; i < gameLevels.Length; i++)
+        //Debug.Log("----------------- isPrevLevelSucceeded: " + isPrevLevelSucceeded);
+        //Debug.Log("----------------- i: " + isPrevLevelSucceeded);
+        /*if (isPrevLevelSucceeded)
         {
-          //  if(level == gameLevels[i])
+            level.IsLocked = false;
+        }*/
+        if (IsLevelIndexLegit(levelIndex))
+        {
+            bool isLocked = IsLevelLocked(levelIndex);//TODO: we do a for loop there, should we save level index on the levels themselves?
+                                                      // Debug.Log("level.IsLocked: " + level.IsLocked);
+            if (!isLocked || areAllLevelsUnlocked)
             {
-                
-                //Debug.Log("----------------- isPrevLevelSucceeded: " + isPrevLevelSucceeded);
-                //Debug.Log("----------------- i: " + isPrevLevelSucceeded);
-                /*if (isPrevLevelSucceeded)
-                {
-                    level.IsLocked = false;
-                }*/
-                bool isLocked = IsLevelLocked(levelIndex);//TODO: we do a for loop there, should we save level index on the levels themselves?
-               // Debug.Log("level.IsLocked: " + level.IsLocked);
-                if (!isLocked || areAllLevelsUnlocked)
-                {
-                    CurrentLevelNumber = levelIndex;
-                    CurrentLevel = gameLevels[levelIndex];
-                    CurrentLevel.PlayingCount++;
-                    SceneManager.LoadScene(cakesScene);
-                }
+                CurrentLevelNumber = levelIndex;
+                CurrentLevel = gameLevels[levelIndex];
+                //CurrentLevel.PlayingCount++;
+                SceneManager.LoadScene(cakesScene);
             }
         }
     }
 
     public bool IsLevelLocked(int levelIndex)
     {
+
         //for (int i = 0; i < gameLevels.Length; i++)
+        if (IsLevelIndexLegit(levelIndex))
         {
-           // if (level == gameLevels[i])
+            // if (level == gameLevels[i])
             {
                 bool isLocked = true;
                 bool isBeforeSecondLevel = levelIndex < 2;
@@ -87,31 +107,49 @@ public class LevelsManager: MonoBehaviour
                 return isLocked;
             }
         }
+        return true;
         //Debug.LogError("Level was not found!");
         //return false;
     }
 
-    private void Awake()
-    {
-        savedData = SaveAndLoadManager.LoadLevelsSavedData();
-    }
+
 
     public System.UInt32? GetLevelSavedScore(int levelIndex)
     {
-        //for (int i = 0; i < gameLevels.Length; i++)
-        {
-            //if (level == gameLevels[i])
-            {
-                return savedData.savedLevelsData[levelIndex].score;
-            }
-        }
-        //Debug.LogError("Level was not found!");
+       if (IsLevelIndexLegit(levelIndex))
+       {
+            return savedData.savedLevelsData[levelIndex].score;
+       }
         return null;
     }
 
+    public LevelStates? GetLevelSavedState(int levelIndex)
+    {
+        if (IsLevelIndexLegit(levelIndex))
+        {
+            return savedData.savedLevelsData[levelIndex].state;
+        }
+        return null;
+    }
 
     public Level GetLevel(int levelIndex)
     {
-           return gameLevels[levelIndex];
+       if( IsLevelIndexLegit(levelIndex))
+       {
+            return gameLevels[levelIndex];
+
+       }
+       return null;
     }
+
+    private bool IsLevelIndexLegit(int levelIndex)
+    {
+        if(levelIndex<0|| levelIndex > gameLevels.Length - 1)
+        {
+            Debug.LogError("Level Index is not legit!");
+            return false;
+        }
+        return true;
+    }
+
 }
