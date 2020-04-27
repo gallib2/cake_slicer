@@ -22,8 +22,8 @@ public class Level : ScriptableObject
       private int minStarsToWin;//Ori: I thought 1 star guarantees a win*/
 
     //public bool IsLevelSucceeded { get; set; }
-    public bool IsSucceedFirstTry { get; private set; }
-    public int PlayingCount { get; set; }
+    //public bool IsSucceedFirstTry { get; private set; }
+    //public int PlayingCount { get; set; }
 
     public Cake[] Cakes
     {
@@ -60,15 +60,15 @@ public class Level : ScriptableObject
         set { minStarsToWin = value; }
     }*/
 
-    public void LevelSucceeded()
+    /*public void LevelSucceeded()
     {
-        /*Debug.Log("IsLevelSucceeded " + IsLevelSucceeded);
-        IsLevelSucceeded = true;*/
+        //Debug.Log("IsLevelSucceeded " + IsLevelSucceeded);
+       // IsLevelSucceeded = true;
         if (PlayingCount == 1)
         {
             IsSucceedFirstTry = true;
         }
-    }
+    }*/
 
     public bool IsLevelComplete(int score)
     {
@@ -186,8 +186,8 @@ public class Cake
 [Serializable]
 public struct Fraction
 {
-    [SerializeField][Range(1, 10)]
+    [SerializeField][Range(1, 32)]
     public byte numerator;
-    [SerializeField] [Range(1, 10)]
+    [SerializeField] [Range(1, 32)]
     public byte denominator;
 }

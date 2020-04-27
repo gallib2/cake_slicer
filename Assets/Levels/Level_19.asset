@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc59fab1ece227847ab227fcf9a752d0, type: 3}
+  m_Name: Level_19
+  m_EditorClassIdentifier: Assembly-CSharp::Level
+  displayName: LVL 19
+  cakes:
+  - cakePrefab: {fileID: 8200570759069020071, guid: ed7a43d86da07254da31624e0215f774,
+      type: 3}
+    numberOfSlices: 5
+    fractions: []
+  - cakePrefab: {fileID: 2935677715139052978, guid: 221d36b24842e6b488078eed48997e8f,
+      type: 3}
+    numberOfSlices: 12
+    fractions: []
+  - cakePrefab: {fileID: 8200570759069020071, guid: 562545a56a6ac6e49b79f24afd5754ce,
+      type: 3}
+    numberOfSlices: 5
+    fractions: []
+  - cakePrefab: {fileID: 8200570759069020071, guid: 5af1a515f5f4c59499abc4273a4a1f13,
+      type: 3}
+    numberOfSlices: 8
+    fractions: []
+  - cakePrefab: {fileID: 8200570759069020071, guid: 166b18ee2f7140b43b64f7cf36d93af3,
+      type: 3}
+    numberOfSlices: 10
+    fractions: []
+  - cakePrefab: {fileID: 8200570759069020071, guid: 4bae5488ff187bc4fbfe7e5f240a0016,
+      type: 3}
+    numberOfSlices: 5
+    fractions: []
+  - cakePrefab: {fileID: 2935677715139052978, guid: 221d36b24842e6b488078eed48997e8f,
+      type: 3}
+    numberOfSlices: 12
+    fractions: []
+  - cakePrefab: {fileID: 4911320157851095417, guid: 55334c3922387b745afd2d608613334e,
+      type: 3}
+    numberOfSlices: 8
+    fractions: []
+  - cakePrefab: {fileID: 4911320157851095417, guid: 55334c3922387b745afd2d608613334e,
+      type: 3}
+    numberOfSlices: 8
+    fractions: []
+  - cakePrefab: {fileID: 4911320157851095417, guid: 55334c3922387b745afd2d608613334e,
+      type: 3}
+    numberOfSlices: 8
+    fractions: []
+  starRequirements:
+  - 0.30000001192092896
+  - 0.44999998807907104
+  - 0.6000000238418579
+  initialTimeInSeconds: 50

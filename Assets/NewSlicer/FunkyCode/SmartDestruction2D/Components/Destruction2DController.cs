@@ -55,7 +55,11 @@ public class Destruction2DController : MonoBehaviour {
 	}
 
 	public void LateUpdate() {
-		if (UnityEngine.EventSystems.EventSystem.current != null && UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) {
+        if (visuals.drawVisuals == false)
+        {
+            return;
+        }
+        if (UnityEngine.EventSystems.EventSystem.current != null && UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) {
 			return;
 		}
 

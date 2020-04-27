@@ -123,7 +123,7 @@ public class Destruction2D : MonoBehaviour {
 		} else {
 			Sprite sprite = spriteRenderer.sprite;
 			pixelsPerUnit = sprite.pixelsPerUnit;
-            Debug.LogError("sprite.pixelsPerUnit");
+            Debug.Log("sprite.pixelsPerUnit");
 
             if (originalSprite == null){
 				originalSprite = sprite;
