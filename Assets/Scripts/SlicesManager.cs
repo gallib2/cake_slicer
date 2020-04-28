@@ -66,6 +66,9 @@ public class SlicesManager : MonoBehaviour
 
     private int comboCounter = 0;
 
+    [SerializeField]
+    private float relativeCakeToScreenSize = 12.0f;
+
     private void Awake()
     {
         if (LevelsManager.CurrentLevel != null)
@@ -389,7 +392,9 @@ public class SlicesManager : MonoBehaviour
             // OnGoalChange.Invoke();
 
             Cake newCake = currentLevel.Cakes[currentCakeIndex];
+            float cameraSeesWidth = Camera.main.orthographicSize * 2.0f * Screen.width / Screen.height;
             GameObject cakeGameObject = Instantiate(newCake.cakePrefab, sliceableObjects.transform, true); // create new cake
+            cakeGameObject.transform.localScale = new Vector3(cameraSeesWidth / relativeCakeToScreenSize, cameraSeesWidth / relativeCakeToScreenSize, cameraSeesWidth / relativeCakeToScreenSize);
             obstacles = cakeGameObject.GetComponentsInChildren<Obstacle>();
             candleObstacles = obstacles.Where(dec => dec.Type == ObstacleType.CANDLE).ToList();
             allowToSlice = candleObstacles.Count == 0;
