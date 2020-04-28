@@ -12207,13 +12207,13 @@ MonoBehaviour:
   obstacleLayerMask:
     serializedVersion: 2
     m_Bits: 512
+  spriteSlicer: {fileID: 1437217053105184}
   currentCakeIndex: 0
   currentLevel: {fileID: 11400000, guid: 71814f100176efa409dc58026342d702, type: 2}
   criticalTime: 5
   particlesEndLevel: {fileID: 1613897369}
   sliceableObjects: {fileID: 1724091152938058}
   obstacleObjects: {fileID: 1841274567}
-  slicesCount: 0
   cakesLeftText: {fileID: 849736505}
   soundManager: {fileID: 557494143}
   timer: {fileID: 1442111312}
@@ -12226,7 +12226,6 @@ MonoBehaviour:
   - {fileID: 575586774}
   - {fileID: 8452256970941189227}
   sliceDemandUI: {fileID: 818491575}
-  negligibleSliceSize: 0.1
   swipedDownObjects:
   - {fileID: 78534996}
   - {fileID: 1724091152938059}
@@ -20197,8 +20196,9 @@ GameObject:
   - component: {fileID: 114717082668378978}
   - component: {fileID: 1539613476}
   - component: {fileID: 1437217053105183}
+  - component: {fileID: 1437217053105184}
   m_Layer: 8
-  m_Name: Demo9Scene
+  m_Name: Slicer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20211,7 +20211,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1437217053105182}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c073086f0f48eff419ef1695f5c8bc32, type: 3}
   m_Name: 
@@ -20232,6 +20232,22 @@ MonoBehaviour:
     sortingLayerName: 
   size: 0.1
   circleVerticesCount: 6
+--- !u!114 &1437217053105184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1437217053105182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dff3e81287b8444d8929993084e4ce5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eraseBrushSize: 12
+  SliceChecksSpeed: 0.25
+  shouldCheckSlicesRegularly: 1
+  negligibleSliceSize: 0.2
 --- !u!1 &1724091152938058
 GameObject:
   m_ObjectHideFlags: 0

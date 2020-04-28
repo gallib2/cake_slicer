@@ -22,15 +22,11 @@ MonoBehaviour:
       denominator: 3
     - numerator: 1
       denominator: 3
-  - cakePrefab: {fileID: 4429666012074374676, guid: f3354f85f3900ac49afec2d0c6574d8f,
+  - cakePrefab: {fileID: 2935677715139052978, guid: 037ae15f098998a45bdce07f2e7aa4ce,
       type: 3}
     numberOfSlices: 4
-    fractions:
-    - numerator: 2
-      denominator: 4
-    - numerator: 1
-      denominator: 2
-  - cakePrefab: {fileID: 4203801516081614381, guid: f2b9d9262839db64f9f0b4df2d3826b6,
+    fractions: []
+  - cakePrefab: {fileID: 2935677715139052978, guid: cdeaf0f5939b3e0409d101774ec4ae22,
       type: 3}
     numberOfSlices: 6
     fractions:
@@ -42,58 +38,30 @@ MonoBehaviour:
       denominator: 6
     - numerator: 1
       denominator: 6
-  - cakePrefab: {fileID: 4203801516081614381, guid: f2b9d9262839db64f9f0b4df2d3826b6,
+  - cakePrefab: {fileID: 2935677715139052978, guid: 037ae15f098998a45bdce07f2e7aa4ce,
       type: 3}
     numberOfSlices: 8
     fractions: []
-  - cakePrefab: {fileID: 4203801516081614381, guid: f2b9d9262839db64f9f0b4df2d3826b6,
+  - cakePrefab: {fileID: 2935677715139052978, guid: 037ae15f098998a45bdce07f2e7aa4ce,
       type: 3}
     numberOfSlices: 8
     fractions: []
-  - cakePrefab: {fileID: 4203801516081614381, guid: f2b9d9262839db64f9f0b4df2d3826b6,
+  - cakePrefab: {fileID: 2935677715139052978, guid: 037ae15f098998a45bdce07f2e7aa4ce,
       type: 3}
     numberOfSlices: 8
-    fractions:
-    - numerator: 1
-      denominator: 3
-    - numerator: 1
-      denominator: 3
-    - numerator: 1
-      denominator: 6
-    - numerator: 1
-      denominator: 6
-  - cakePrefab: {fileID: 8200570759069020071, guid: 9e8e89e540c26c94a921021a98c58a04,
+    fractions: []
+  - cakePrefab: {fileID: 2935677715139052978, guid: 037ae15f098998a45bdce07f2e7aa4ce,
       type: 3}
     numberOfSlices: 8
-    fractions:
-    - numerator: 3
-      denominator: 4
-    - numerator: 1
-      denominator: 4
-  - cakePrefab: {fileID: 26350562484668360, guid: 75cec3840c5ea254d8a35463eb1be124,
+    fractions: []
+  - cakePrefab: {fileID: 2935677715139052978, guid: 037ae15f098998a45bdce07f2e7aa4ce,
       type: 3}
     numberOfSlices: 8
-    fractions:
-    - numerator: 1
-      denominator: 2
-    - numerator: 1
-      denominator: 4
-    - numerator: 1
-      denominator: 4
-  - cakePrefab: {fileID: 3160547572476184343, guid: f771dc6483aabaa47a3ef32005af57be,
+    fractions: []
+  - cakePrefab: {fileID: 2935677715139052978, guid: 037ae15f098998a45bdce07f2e7aa4ce,
       type: 3}
     numberOfSlices: 8
-    fractions:
-    - numerator: 1
-      denominator: 4
-    - numerator: 1
-      denominator: 4
-    - numerator: 1
-      denominator: 6
-    - numerator: 1
-      denominator: 6
-    - numerator: 1
-      denominator: 6
+    fractions: []
   - cakePrefab: {fileID: 4203801516081614381, guid: ece24715fa60f44fe8c0794eac32d649,
       type: 3}
     numberOfSlices: 7

@@ -85,7 +85,10 @@ public class HoleCutController : MonoBehaviour
             oldPosition = new Vector2D(pos);
         }
         isSlicing = slicingDetected;
-        Draw(transform, pos);
+        if (visuals.drawVisuals)
+        {
+            Draw(transform, pos);
+        }
     }
 
     public void Draw(Transform transform, Vector2 pos) {

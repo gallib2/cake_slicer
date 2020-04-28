@@ -18,46 +18,30 @@ public class SlicesManager : MonoBehaviour
    // public int obstaclesLayer = 9;
     public LayerMask obstacleLayerMask;
 
+    [SerializeField] private SpriteSlicer spriteSlicer;
     //List<double> slicesSizeList;
     public int currentCakeIndex = 0;
 
-    [SerializeField]
-    public Level currentLevel;
+    [SerializeField] public Level currentLevel;
     private static int slicesToSlice;
-    [SerializeField]
-    private float criticalTime = 5f;
+    [SerializeField] private float criticalTime = 5f;
     private int minmumSize;
     public ParticleSystem particlesEndLevel;
 
-    //private double originalSize = 0;
+    [SerializeField] private GameObject sliceableObjects;
+    [SerializeField] private GameObject obstacleObjects;
 
-    [SerializeField]
-    private GameObject sliceableObjects;
-    [SerializeField]
-    private GameObject obstacleObjects;
+    //public int slicesCount = 0;
+    [SerializeField] private Text cakesLeftText;
+    [SerializeField] private SoundManager soundManager;
 
-    public int slicesCount = 0;
-    [SerializeField]
-    private Text cakesLeftText;
-    [SerializeField]
-    private SoundManager soundManager;
+    [SerializeField] private Timer timer;
+    [SerializeField] private bool perfectSlicing = false;
+    [SerializeField] private Text sliceDemandText;
+    [SerializeField] private FractionUI[] fractionUIS;
+    [SerializeField] private SliceDemandUI sliceDemandUI;
 
-    [SerializeField]
-    private Timer timer;
-    [SerializeField]
-    private bool perfectSlicing = false;
-    [SerializeField]
-    private Text sliceDemandText;
-    [SerializeField]
-    private FractionUI[] fractionUIS;
-    [SerializeField]
-    private SliceDemandUI sliceDemandUI;
-
-    [SerializeField]
-    private double negligibleSliceSize = 0.01;
-
-    [SerializeField]
-    private Animator[] swipedDownObjects;
+    [SerializeField] private Animator[] swipedDownObjects;
 
     public static bool allowToSlice;
     private Obstacle[] obstacles;
@@ -84,12 +68,16 @@ public class SlicesManager : MonoBehaviour
         comboCounter = 0;
         currentLevel.IsLegitimate();
         currentCakeIndex = -1;
-        NextRound();
+       NextRound();
+       //Invoke( "NextRound", 0.5f);
     }
 
-    // Update is called once per frame
     void Update()
     {
+       /* if (Time.time < 1)
+        {
+            return;
+        }*/
         if (GameManager.GameIsPaused)
         {
             return;
@@ -159,47 +147,31 @@ public class SlicesManager : MonoBehaviour
     private void CheckSlices()
     {
         //slicesCount = sliceableObjects.GetComponentsInChildren<Transform>().Length - 1;//TODO: this comes out wrong alot
-        //if (false)
+        int slicesCount;
+        //List<Polygon2D> polygons = Polygon2DList.CreateFromGameObject(sliceableObjects.transform.GetChild(0).gameObject, Polygon2D.ColliderType.Polygon);
+        // if (polygons.Count > 1)//Optimisation..
         {
-            List<Polygon2D> polygons = Polygon2DList.CreateFromGameObject(sliceableObjects.transform.GetChild(0).gameObject,Polygon2D.ColliderType.Polygon);
-            if (polygons.Count > 1)//Optimisation..
+            //Debug.Log("polygons.Count > 1 ");
+            slicesCount = spriteSlicer.SlicesCount;
+
+            if (slicesCount == slicesToSlice)
             {
-                //Debug.Log("polygons.Count > 1 ");
-                for (int i = 0; i < polygons.Count;)//TODO: must be inefficient
-                {
-                    if (polygons[i].GetArea() < negligibleSliceSize)
-                    {
-                        polygons.RemoveAt(i);
-                    }
-                    else
-                    {
-                        i++;
-                    }
-                }
-                slicesCount = polygons.Count;
+                Debug.Log("slicesCount: " + slicesCount + "goal: " + slicesToSlice);
+                //slicesSizeList = GetSlicesSizesList();
+                CalculateNewScore();
+                // TODO :note add a small delay after the cake is cut 
+                NextRound();
 
-                if (slicesCount == slicesToSlice)
-                {
-                    Debug.Log("slicesCount: " + slicesCount + "goal: " + slicesToSlice);
-                    //slicesSizeList = GetSlicesSizesList();
+            }
+            else if (slicesCount > slicesToSlice)
+            {
+                Debug.Log("BadSlice slicesCount > goal => slicesCount: " + slicesCount);
 
-                    CalculateNewScore();
-                    // TODO :note add a small delay after the cake is cut 
+                NextRound();
 
-                    NextRound();
-
-                }
-                else if (slicesCount > slicesToSlice)
-                {
-                    Debug.Log("BadSlice slicesCount > goal => slicesCount: " + slicesCount);
-
-                    NextRound();
-
-                    BadSlice(true);
-                }
+                BadSlice(true);
             }
         }
-       
 
     }
 
@@ -211,7 +183,6 @@ public class SlicesManager : MonoBehaviour
 
     private void CalculateNewScore()
     {
-        //bool isHaveScoreLevel = false;
         ScoreData.ScoreLevel playerScoreLevel = ScoreData.ScoreLevel.Regular;
 
         if (perfectSlicing)
@@ -221,9 +192,8 @@ public class SlicesManager : MonoBehaviour
         }
         else
         {
-            
             //We get a list of the real sizes of all slices, determine their overall size and then modify the list so that it will contain the percentage rather than real size
-            List<double> slicesInPercentage = SlicesSizesInDoubles();
+            List<double> slicesInPercentage = spriteSlicer.SlicesSizesInDoubles();
             double overallSize = 0;
 
             // get overall size
@@ -351,10 +321,10 @@ public class SlicesManager : MonoBehaviour
         }
     }
 
-    List<double> SlicesSizesInDoubles()
+   /* List<double> SlicesSizesInDoubles()
     {
         List<double> slicesSizesInDoubles = new List<double>();
-
+        */
         //foreach (Slicer2D slicer in Slicer2D.GetList())
         /*foreach (Destruction2D slicer in Destruction2D.GetList())
         {
@@ -364,7 +334,7 @@ public class SlicesManager : MonoBehaviour
             //  Debug.Log("current size : " + currentSizeInt);
             slicesSizesInDoubles.Add(size);
         }*/
-        List<Polygon2D> polygons = Polygon2DList.CreateFromGameObject(sliceableObjects.transform.GetChild(0).gameObject,Polygon2D.ColliderType.Polygon);
+   /*     List<Polygon2D> polygons = Polygon2DList.CreateFromGameObject(sliceableObjects.transform.GetChild(0).gameObject,Polygon2D.ColliderType.Polygon);
         for (int i = 0; i < polygons.Count; i++)
         {
             //Debug.Log("polygon " + i + "area: " + polygons[i].GetArea());
@@ -377,12 +347,12 @@ public class SlicesManager : MonoBehaviour
         }
 
         return slicesSizesInDoubles;
-    }
+    }*/
 
     private void NextRound()
     {
         Debug.Log("--------------------- in NextRound!!!");
-
+        //spriteSlicer.Reset();
         timer.ToStopTimer = false;
         DestroyAllLeftPieces();
         currentCakeIndex++;
@@ -400,6 +370,7 @@ public class SlicesManager : MonoBehaviour
             obstacles = cakeGameObject.GetComponentsInChildren<Obstacle>();
             candleObstacles = obstacles.Where(dec => dec.Type == ObstacleType.CANDLE).ToList();
             allowToSlice = candleObstacles.Count == 0;
+            spriteSlicer.SetNewSliceable(cakeGameObject.AddComponent<SpriteSliceable>());//TODO: make this a public field on the cake object
 
             cakesLeftText.text =
                 (currentLevel.Cakes.Length - currentCakeIndex).ToString();
