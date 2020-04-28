@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Level
   displayName: LVL 1
   cakes:
-  - cakePrefab: {fileID: 4203801516081614381, guid: f2b9d9262839db64f9f0b4df2d3826b6,
+  - cakePrefab: {fileID: 8200570759069020071, guid: 26a775322eba4f846941e3f21a82bb3b,
       type: 3}
     numberOfSlices: 2
     fractions: []
-  - cakePrefab: {fileID: 3160547572476184343, guid: f771dc6483aabaa47a3ef32005af57be,
+  - cakePrefab: {fileID: 2935677715139052978, guid: b2aae11461c96924a9e497ecfec9f9fc,
       type: 3}
     numberOfSlices: 2
     fractions: []
-  - cakePrefab: {fileID: 4985836295831633166, guid: 4f71c336440763e4990c92779044c650,
+  - cakePrefab: {fileID: 2935677715139052978, guid: 05b96e7436d1ff647960ac27099dc870,
       type: 3}
     numberOfSlices: 4
     fractions: []
@@ -30,7 +30,7 @@ MonoBehaviour:
       type: 3}
     numberOfSlices: 4
     fractions: []
-  - cakePrefab: {fileID: 4985836295831633166, guid: 4f71c336440763e4990c92779044c650,
+  - cakePrefab: {fileID: 8200570759069020071, guid: 8f37ef1cb3cc6f94994193ebd07f2e58,
       type: 3}
     numberOfSlices: 4
     fractions: []
@@ -39,7 +39,7 @@ MonoBehaviour:
     numberOfSlices: 6
     fractions: []
   starRequirements:
-  - 0.2549999952316284
-  - 0.5440000295639038
-  - 0.871999979019165
-  initialTimeInSeconds: 30
+  - 0.30000001192092896
+  - 0.44999998807907104
+  - 0.6000000238418579
+  initialTimeInSeconds: 45

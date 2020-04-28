@@ -10,7 +10,7 @@ public class LevelsUnlockToggle : MonoBehaviour
 
     public void SetLevelsUnlocked()
     {
-        LevelsManager.areAllLevelsUnlocked = toggle.isOn;
+        LevelsManager.SetLevelsUnlocked(toggle.isOn);
     }
     private void Start()
     {

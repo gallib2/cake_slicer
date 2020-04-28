@@ -22,8 +22,8 @@ public class Level : ScriptableObject
       private int minStarsToWin;//Ori: I thought 1 star guarantees a win*/
 
     //public bool IsLevelSucceeded { get; set; }
-    public bool IsSucceedFirstTry { get; private set; }
-    public int PlayingCount { get; set; }
+    //public bool IsSucceedFirstTry { get; private set; }
+    //public int PlayingCount { get; set; }
 
     public Cake[] Cakes
     {
@@ -60,20 +60,39 @@ public class Level : ScriptableObject
         set { minStarsToWin = value; }
     }*/
 
-    public void LevelSucceeded()
+    /*public void LevelSucceeded()
     {
-        /*Debug.Log("IsLevelSucceeded " + IsLevelSucceeded);
-        IsLevelSucceeded = true;*/
+        //Debug.Log("IsLevelSucceeded " + IsLevelSucceeded);
+       // IsLevelSucceeded = true;
         if (PlayingCount == 1)
         {
             IsSucceedFirstTry = true;
         }
-    }
+    }*/
 
     public bool IsLevelComplete(int score)
     {
         double ScoreDividedByMaxScore = ((double)score / MaximumScoreWithouPowerUps());
         return (ScoreDividedByMaxScore >= StarRequirements[0]);
+    }
+
+    public int GetNumberOfStars(int score)//TODO: SetScore might not be using this yet
+    {
+        double ScoreDividedByMaxScore = ((double)score / MaximumScoreWithouPowerUps());
+        int numberOfStars = 0;
+        for (int i = 0; i < StarRequirements.Length; i++)
+        {
+            bool shouldGetStar = (ScoreDividedByMaxScore >= StarRequirements[i]);
+            if (shouldGetStar)
+            {
+                numberOfStars += 1;
+            }
+            else
+            {
+                break;
+            }
+        }
+        return numberOfStars;
     }
 
     public int MaximumScoreWithouPowerUps()
@@ -167,8 +186,8 @@ public class Cake
 [Serializable]
 public struct Fraction
 {
-    [SerializeField][Range(1, 10)]
+    [SerializeField][Range(1, 32)]
     public byte numerator;
-    [SerializeField] [Range(1, 10)]
+    [SerializeField] [Range(1, 32)]
     public byte denominator;
 }

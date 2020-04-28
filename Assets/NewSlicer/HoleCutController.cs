@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HoleCutController : MonoBehaviour {
+public class HoleCutController : MonoBehaviour
+{
     public Destruction2DVisuals visuals = new Destruction2DVisuals();
 
     EraseBrush eraseBrushStart = new EraseBrush(null, null);
@@ -90,25 +91,31 @@ public class HoleCutController : MonoBehaviour {
     public void Draw(Transform transform, Vector2 pos) {
         eraseBrushStart.SetPosition(new Vector2D(pos));
 
-		if (eraseBrushStart.GetWorldShape() != null)
+        if (visuals.drawVisuals)
         {
-            visuals.Clear();
-        
-			visuals.GenerateComplexMesh(eraseBrushStart.GetWorldShape().pointsList, transform);
-
-            if (oldPosition != null)
+            if (eraseBrushStart.GetWorldShape() != null)
             {
-                if (UpdateMiddleEraseMesh())
+                visuals.Clear();
+
+                visuals.GenerateComplexMesh(eraseBrushStart.GetWorldShape().pointsList, transform);
+
+                if (oldPosition != null)
                 {
-                    visuals.GenerateComplexMesh(eraseBrushMiddle.GetWorldShape().pointsList, transform);
+                    if (UpdateMiddleEraseMesh())
+                    {
+                        visuals.GenerateComplexMesh(eraseBrushMiddle.GetWorldShape().pointsList, transform);
+                    }
+
+                }
+                else
+                {
+                    oldPosition = new Vector2D(pos);
                 }
 
-            } else {
-                oldPosition = new Vector2D(pos);
-            }   
-                    
-			visuals.Draw();
-		}
+                visuals.Draw();
+            }
+        }
+
 	}
 
     bool UpdateMiddleEraseMesh() {
