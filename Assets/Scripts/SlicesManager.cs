@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+
 public class SlicesManager : MonoBehaviour
 {
     public delegate void ScoreChange(int bonuslessScoreToAdd,int bonus, ScoreData.ScoreLevel scoreLevel);
@@ -65,6 +66,9 @@ public class SlicesManager : MonoBehaviour
 
     private int comboCounter = 0;
 
+    [SerializeField]
+    private float relativeCakeToScreenSize = 12.0f;
+
     private void Awake()
     {
         if (LevelsManager.CurrentLevel != null)
@@ -97,40 +101,35 @@ public class SlicesManager : MonoBehaviour
 
         if (!GameManager.isGameOver)
         {
-            if (Input.GetMouseButton(0))
+            bool isMouseButtonClick = Input.GetMouseButton(0);
+            bool isMouseDown = Input.GetMouseButtonDown(0);
+            if (isMouseButtonClick || isMouseDown)
             {
                 bool isHaveDecorators = obstacles.Length > 0;
                 Collider2D collider = isHaveDecorators ? CheckClicksByLayer(obstacleLayerMask) : null;
                 Obstacle decorator = collider ? collider.gameObject.GetComponent<Obstacle>() : null;
                 if (decorator != null)
                 {
-                    if (decorator.Type == ObstacleType.CHERRY)
+                    bool isTouchCherry = isMouseButtonClick && decorator.Type == ObstacleType.CHERRY;
+                    bool isTouchCandle = isMouseDown && decorator.Type == ObstacleType.CANDLE;
+                    if (isTouchCherry)
                     {
-                        //  Debug.Log("Obstacle!!!!1111");
-                        //Slicer2DController.ClearPoints();//TODO: Fix
                         Handheld.Vibrate();
                         BadSlice();
                         NextRound();
                         return;
                     }
-                    else if (decorator.Type == ObstacleType.CANDLE)
+                    else if (isTouchCandle)
                     {
-                        Debug.Log(" decorator:  caandlleeeee ");
-
                         candleObstacles.RemoveAt(0);
                         Destroy(collider.gameObject);
+
                         return;
                     }
                 }
             }
 
-            if(Input.GetMouseButtonUp(0))
-            {
-                if (candleObstacles.Count == 0)
-                {
-                    allowToSlice = true;
-                }
-            }
+            allowToSlice |= !allowToSlice && Input.GetMouseButtonUp(0) && candleObstacles.IsEmpty();
 
             CheckSlices();//TODO: We don't have to do this every frame.
             if (timer.ToStopTimer && !GameManager.isGameOver)//the reason !GameManager.isGameOver is checked is that CheckSlices() can lead to a GameOver()
@@ -143,14 +142,11 @@ public class SlicesManager : MonoBehaviour
 
     private Collider2D CheckClicksByLayer(int layer)
     {
-        if (Input.GetMouseButton(0))
+        Vector2 fingerPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Collider2D colliderAtfingerPosition = Physics2D.OverlapPoint(fingerPosition, layer);
+        if (colliderAtfingerPosition != null)
         {
-            Vector2 fingerPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Collider2D colliderAtfingerPosition = Physics2D.OverlapPoint(fingerPosition, layer);
-            if (colliderAtfingerPosition != null)
-            {
-                return colliderAtfingerPosition;
-            }
+            return colliderAtfingerPosition;
         }
 
         return null;
@@ -320,10 +316,16 @@ public class SlicesManager : MonoBehaviour
         {
             comboCounter = 0;
         }
+        if (PowerUps.goldenKnifeIsActive)
+        {
+            Debug.Log("goldenKnifeIsActive, multiplyin score." );
+            bonuslessScoreToAdd *= 2;//TODO: do we care whter this is hardcoded or not?
+            bonus *= 2;//TODO: do we care whter this is hardcoded or not?
+        }
         OnScoreChange?.Invoke(bonuslessScoreToAdd,bonus, playerScoreLevel);
         //comboCounter = (playerScoreLevel == ScoreData.ScoreLevel.Awesome ? (comboCounter + 1) : 0);
         Debug.Log("comboCounter = " + comboCounter);
-        Debug.Log("scoreToAdd = " + bonuslessScoreToAdd+bonus);
+        Debug.Log("scoreToAdd = " + (bonuslessScoreToAdd+bonus));
     }
 
     private void GameOver()
@@ -390,7 +392,9 @@ public class SlicesManager : MonoBehaviour
             // OnGoalChange.Invoke();
 
             Cake newCake = currentLevel.Cakes[currentCakeIndex];
+            float cameraSeesWidth = Camera.main.orthographicSize * 2.0f * Screen.width / Screen.height;
             GameObject cakeGameObject = Instantiate(newCake.cakePrefab, sliceableObjects.transform, true); // create new cake
+            cakeGameObject.transform.localScale = new Vector3(cameraSeesWidth / relativeCakeToScreenSize, cameraSeesWidth / relativeCakeToScreenSize, cameraSeesWidth / relativeCakeToScreenSize);
             obstacles = cakeGameObject.GetComponentsInChildren<Obstacle>();
             candleObstacles = obstacles.Where(dec => dec.Type == ObstacleType.CANDLE).ToList();
             allowToSlice = candleObstacles.Count == 0;

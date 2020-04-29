@@ -24,8 +24,6 @@ public class GameManager : MonoBehaviour
         }
     }
     private static bool gameIsPaused = false;
-    [SerializeField]
-    private GameObject pauseMenuPopUp;
     public Score score;
 
     public static bool FunSlicing = false;
@@ -76,11 +74,15 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         isGameOver = true;
-        currentLevel.PlayingCount++;
-        if (score.CurrentStars >= 1/*currentLevel.MinStarsToWin*/) //TODO: hardcoded winning condition(Can be moved to Level)
+        bool won = score.CurrentStars >= 1;
+        //TODO: If we see that saving and oading slows the device, 
+        //we can import the loaded data that was loaded previously and thus avoid loading inside TrySaveLevelData
+        SaveAndLoadManager.TrySaveLevelData(LevelsManager.CurrentLevelNumber, (UInt32)Score.score, won);
+        //currentLevel.PlayingCount++;
+        if (won/*currentLevel.MinStarsToWin*/) //TODO: hardcoded winning condition(Can be moved to Level)
         {
-            currentLevel.LevelSucceeded();
-            SaveAndLoadManager.TrySaveLevelData(LevelsManager.CurrentLevelNumber, (UInt32)Score.score);
+           // currentLevel.LevelSucceeded();
+            //SaveAndLoadManager.TrySaveLevelData(LevelsManager.CurrentLevelNumber, (UInt32)Score.score);
             OnWin?.Invoke(score.CurrentStars);//TODO: Record the number of stars or/and score if it's larger than it was previously
         }
         else

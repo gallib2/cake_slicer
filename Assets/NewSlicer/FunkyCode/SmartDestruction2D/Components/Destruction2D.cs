@@ -123,7 +123,7 @@ public class Destruction2D : MonoBehaviour {
 		} else {
 			Sprite sprite = spriteRenderer.sprite;
 			pixelsPerUnit = sprite.pixelsPerUnit;
-            Debug.LogError("sprite.pixelsPerUnit");
+            Debug.Log("sprite.pixelsPerUnit");
 
             if (originalSprite == null){
 				originalSprite = sprite;
@@ -509,13 +509,21 @@ public class Destruction2D : MonoBehaviour {
 		}
 	}
 
-	static public void DestroyByPolygonAll(EraseBrush eraseBrush, Destruction2DLayer layer = null) {
-		if (layer == null) {
+	static public bool DestroyByPolygonAll(EraseBrush eraseBrush, Destruction2DLayer layer = null)
+    {
+        bool slicingDetected = false;
+		if (layer == null)
+        {
 			layer = Destruction2DLayer.Create();
 		}
-		foreach(Destruction2D gObject in GetListLayer(layer)) {
-			gObject.DestroyByPolygon(eraseBrush);
+		foreach(Destruction2D gObject in GetListLayer(layer))
+        {
+            if (gObject.DestroyByPolygon(eraseBrush))
+            {
+                slicingDetected = true  ;
+            }
 		}
+        return slicingDetected;
 	}
 
 	
@@ -554,57 +562,79 @@ public class Destruction2D : MonoBehaviour {
 		DestroyByPolygon(erase);
 	}
 
-	public void DestroyByPolygon(EraseBrush EraseBrush) {
-		if (EraseBrush.GetWorldShape().pointsList.Count < 3) {
-			return;
+	public bool DestroyByPolygon(EraseBrush EraseBrush)
+    {
+        //CrumbsEffect.isSlicing = false;
+
+        if (EraseBrush.GetWorldShape().pointsList.Count < 3)
+        {
+			return false;
 		}
 
 		List<Polygon2D> polys = shape.GetWorld();
-		if (polys.Count > 0) {
+		if (polys.Count > 0)
+        {
 			bool touch = false;
 			bool outside = false;
 
 			foreach(Polygon2D p in polys) {
-				if (Math2D.PolyCollidePoly(EraseBrush.GetWorldShape(), p) == true) {
+				if (Math2D.PolyCollidePoly(EraseBrush.GetWorldShape(), p) == true)
+                {
 					touch = true;
 				}
 
-				if (EraseBrush.GetWorldShape().PolyInPoly(p) == false) {
+				if (EraseBrush.GetWorldShape().PolyInPoly(p) == false)
+                {
 					outside = true;
-				}
-			}
 
-			if (touch == false) {
-				return;
-			}
+                }
+            }
 
-			if (outside == false) {
-				Destroy(gameObject);
-				return;
+            
+
+            if (touch == false)
+            {
+               
+                return false;
 			}
-		} else {
-			Polygon2D bound = GetBoundPolygon(); 
+           // CrumbsEffect.isSlicing = true;
+            if (outside == false)
+            {
+                Destroy(gameObject);
+				return true;
+			}
+		}
+        else
+        {
+
+            Polygon2D bound = GetBoundPolygon(); 
 			bool touch = false;
 
 			bound.ToWorldSpaceItself(transform);
 
-			if (Math2D.PolyCollidePoly(EraseBrush.GetWorldShape(), bound) == true) {
+			if (Math2D.PolyCollidePoly(EraseBrush.GetWorldShape(), bound) == true)
+            {
 				touch = true;
 			}
 
-			if (touch == false) {
-				return;
+			if (touch == false)
+            {
+                
+				return false;
 			}
-		}
 
-		eraseEvents.Add(new DestructionEvent(EraseBrush));
+        }
+
+        eraseEvents.Add(new DestructionEvent(EraseBrush));
 
 		if (textureType == TextureType.SpriteShape) {
 			buffer.renderCamera.enabled = true;
 		} else {
 			Destruction2DManager.RequestBufferEvent(this);
 		}
-	}
+        return true;
+
+    }
 
 	public void AddModifier(Texture2D texture, Vector2 position, Vector2 size, float rotation) {
 		Polygon2D poly = Polygon2D.CreateFromRect(size);

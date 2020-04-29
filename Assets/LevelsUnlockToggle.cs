@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class LevelsUnlockToggle : MonoBehaviour
 {
     [SerializeField]
@@ -9,7 +10,7 @@ public class LevelsUnlockToggle : MonoBehaviour
 
     public void SetLevelsUnlocked()
     {
-        LevelsManager.areAllLevelsUnlocked = toggle.isOn;
+        LevelsManager.SetLevelsUnlocked(toggle.isOn);
     }
     private void Start()
     {
