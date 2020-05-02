@@ -73,15 +73,10 @@ public class SlicesManager : MonoBehaviour
         currentLevel.IsLegitimate();
         currentCakeIndex = -1;
        NextRound();
-       //Invoke( "NextRound", 0.5f);
     }
 
     void Update()
     {
-       /* if (Time.time < 1)
-        {
-            return;
-        }*/
         if (GameManager.GameIsPaused)
         {
             return;
