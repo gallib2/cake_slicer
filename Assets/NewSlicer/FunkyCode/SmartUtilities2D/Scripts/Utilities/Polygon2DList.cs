@@ -100,4 +100,12 @@ public class Polygon2DList : Polygon2D {
 		}
 		return(result);
 	}
+
+    public static List<Polygon2D> CreateFromPolygonCollider( PolygonCollider2D collider)
+    {
+        List<Polygon2D> result = new List<Polygon2D>();
+         result = CreateFromPolygonColliderToLocalSpace(collider);
+        
+        return (result);
+    }
 }

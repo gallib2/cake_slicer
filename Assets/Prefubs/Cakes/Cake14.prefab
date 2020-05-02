@@ -10,10 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8200570759069020068}
   - component: {fileID: 8200570759069020079}
-  - component: {fileID: 5691775150322051421}
-  - component: {fileID: 4152829001226367984}
   m_Layer: 8
-  m_Name: Cake13
+  m_Name: Cake14
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -83,94 +81,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!60 &5691775150322051421
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8200570759069020071}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 9.16, y: 9.16}
-    newSize: {x: 9.77, y: 9.98}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 0.98499995, y: 1.38}
-      - {x: 0.935, y: 1.53}
-      - {x: 0.8198347, y: 1.6948347}
-      - {x: 0.685, y: 1.73}
-      - {x: 0.145, y: 1.74}
-      - {x: -0.865, y: 1.74}
-      - {x: -0.98167086, y: 1.6555637}
-      - {x: -1.0649999, y: 1.5799999}
-      - {x: -1.1154714, y: 1.4950013}
-      - {x: -1.145, y: 1.41}
-      - {x: -1.165, y: 1.28}
-      - {x: -1.165, y: -1.29}
-      - {x: -1.155, y: -1.37}
-      - {x: -1.055, y: -1.5699999}
-      - {x: -0.94572496, y: -1.6705823}
-      - {x: -0.815, y: -1.74}
-      - {x: -0.745, y: -1.75}
-      - {x: 0.585, y: -1.75}
-      - {x: 0.72499996, y: -1.7199999}
-      - {x: 0.8579855, y: -1.6662331}
-      - {x: 0.955, y: -1.54}
-      - {x: 0.98499995, y: -1.37}
---- !u!114 &4152829001226367984
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8200570759069020071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62b06ecd429b51c4688fa0f1fcb58e3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  textureType: 0
-  destructionLayer: 0
-  centerOfMass: 0
-  spriteShapeBounds: 0
-  split:
-    enabled: 0
-    splitLimit: 0
-    splitCount: 0
-    maxSplits: 10
-  filterMode: 0
-  gridSize: {x: 1, y: 1}
-  chunks:
-    enabled: 0
-    chunksRows: 2
-    chunksColumns: 2
-    chunkOffset: 0
-  buffer: {fileID: 0}
-  renderTexture: {fileID: 0}
-  spriteRenderer: {fileID: 0}
-  outputSprite: {fileID: 0}
-  outputMaterial: {fileID: 0}
-  outputTexture: {fileID: 0}
-  originalSpriteOffSet: {x: 0, y: 0}
-  originalSprite: {fileID: 0}
-  originalSpriteMaterial: {fileID: 0}
-  modifiersAdded: 0
-  replaceSprite: 0
-  initialized: 0
-  pixelsPerUnit: 100
-  scaledPixelsPerUnit: 100
-  init: 0
-  anchorColliders: []

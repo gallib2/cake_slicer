@@ -481,16 +481,6 @@ public class Destruction2D : MonoBehaviour {
 
 
 
-
-
-
-
-
-
-
-	
-
-
 	static public void DestroyByLinearCutAll(LinearCut linearCut, Destruction2DLayer layer = null) {
 		if (layer == null) {
 			layer = Destruction2DLayer.Create();
@@ -536,12 +526,6 @@ public class Destruction2D : MonoBehaviour {
 			gObject.AddModifier(texture,position,size, rotation);
 		}
 	}
-
-
-
-
-
-
 
 
 	public void DestroyByCollider(Collider2D collider) {
@@ -695,26 +679,7 @@ public class Destruction2D : MonoBehaviour {
 		}
 	}
 	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 
 	public void UpdateCollider() {
 		PolygonCollider2D polygonCollider2D = GetComponent<PolygonCollider2D>();
