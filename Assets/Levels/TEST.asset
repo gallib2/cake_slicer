@@ -22,7 +22,7 @@ MonoBehaviour:
       denominator: 3
     - numerator: 1
       denominator: 3
-  - cakePrefab: {fileID: 2935677715139052978, guid: 037ae15f098998a45bdce07f2e7aa4ce,
+  - cakePrefab: {fileID: 4429666012074374676, guid: f3354f85f3900ac49afec2d0c6574d8f,
       type: 3}
     numberOfSlices: 4
     fractions: []
