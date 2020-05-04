@@ -23,8 +23,10 @@ public class SpriteSliceable : MonoBehaviour
                 spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             }
             boxCollider = gameObject.AddComponent<BoxCollider2D>();
-        }
 
+            GetNewPolygonCollider();
+
+        }
         initialised = true;
     }
 

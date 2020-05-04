@@ -17,6 +17,7 @@ public class SpriteSlicer : MonoBehaviour
     private int textureHeight;
 
     [SerializeField] private int eraseBrushSize = 7;
+    [SerializeField] private int interpolationDistance;
     private int halfOfEraseBrushSize;
     private Color[] clearColours;
     private bool changedSinceLastCheck;
@@ -83,11 +84,12 @@ public class SpriteSlicer : MonoBehaviour
             dynamicTexture.Apply();
             textureWidth = dynamicTexture.width;
             textureHeight = dynamicTexture.height;
-
+            BoxCollider2D boxCollider = sliceableBeingSliced.boxCollider;//TODO we migh be able to get rid of this
             boundsMinX = sliceableBeingSliced.boxCollider.bounds.min.x;
             normalisedMaxX = sliceableBeingSliced.boxCollider.bounds.max.x - boundsMinX;
             boundsMinY = sliceableBeingSliced.boxCollider.bounds.min.y;
             normalisedMaxY = sliceableBeingSliced.boxCollider.bounds.max.y - boundsMinY;
+            boxCollider.enabled = false;
 
             Sprite currentSprite = sliceableBeingSliced.spriteRenderer.sprite;
             Sprite newSprite = Sprite.Create
@@ -96,13 +98,27 @@ public class SpriteSlicer : MonoBehaviour
         }
     }
 
+    private bool overlappedColliderThisFrame;
+    private bool overlappedColliderPreviousFrame;
+
     private void FixedUpdate()
     {
         isSlicing = false;
+        if (GameManager.GameIsPaused)
+        {
+            return;
+        }
+
+        if (!SlicesManager.allowToSlice)
+        {
+            //skipedFrame = false;
+            return;
+        }
         if (Input.GetMouseButton(0))
         {
             Vector2 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            
+            overlappedColliderThisFrame = (Physics2D.OverlapPoint(mousePoint) != null);
+
             if (sliceableBeingSliced == null)
             {
                 return;
@@ -120,7 +136,7 @@ public class SpriteSlicer : MonoBehaviour
             bool textureChanged = false;
 
             //Texture Creation:
-            if (MakeHole(hitPixelX, hitPixelY))
+            if (MakeCircleHole(hitPixelX, hitPixelY))
             {
                 textureChanged = true;
             }
@@ -134,15 +150,15 @@ public class SpriteSlicer : MonoBehaviour
             {
                 int distance = Mathf.RoundToInt(Vector2.Distance(newHitPixel, lastHitPixel));
                 //Debug.Log("distance" + distance);
-                if (distance > 1)
+                if (distance > interpolationDistance)
                 {
-                    for (int multiplierA = 1; multiplierA < distance; multiplierA += 1)
+                    for (int multiplierA = interpolationDistance; multiplierA < distance; multiplierA += interpolationDistance)
                     {
                         int multiplierB = distance - multiplierA;
                         Vector2Int InterpolatedPoint = new Vector2Int(
                             Mathf.RoundToInt((float)((newHitPixel.x * multiplierA) + (lastHitPixel.x * multiplierB)) / (float)distance),
                             Mathf.RoundToInt((float)((newHitPixel.y * multiplierA) + (lastHitPixel.y * multiplierB)) / (float)distance));
-                        if( MakeHole(InterpolatedPoint.x, InterpolatedPoint.y))
+                        if( MakeCircleHole(InterpolatedPoint.x, InterpolatedPoint.y))
                         {
                             textureChanged = true;
                         }
@@ -160,10 +176,19 @@ public class SpriteSlicer : MonoBehaviour
             if (textureChanged)
             {
                 currentTexture.Apply();
-                isSlicing = true;
             }
             lastHitPixel = newHitPixel;
+            if (overlappedColliderThisFrame)
+            {
+                isSlicing = true;
+            }
 
+            if (!overlappedColliderThisFrame&& overlappedColliderPreviousFrame)
+            {
+                Debug.Log("CalculateSlices");
+                CalculateSlices();
+            }
+            overlappedColliderPreviousFrame = overlappedColliderThisFrame;
         }
 
         if (Input.GetKeyDown(KeyCode.F))
@@ -173,7 +198,7 @@ public class SpriteSlicer : MonoBehaviour
         }
     }
 
-    private bool MakeHole(int x, int y)
+    private bool MakeSquraeHole(int x, int y)
     {
         if(textureWidth!= currentTexture.width|| textureHeight != currentTexture.height)
         {
@@ -274,9 +299,88 @@ public class SpriteSlicer : MonoBehaviour
             //x = Mathf.Clamp()
             currentTexture.SetPixels
                 (x, y, holeWidth, holeHeight, clearColours);
+
+
+
             return true;
         }
        // return solidPixelFound;
+
+    }
+
+    private bool MakeCircleHole(int x, int y)
+    {
+        if (textureWidth != currentTexture.width || textureHeight != currentTexture.height)
+        {
+            Debug.LogError("texture dimentions are incorrect!");
+            textureWidth = currentTexture.width;
+            textureHeight = currentTexture.height;
+        }
+       /* x = x - halfOfEraseBrushSize;
+        y = y - halfOfEraseBrushSize;*/
+       // int holeWidth = eraseBrushSize;
+       // int holeHeight = eraseBrushSize;
+       // bool solidPixelFound = false;
+
+        // Color[] coloursInTexture = currentTexture.GetPixels(x, y, eraseBrushSize, eraseBrushSize);//TODO: Optimise
+        /*for (int i = 0; i < coloursInTexture.Length; i++)
+        {
+            if( coloursInTexture[i]!= Color.clear)
+            {
+                emptyPixelFound = true;
+                 break;
+            }
+        }*/
+
+        /* for (int ix = x; ix < holeWidth+x; ix++)//TODO: should this be before or after bounds checks?
+         {
+             for (int iy = y; iy < holeHeight+y; iy++)
+             {
+                 if (currentTexture.GetPixel(ix, iy) != Color.clear)
+                 {
+                     Debug.Log("emptyPixelFound:"+ currentTexture.GetPixel(ix, iy));
+                     Debug.Log("x:" + ix+"y:" + iy);
+                     Debug.Log("width:" + textureWidth + "height:" + textureHeight);
+
+                     currentTexture.SetPixel(ix, iy, Color.magenta);
+                     solidPixelFound = true;
+                     return true;
+                     break;
+                 }
+             }
+         }*/
+        // if (solidPixelFound)
+        bool changed = false;
+
+        //x = Mathf.Clamp()
+        // currentTexture.SetPixels (x, y, holeWidth, holeHeight, clearColours);
+        int radius = halfOfEraseBrushSize;
+        Vector2 centre = new Vector2(x, y);
+        if (!(centre.x + radius < 0 || centre.x - radius > textureWidth ||
+           centre.y + radius < 0 || centre.y - radius > textureHeight))
+        {
+            for (int ix = x - radius; ix < x + radius; ix++)
+            {
+                for (int iy = y - radius; iy < y + radius; iy++)
+                {
+                    if (ix == centre.x || iy == centre.y || Vector2.Distance(new Vector2(ix, iy), centre) <= radius)
+                    {
+                        if (ix > -1 && ix < textureWidth &&
+                            iy > -1 && iy < textureHeight)
+                        {
+                            currentTexture.SetPixel(ix, iy, Color.clear);
+                            changed = true;
+                        }
+                    }
+                }
+            }
+        }
+        if (changed)
+        {
+            changedSinceLastCheck = true;
+            return true;
+        }
+        return false;
 
     }
 
@@ -352,13 +456,26 @@ public class SpriteSlicer : MonoBehaviour
     
     private void FloodFillNumberOfSlices(/*Texture2D texture*/)
     {
-       /* Debug.Log(floodFillTexture.GetPixel(32, 32));
-        floodFillTexture.SetPixel(32,32,  Color.black);
-        Debug.Log(floodFillTexture.GetPixel(32, 32));*/
+        /* Debug.Log(floodFillTexture.GetPixel(32, 32));
+         floodFillTexture.SetPixel(32,32,  Color.black);
+         Debug.Log(floodFillTexture.GetPixel(32, 32));*/
         //return;
-       // byte[,] signatures = new byte[floodFillTexture.width, floodFillTexture.height];
-        Color targetColour = new Color(UnityEngine.Random.Range(0, 255), UnityEngine.Random.Range(0, 255), UnityEngine.Random.Range(0, 255));
-        targetColour = Color.black;
+        // byte[,] signatures = new byte[floodFillTexture.width, floodFillTexture.height];
+        Color targetColour = Color.black; ;//= new Color(UnityEngine.Random.Range(0, 255), UnityEngine.Random.Range(0, 255), UnityEngine.Random.Range(0, 255));
+        int random = UnityEngine.Random.Range(0, 5);
+        switch (random)
+        {
+            case 0:
+                targetColour = Color.black; break;
+            case 1:
+                targetColour = Color.white; break;
+            case 2:
+                targetColour = Color.green; break;
+            case 3:
+                targetColour = Color.red; break;
+            case 4:
+                targetColour = Color.blue; break;
+        }
         List<Color> previousColours = new List<Color>();
         previousColours.Add(targetColour);
         floodFillFuncs.Clear();
@@ -441,7 +558,7 @@ public class SpriteSlicer : MonoBehaviour
         floodFillTexture.Apply();
     }
 
-    IEnumerator FloodFillCR(int x, int y, Color target)
+    /*IEnumerator FloodFillCR(int x, int y, Color target)
     {
         Color thisColour = floodFillTexture.GetPixel(x, y);
         if (thisColour != target && thisColour != Color.clear)
@@ -464,7 +581,7 @@ public class SpriteSlicer : MonoBehaviour
 
 
         }
-    }
+    }*/
     //public delegate void FloodFillDelegate(byte x, byte y, Color target);
     public List<Action> floodFillFuncs = new List<Action>();
 
@@ -500,12 +617,12 @@ public class SpriteSlicer : MonoBehaviour
             }
             neighbourColour = floodFillTexture.GetPixel(x , y - 1);
              if (neighbourColour != target && neighbourColour != Color.clear)
-            {
+             {
                 floodFillTexture.SetPixel(x, y - 1, target);
 
                 floodFillFuncs.Add(delegate () { FloodFill(x, (byte)(y - 1), target); });
 
-            }
+             }
 
         }        
     }

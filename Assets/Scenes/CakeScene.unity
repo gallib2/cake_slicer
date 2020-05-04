@@ -21317,8 +21317,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dff3e81287b8444d8929993084e4ce5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eraseBrushSize: 12
-  SliceChecksSpeed: 0.25
+  eraseBrushSize: 14
+  interpolationDistance: 5
+  SliceChecksSpeed: 0.85
   shouldCheckSlicesRegularly: 1
   negligibleSliceSize: 0.2
 --- !u!1 &1724091152938058
