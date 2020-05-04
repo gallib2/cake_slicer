@@ -52,7 +52,7 @@ public class LevelsManager: MonoBehaviour
         }
     }
 
-    public void LoadLevel(int levelIndex, int? prevLevelScore = null)
+    public void LoadLevel(int levelIndex, int? prevLevelScore = null, bool toPauseOnEnter=false)
     {
         if (IsLevelIndexLegit(levelIndex))
         {
@@ -62,6 +62,7 @@ public class LevelsManager: MonoBehaviour
             {
                 CurrentLevelNumber = levelIndex;
                 CurrentLevel = gameLevels[levelIndex];
+                GameManager.toSetPauseOnEnterLevel = toPauseOnEnter;
                 SceneManager.LoadScene(cakesScene);
             }
         }

@@ -13,8 +13,14 @@ public class GameManager : MonoBehaviour
     public static event Action OnLevelInitialised;
     public static event Action<bool> OnPauseChanged;
 
+    public static PauseUIManager[] pauseUIs;
+    public static PauseUIManager pauseUIsGeneral;
+    public static PauseUIManager pauseUIsOnEnter;
+
     public static string playerName;
     public static bool isGameOver = false;
+    public static bool toSetPauseOnEnterLevel = false;
+
     public static bool GameIsPaused
     {
         get
@@ -43,23 +49,38 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        pauseUIs = GetComponents<PauseUIManager>();
+        pauseUIsGeneral = pauseUIs[0];
+        pauseUIsOnEnter = pauseUIs[1];
         if (LevelsManager.CurrentLevel != null)
         {
             currentLevel = LevelsManager.CurrentLevel;
         }
 
         InitialiseLevel();
+        if(toSetPauseOnEnterLevel)
+        {
+            SetPauseOnEnterGame(true);
+            toSetPauseOnEnterLevel = false;
+        }
+
     }
 
     public void NextLevel()
     {
         int nextlevelNumber = LevelsManager.CurrentLevelNumber + 1;
-        LevelsManager.instance.LoadLevel(nextlevelNumber, Score.score);
+        LevelsManager.instance.LoadLevel(nextlevelNumber, Score.score, true);
     }
 
     public void SetPause(bool to)
     {
-        OnPauseChanged(to);
+        pauseUIsGeneral.ChangeState(to);
+        gameIsPaused = to;
+    }
+
+    public void SetPauseOnEnterGame(bool to)
+    {
+        pauseUIsOnEnter.ChangeState(to);
         gameIsPaused = to;
     }
 
@@ -68,6 +89,7 @@ public class GameManager : MonoBehaviour
         SetPause(false);
         isGameOver = false;
         OnLevelInitialised.Invoke();
+        pauseUIsGeneral.HidePauseScreen();
     }
 
     public void GameOver()
