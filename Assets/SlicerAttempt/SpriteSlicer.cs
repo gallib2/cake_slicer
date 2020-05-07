@@ -13,6 +13,9 @@ public class SpriteSlicer : MonoBehaviour
     private float normalisedMaxY;
     private Texture2D currentTexture;
     private Texture2D dynamicTexture;
+    private Texture2D lowerDynamicTexture;
+    private Texture2D upperDynamicTexture;
+
     private int textureWidth;
     private int textureHeight;
 
@@ -90,6 +93,12 @@ public class SpriteSlicer : MonoBehaviour
             boundsMinY = sliceableBeingSliced.boxCollider.bounds.min.y;
             normalisedMaxY = sliceableBeingSliced.boxCollider.bounds.max.y - boundsMinY;
             boxCollider.enabled = false;
+
+            lowerDynamicTexture = new Texture2D(currentTexture.width, currentTexture.height/2);
+            lowerDynamicTexture.filterMode = currentTexture.filterMode;
+            lowerDynamicTexture.SetPixels(currentTexture.GetPixels(0,0, lowerDynamicTexture.width, lowerDynamicTexture.height));
+
+
 
             Sprite currentSprite = sliceableBeingSliced.spriteRenderer.sprite;
             Sprite newSprite = Sprite.Create
