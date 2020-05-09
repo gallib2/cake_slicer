@@ -20,6 +20,12 @@ public class GameManager : MonoBehaviour
     public static string playerName;
     public static bool isGameOver = false;
     public static bool toSetPauseOnEnterLevel = false;
+    public static bool currentLevelIsUntouched;
+
+    //ToDo: move these out of GaymeManager!
+    [SerializeField] private GameObject areYouSureObject;
+    [SerializeField] private ConfirmationButton yesButton;
+    [SerializeField] private ConfirmationButton noButton;
 
     public static bool GameIsPaused
     {
@@ -84,6 +90,44 @@ public class GameManager : MonoBehaviour
         gameIsPaused = to;
     }
 
+    public void RestartLevelFromPause()
+    {
+        if (currentLevelIsUntouched)
+        {
+            areYouSureObject.SetActive(true);
+            noButton.ClickAction = (delegate () { areYouSureObject.SetActive(false); });
+            yesButton.ClickAction = (delegate () 
+            {
+                currentLevelIsUntouched = false;
+                SaveAndLoadManager.TrySaveLevelData(LevelsManager.CurrentLevelNumber, 0, false, true);
+                InitialiseLevel();
+                areYouSureObject.SetActive(false);
+            });
+        }
+        else
+        {
+            InitialiseLevel();
+        }
+    }
+
+    public void GoToHomeScreenFromPause()
+    {
+        if (currentLevelIsUntouched)
+        {
+            areYouSureObject.SetActive(true);
+            noButton.ClickAction = (delegate () { areYouSureObject.SetActive(false); });
+            yesButton.ClickAction = (delegate ()
+            {
+                SaveAndLoadManager.TrySaveLevelData(LevelsManager.CurrentLevelNumber, 0, false, true);
+                UnloadScene();
+            });
+        }
+        else
+        {
+            UnloadScene();
+        }
+    }
+
     public void InitialiseLevel()
     {
         SetPause(false);
@@ -98,7 +142,8 @@ public class GameManager : MonoBehaviour
         bool won = score.CurrentStars >= 1;
         //TODO: If we see that saving and oading slows the device, 
         //we can import the loaded data that was loaded previously and thus avoid loading inside TrySaveLevelData
-        SaveAndLoadManager.TrySaveLevelData(LevelsManager.CurrentLevelNumber, (UInt32)Score.score, won);
+        SaveAndLoadManager.TrySaveLevelData
+             (LevelsManager.CurrentLevelNumber, (UInt32)Score.score, won, currentLevelIsUntouched);
         if (won) //TODO: hardcoded winning condition(Can be moved to Level)
         {
             OnWin?.Invoke(score.CurrentStars);//TODO: Record the number of stars or/and score if it's larger than it was previously
@@ -108,6 +153,7 @@ public class GameManager : MonoBehaviour
             OnLose.Invoke();
         }
         OnGameOver?.Invoke(Score.score);
+        currentLevelIsUntouched = false;
     }
 
     public void UnloadScene()
