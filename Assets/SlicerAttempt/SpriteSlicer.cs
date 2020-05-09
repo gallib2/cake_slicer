@@ -6,6 +6,7 @@ using UnityEngine;
 public class SpriteSlicer : MonoBehaviour
 {
     private Vector2Int lastHitPixel;
+    private static Vector2 lastMousePointInsideCake;
     private SpriteSliceable sliceableBeingSliced;
     private float boundsMinX;
     private float boundsMinY;
@@ -59,6 +60,11 @@ public class SpriteSlicer : MonoBehaviour
         slicesCount = 0;
         lastHitPixel = Vector2Int.zero;
     }*/
+
+    public static Vector2 GetLastMousePosition()
+    {
+        return lastMousePointInsideCake;
+    }
 
     private void Update()
     {
@@ -177,7 +183,6 @@ public class SpriteSlicer : MonoBehaviour
   currentTexture.SetPixel(InterpolatedPoint.x, InterpolatedPoint.y + 1, Color.clear);
   currentTexture.SetPixel(InterpolatedPoint.x, InterpolatedPoint.y - 1, Color.clear);*/
                     }
-                    // Debug.Log("interpolate");
                     //Vector2Int InterpolatedPoint = new Vector2Int((newHitPixel.x + lastHitPixel.x) / 2, (newHitPixel.y + lastHitPixel.y) / 2);
                 }
             }
@@ -192,11 +197,17 @@ public class SpriteSlicer : MonoBehaviour
                 isSlicing = true;
             }
 
-            if (!overlappedColliderThisFrame&& overlappedColliderPreviousFrame)
+            if (overlappedColliderPreviousFrame)
             {
-                Debug.Log("CalculateSlices");
-                CalculateSlices();
+                lastMousePointInsideCake = mousePoint;
+                if (!overlappedColliderThisFrame)
+                {
+                    Debug.Log("CalculateSlices");
+                    CalculateSlices();
+                }
+
             }
+
             overlappedColliderPreviousFrame = overlappedColliderThisFrame;
         }
 
@@ -308,8 +319,6 @@ public class SpriteSlicer : MonoBehaviour
             //x = Mathf.Clamp()
             currentTexture.SetPixels
                 (x, y, holeWidth, holeHeight, clearColours);
-
-
 
             return true;
         }
