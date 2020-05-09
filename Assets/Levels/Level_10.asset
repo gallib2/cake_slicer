@@ -20,8 +20,10 @@ MonoBehaviour:
     fractions:
     - numerator: 1
       denominator: 3
-    - numerator: 2
-      denominator: 3
+    - numerator: 3
+      denominator: 9
+    - numerator: 4
+      denominator: 12
   - cakePrefab: {fileID: 2935677715139052978, guid: 037ae15f098998a45bdce07f2e7aa4ce,
       type: 3}
     numberOfSlices: 4
