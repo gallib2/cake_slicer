@@ -38,7 +38,7 @@ MonoBehaviour:
       denominator: 60
     - numerator: 7
       denominator: 42
-  - cakePrefab: {fileID: 8200570759069020071, guid: dafd1d5b7629ba346bb8217b27cca627,
+  - cakePrefab: {fileID: 8200570759069020071, guid: 5478e7f94983bdc499053143bfcc4af4,
       type: 3}
     numberOfSlices: 8
     fractions: []
@@ -63,5 +63,5 @@ MonoBehaviour:
   starRequirements:
   - 0.30000001192092896
   - 0.44999998807907104
-  - 0.6000000238418579
+  - 0.6499999761581421
   initialTimeInSeconds: 55

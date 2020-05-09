@@ -14,19 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Level
   displayName: LVL 13
   cakes:
-  - cakePrefab: {fileID: 8200570759069020071, guid: 3947c58e62bb1b34582ab5c39bde38da,
+  - cakePrefab: {fileID: 8200570759069020071, guid: 0ec6566b92cdf2c4d9daee3b5143a442,
       type: 3}
     numberOfSlices: 4
     fractions: []
-  - cakePrefab: {fileID: 8200570759069020071, guid: 562545a56a6ac6e49b79f24afd5754ce,
+  - cakePrefab: {fileID: 8200570759069020071, guid: 5af1a515f5f4c59499abc4273a4a1f13,
       type: 3}
     numberOfSlices: 4
     fractions: []
-  - cakePrefab: {fileID: 8200570759069020071, guid: 250299b456ae5064b85e860011734d84,
+  - cakePrefab: {fileID: 8200570759069020071, guid: 19df3e3b475ec0a4bb1ba2b409d707ac,
       type: 3}
     numberOfSlices: 4
     fractions: []
-  - cakePrefab: {fileID: 8200570759069020071, guid: 1e495d9e5a07e97459d1353e9916186d,
+  - cakePrefab: {fileID: 8200570759069020071, guid: 3a5a0d38b346fec45ae2f3d43b4a876b,
       type: 3}
     numberOfSlices: 8
     fractions: []
@@ -34,11 +34,11 @@ MonoBehaviour:
       type: 3}
     numberOfSlices: 8
     fractions: []
-  - cakePrefab: {fileID: 8200570759069020071, guid: ed7a43d86da07254da31624e0215f774,
+  - cakePrefab: {fileID: 2935677715139052978, guid: b2aae11461c96924a9e497ecfec9f9fc,
       type: 3}
     numberOfSlices: 6
     fractions: []
-  - cakePrefab: {fileID: 8200570759069020071, guid: dafd1d5b7629ba346bb8217b27cca627,
+  - cakePrefab: {fileID: 8200570759069020071, guid: 250299b456ae5064b85e860011734d84,
       type: 3}
     numberOfSlices: 4
     fractions: []
