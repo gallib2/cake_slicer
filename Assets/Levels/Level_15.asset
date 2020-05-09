@@ -25,7 +25,15 @@ MonoBehaviour:
   - cakePrefab: {fileID: 8200570759069020071, guid: 562545a56a6ac6e49b79f24afd5754ce,
       type: 3}
     numberOfSlices: 4
-    fractions: []
+    fractions:
+    - numerator: 5
+      denominator: 20
+    - numerator: 1
+      denominator: 4
+    - numerator: 3
+      denominator: 12
+    - numerator: 2
+      denominator: 8
   - cakePrefab: {fileID: 8200570759069020071, guid: 1e495d9e5a07e97459d1353e9916186d,
       type: 3}
     numberOfSlices: 8
@@ -40,8 +48,20 @@ MonoBehaviour:
     fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: 166b18ee2f7140b43b64f7cf36d93af3,
       type: 3}
-    numberOfSlices: 10
-    fractions: []
+    numberOfSlices: 6
+    fractions:
+    - numerator: 6
+      denominator: 32
+    - numerator: 5
+      denominator: 30
+    - numerator: 1
+      denominator: 6
+    - numerator: 2
+      denominator: 12
+    - numerator: 0
+      denominator: 0
+    - numerator: 0
+      denominator: 0
   - cakePrefab: {fileID: 8200570759069020071, guid: 4bae5488ff187bc4fbfe7e5f240a0016,
       type: 3}
     numberOfSlices: 4

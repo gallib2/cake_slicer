@@ -25,7 +25,17 @@ MonoBehaviour:
   - cakePrefab: {fileID: 8200570759069020071, guid: 562545a56a6ac6e49b79f24afd5754ce,
       type: 3}
     numberOfSlices: 5
-    fractions: []
+    fractions:
+    - numerator: 2
+      denominator: 10
+    - numerator: 1
+      denominator: 5
+    - numerator: 5
+      denominator: 25
+    - numerator: 6
+      denominator: 30
+    - numerator: 0
+      denominator: 0
   - cakePrefab: {fileID: 8200570759069020071, guid: 5af1a515f5f4c59499abc4273a4a1f13,
       type: 3}
     numberOfSlices: 8
