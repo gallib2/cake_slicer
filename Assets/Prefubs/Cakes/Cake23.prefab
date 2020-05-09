@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2935677715139052983}
   - component: {fileID: 4742262885414832166}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cake23
   m_TagString: Untagged
   m_Icon: {fileID: 0}
