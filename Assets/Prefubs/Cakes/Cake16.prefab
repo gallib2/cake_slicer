@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2935677715139052983}
   - component: {fileID: 4742262885414832166}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cake16
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 02aebd72b1b6b874e889bfb5440ae8b8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 87ba0521e1a72984faa2343eb3bc1abd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
