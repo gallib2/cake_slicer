@@ -7,15 +7,20 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    //public static event Action OnGameOver;
     public static event Action<int> OnWin;
     public static event Action OnLose;
     public static event Action<int> OnGameOver;
     public static event Action OnLevelInitialised;
     public static event Action<bool> OnPauseChanged;
 
+    public static PauseUIManager[] pauseUIs;
+    public static PauseUIManager pauseUIsGeneral;
+    public static PauseUIManager pauseUIsOnEnter;
+
     public static string playerName;
     public static bool isGameOver = false;
+    public static bool toSetPauseOnEnterLevel = false;
+
     public static bool GameIsPaused
     {
         get
@@ -44,23 +49,38 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        pauseUIs = GetComponents<PauseUIManager>();
+        pauseUIsGeneral = pauseUIs[0];
+        pauseUIsOnEnter = pauseUIs[1];
         if (LevelsManager.CurrentLevel != null)
         {
             currentLevel = LevelsManager.CurrentLevel;
         }
 
         InitialiseLevel();
+        if(toSetPauseOnEnterLevel)
+        {
+            SetPauseOnEnterGame(true);
+            toSetPauseOnEnterLevel = false;
+        }
+
     }
 
-    /*public void SwitchPauseState()
+    public void NextLevel()
     {
-        gameIsPaused = !gameIsPaused;
-    }*/
+        int nextlevelNumber = LevelsManager.CurrentLevelNumber + 1;
+        LevelsManager.instance.LoadLevel(nextlevelNumber, Score.score, true);
+    }
 
     public void SetPause(bool to)
     {
-        //pauseMenuPopUp.SetActive(to);
-        OnPauseChanged(to);
+        pauseUIsGeneral.ChangeState(to);
+        gameIsPaused = to;
+    }
+
+    public void SetPauseOnEnterGame(bool to)
+    {
+        pauseUIsOnEnter.ChangeState(to);
         gameIsPaused = to;
     }
 
@@ -69,6 +89,7 @@ public class GameManager : MonoBehaviour
         SetPause(false);
         isGameOver = false;
         OnLevelInitialised.Invoke();
+        pauseUIsGeneral.HidePauseScreen();
     }
 
     public void GameOver()
@@ -78,11 +99,8 @@ public class GameManager : MonoBehaviour
         //TODO: If we see that saving and oading slows the device, 
         //we can import the loaded data that was loaded previously and thus avoid loading inside TrySaveLevelData
         SaveAndLoadManager.TrySaveLevelData(LevelsManager.CurrentLevelNumber, (UInt32)Score.score, won);
-        //currentLevel.PlayingCount++;
-        if (won/*currentLevel.MinStarsToWin*/) //TODO: hardcoded winning condition(Can be moved to Level)
+        if (won) //TODO: hardcoded winning condition(Can be moved to Level)
         {
-           // currentLevel.LevelSucceeded();
-            //SaveAndLoadManager.TrySaveLevelData(LevelsManager.CurrentLevelNumber, (UInt32)Score.score);
             OnWin?.Invoke(score.CurrentStars);//TODO: Record the number of stars or/and score if it's larger than it was previously
         }
         else
@@ -96,9 +114,4 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
-
-   /* public void SetFunSlicing(bool to)
-    {
-        FunSlicing = to;
-    }*/
 }

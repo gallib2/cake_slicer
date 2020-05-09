@@ -11,18 +11,10 @@ public class PauseUIManager : MonoBehaviour
 
     private void Awake()
     {
-        GameManager.OnPauseChanged += ChangeState;
-        GameManager.OnLevelInitialised += HidePauseScreen;
         // HideWinScreen();//Should be called by OnLevelInitialised though
     }
 
-    private void OnDisable()
-    {
-        GameManager.OnPauseChanged -= ChangeState;
-        GameManager.OnLevelInitialised -= HidePauseScreen;
-    }
-
-    private void ChangeState(bool to)
+    public void ChangeState(bool to)
     {
         if (to)
         {
@@ -46,7 +38,7 @@ public class PauseUIManager : MonoBehaviour
         }
     }
 
-    private void HidePauseScreen()
+    public void HidePauseScreen()
     {
         for (int i = 0; i < elementsToAppearOnPause.Length; i++)
         {
