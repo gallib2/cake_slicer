@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class LoseUIManager : MonoBehaviour
@@ -27,6 +28,12 @@ public class LoseUIManager : MonoBehaviour
     {
         Debug.Log("ShowLoseScreen");
         soundManager.PlaySoundEffect(SoundEffectNames.LOSE);
+        bool isNextLevelLocked = LevelsManager.instance.IsLevelLocked(LevelsManager.CurrentLevelNumber +1);
+        if(isNextLevelLocked)
+        {
+            elementsToAppearOnLose = elementsToAppearOnLose.Where(element => element.tag != "NextButton").ToArray();
+        }
+
         for (int i = 0; i < elementsToAppearOnLose.Length; i++)
         {
             elementsToAppearOnLose[i].SetActive(true);

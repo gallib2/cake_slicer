@@ -9,6 +9,7 @@ TagManager:
   - Goal
   - Timer
   - Refresh
+  - NextButton
   layers:
   - Default
   - TransparentFX

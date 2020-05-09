@@ -81,7 +81,8 @@ public class LevelsManager: MonoBehaviour
             }
             else
             {
-                int _prevLevelScore = prevLevelScore ?? (int)GetLevelSavedScore(levelIndex - 1);
+                int savedPrevLevelScore = (int)GetLevelSavedScore(levelIndex - 1);
+                int _prevLevelScore = savedPrevLevelScore > 0 ? savedPrevLevelScore : prevLevelScore ?? 0;
                 bool isPreviousLevelSucceeded = gameLevels[levelIndex - 1].IsLevelComplete(_prevLevelScore);
                 isLocked = !isPreviousLevelSucceeded;
             }          
