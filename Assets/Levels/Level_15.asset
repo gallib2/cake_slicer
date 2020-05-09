@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Level
   displayName: LVL 15
   cakes:
-  - cakePrefab: {fileID: 8200570759069020071, guid: 3947c58e62bb1b34582ab5c39bde38da,
+  - cakePrefab: {fileID: 8200570759069020071, guid: 562545a56a6ac6e49b79f24afd5754ce,
       type: 3}
     numberOfSlices: 4
     fractions: []
@@ -49,5 +49,5 @@ MonoBehaviour:
   starRequirements:
   - 0.30000001192092896
   - 0.44999998807907104
-  - 0.6000000238418579
+  - 0.6499999761581421
   initialTimeInSeconds: 50
