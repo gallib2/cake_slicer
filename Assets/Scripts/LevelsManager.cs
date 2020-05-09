@@ -52,7 +52,7 @@ public class LevelsManager: MonoBehaviour
         }
     }
 
-    public void LoadLevel(int levelIndex, int? prevLevelScore = null, bool toPauseOnEnter=false)
+    public void LoadLevel(int levelIndex, int prevLevelScore = 0, bool toPauseOnEnter=false)
     {
         if (IsLevelIndexLegit(levelIndex))
         {
@@ -68,7 +68,7 @@ public class LevelsManager: MonoBehaviour
         }
     }
 
-    public bool IsLevelLocked(int levelIndex, int? prevLevelScore = null)
+    public bool IsLevelLocked(int levelIndex, int prevLevelScore = 0)
     {
         Debug.Log("in is level locked");
         if (IsLevelIndexLegit(levelIndex))
@@ -82,7 +82,8 @@ public class LevelsManager: MonoBehaviour
             else
             {
                 int savedPrevLevelScore = (int)GetLevelSavedScore(levelIndex - 1);
-                int _prevLevelScore = savedPrevLevelScore > 0 ? savedPrevLevelScore : prevLevelScore ?? 0;
+                bool toTakeSavedScore = savedPrevLevelScore > 0 && savedPrevLevelScore > prevLevelScore;
+                int _prevLevelScore = toTakeSavedScore ? savedPrevLevelScore : prevLevelScore;
                 bool isPreviousLevelSucceeded = gameLevels[levelIndex - 1].IsLevelComplete(_prevLevelScore);
                 isLocked = !isPreviousLevelSucceeded;
             }          
