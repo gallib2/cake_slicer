@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class SpriteSlicer : MonoBehaviour
 {
+    [SerializeField] private LayerMask cakesLayerMask;
     private Vector2Int lastHitPixel;
     private SpriteSliceable sliceableBeingSliced;
     private float boundsMinX;
@@ -13,8 +14,8 @@ public class SpriteSlicer : MonoBehaviour
     private float normalisedMaxY;
     private Texture2D currentTexture;
     private Texture2D dynamicTexture;
-    private Texture2D lowerDynamicTexture;
-    private Texture2D upperDynamicTexture;
+   // private Texture2D lowerDynamicTexture;//TODO: continue..
+   // private Texture2D upperDynamicTexture;
 
     private int textureWidth;
     private int textureHeight;
@@ -94,9 +95,9 @@ public class SpriteSlicer : MonoBehaviour
             normalisedMaxY = sliceableBeingSliced.boxCollider.bounds.max.y - boundsMinY;
             boxCollider.enabled = false;
 
-            lowerDynamicTexture = new Texture2D(currentTexture.width, currentTexture.height/2);
+           /* lowerDynamicTexture = new Texture2D(currentTexture.width, currentTexture.height/2);
             lowerDynamicTexture.filterMode = currentTexture.filterMode;
-            lowerDynamicTexture.SetPixels(currentTexture.GetPixels(0,0, lowerDynamicTexture.width, lowerDynamicTexture.height));
+            lowerDynamicTexture.SetPixels(currentTexture.GetPixels(0,0, lowerDynamicTexture.width, lowerDynamicTexture.height));*/
 
 
 
@@ -126,7 +127,8 @@ public class SpriteSlicer : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             Vector2 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            overlappedColliderThisFrame = (Physics2D.OverlapPoint(mousePoint) != null);
+            Collider2D colliderAtMousePoint = (Physics2D.OverlapPoint(mousePoint, cakesLayerMask));
+            overlappedColliderThisFrame = (colliderAtMousePoint != null && colliderAtMousePoint is PolygonCollider2D);
 
             if (sliceableBeingSliced == null)
             {
@@ -177,7 +179,6 @@ public class SpriteSlicer : MonoBehaviour
   currentTexture.SetPixel(InterpolatedPoint.x, InterpolatedPoint.y + 1, Color.clear);
   currentTexture.SetPixel(InterpolatedPoint.x, InterpolatedPoint.y - 1, Color.clear);*/
                     }
-                    // Debug.Log("interpolate");
                     //Vector2Int InterpolatedPoint = new Vector2Int((newHitPixel.x + lastHitPixel.x) / 2, (newHitPixel.y + lastHitPixel.y) / 2);
                 }
             }
@@ -192,11 +193,12 @@ public class SpriteSlicer : MonoBehaviour
                 isSlicing = true;
             }
 
-            if (!overlappedColliderThisFrame&& overlappedColliderPreviousFrame)
+            if (overlappedColliderPreviousFrame && !overlappedColliderThisFrame)
             {
-                Debug.Log("CalculateSlices");
-                CalculateSlices();
+                 Debug.Log("CalculateSlices");
+                 CalculateSlices();
             }
+
             overlappedColliderPreviousFrame = overlappedColliderThisFrame;
         }
 
@@ -308,8 +310,6 @@ public class SpriteSlicer : MonoBehaviour
             //x = Mathf.Clamp()
             currentTexture.SetPixels
                 (x, y, holeWidth, holeHeight, clearColours);
-
-
 
             return true;
         }

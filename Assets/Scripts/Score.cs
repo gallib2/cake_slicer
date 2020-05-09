@@ -23,10 +23,10 @@ public class Score : MonoBehaviour
     [SerializeField]
     private UIStar UIStarPrefab;
     private UIStar[] UIStars;
-    [SerializeField]
-    private float StarYOffset = 54f;
-    [SerializeField]
-    private SoundManager soundManager;
+    [SerializeField] private float StarYOffset = 54f;
+    [SerializeField] private SoundManager soundManager;
+    [SerializeField] private BoxCollider2D scoreFeedbacksBorders;
+
 
     public int CurrentStars { get; set; }
 
@@ -147,10 +147,15 @@ public class Score : MonoBehaviour
 
     private void CreateScoreFeedback(int bonuslessScore, int bonus, ScoreData.ScoreLevel scoreLevel)
     {
-        Vector3 feedbackPosition = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-        feedbackPosition.x = Mathf.Clamp(feedbackPosition.x, 0,1);
-        feedbackPosition.y = Mathf.Clamp(feedbackPosition.y, 0, 1);
-        feedbackPosition = Camera.main.ViewportToWorldPoint(feedbackPosition);
+        //Vector3 feedbackPosition = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+        // feedbackPosition.x = Mathf.Clamp(feedbackPosition.x, 0,1);
+        //feedbackPosition.y = Mathf.Clamp(feedbackPosition.y, 0, 1);
+        // feedbackPosition = Camera.main.ViewportToWorldPoint(feedbackPosition);
+
+        Vector3 feedbackPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        feedbackPosition.x = Mathf.Clamp(feedbackPosition.x, scoreFeedbacksBorders.bounds.min.x, scoreFeedbacksBorders.bounds.max.x);
+        feedbackPosition.y = Mathf.Clamp(feedbackPosition.y, scoreFeedbacksBorders.bounds.min.y, scoreFeedbacksBorders.bounds.max.y);
+
         ScoreFeedback newScoreFeedback = Instantiate
             (scoreFeedback, feedbackPosition, Quaternion.identity);
         //Making sure Z is zero so that the camera actually desplays the damn thing
