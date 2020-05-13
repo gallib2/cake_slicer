@@ -27,6 +27,7 @@ public class SpriteSlicer : MonoBehaviour
     private bool changedSinceLastCheck;
     [SerializeField] private float SliceChecksSpeed = 0.2f;
     [SerializeField] private bool shouldCheckSlicesRegularly;
+    [SerializeField] private bool shouldCheckWhenEnteringAndExiting;
     [SerializeField] private double negligibleSliceSize = 0.01;
     public static bool isSlicing;
     private int slicesCount;
@@ -61,14 +62,14 @@ public class SpriteSlicer : MonoBehaviour
         lastHitPixel = Vector2Int.zero;
     }*/
 
-    private void Update()
+    /*private void Update()
     {
-        if (Input.GetMouseButtonUp(0))
+        /*if (Input.GetMouseButtonUp(0))
         {
-            lastHitPixel = Vector2Int.zero;
+           // lastHitPixel = Vector2Int.zero;
             CalculateSlices();
         }
-    }
+    }*/
 
     public void SetNewSliceable(SpriteSliceable newSliceable )
     {
@@ -110,8 +111,9 @@ public class SpriteSlicer : MonoBehaviour
 
     private bool overlappedColliderThisFrame;
     private bool overlappedColliderPreviousFrame;
+    private float timeOnLastDraw;
 
-    private void FixedUpdate()
+    private void Update()
     {
         isSlicing = false;
         if (GameManager.GameIsPaused)
@@ -124,6 +126,14 @@ public class SpriteSlicer : MonoBehaviour
             //skipedFrame = false;
             return;
         }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            // lastHitPixel = Vector2Int.zero;
+            currentTexture.Apply();
+            CalculateSlices();
+        }
+
         if (Input.GetMouseButton(0))
         {
             Vector2 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -152,11 +162,6 @@ public class SpriteSlicer : MonoBehaviour
                 textureChanged = true;
             }
 
-            /*currentTexture.SetPixel(hitPixelX, hitPixelY, Color.clear);
-            currentTexture.SetPixel(hitPixelX + 1, hitPixelY, Color.clear);
-            currentTexture.SetPixel(hitPixelX- 1, hitPixelY, Color.clear);
-            currentTexture.SetPixel(hitPixelX, hitPixelY + 1, Color.clear);
-            currentTexture.SetPixel(hitPixelX, hitPixelY - 1, Color.clear);*/
             if (lastHitPixel != Vector2Int.zero)
             {
                 int distance = Mathf.RoundToInt(Vector2.Distance(newHitPixel, lastHitPixel));
@@ -185,7 +190,11 @@ public class SpriteSlicer : MonoBehaviour
 
             if (textureChanged)
             {
-                currentTexture.Apply();
+                if (Time.time - timeOnLastDraw > 0.02f)
+                {
+                    currentTexture.Apply();
+                    timeOnLastDraw = Time.time;
+                }
             }
             lastHitPixel = newHitPixel;
             if (overlappedColliderThisFrame)
@@ -196,10 +205,19 @@ public class SpriteSlicer : MonoBehaviour
             if (overlappedColliderPreviousFrame && !overlappedColliderThisFrame)
             {
                  Debug.Log("CalculateSlices");
-                 CalculateSlices();
+                currentTexture.Apply();
+                if (shouldCheckWhenEnteringAndExiting)
+                {
+                    CalculateSlices();
+
+                }
             }
 
             overlappedColliderPreviousFrame = overlappedColliderThisFrame;
+        }
+        else
+        {
+             lastHitPixel = Vector2Int.zero;
         }
 
         if (Input.GetKeyDown(KeyCode.F))

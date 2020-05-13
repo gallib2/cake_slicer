@@ -22,8 +22,12 @@ public class CrumbsEffect : MonoBehaviour
         distanceBetweenOldAndNewMousePositions= Vector3.Distance(newMousePosition, oldMousePosition) / Time.deltaTime;
         if ((HoleCutController.isSlicing || SpriteSlicer.isSlicing) && distanceBetweenOldAndNewMousePositions > signtificantDistance)
         {
-            transform.position = Camera.main.ScreenToWorldPoint(newMousePosition);
-            transform.position = new Vector3(transform.position.x, transform.position.y, -2);
+            if (Input.GetMouseButton(0))//TODO: we might be able to remove this line, it is intended for testing
+            {
+                transform.position = Camera.main.ScreenToWorldPoint(newMousePosition);
+                transform.position = new Vector3(transform.position.x, transform.position.y, -2);
+            }
+
             particleSystem.enableEmission = true;
             particleSystem.emissionRate = distanceBetweenOldAndNewMousePositions * emissionRateNormaliser;
 
