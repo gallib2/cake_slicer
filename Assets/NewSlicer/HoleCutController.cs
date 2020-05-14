@@ -15,10 +15,8 @@ public class HoleCutController : MonoBehaviour
 
     public int circleVerticesCount = 15;
 
-    private bool skipedFrame;
+    private bool skippedFrame;
 
-    /* [SerializeField]
-     private CrumbsEffect crumbs;*/
     public static bool isSlicing;
 
     public void Initialize() {
@@ -46,7 +44,7 @@ public class HoleCutController : MonoBehaviour
 
         if(!SlicesManager.allowToSlice)
         {
-            skipedFrame = false;
+            skippedFrame = false;
             return;
         }
 

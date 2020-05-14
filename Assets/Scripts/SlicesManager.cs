@@ -84,8 +84,8 @@ public class SlicesManager : MonoBehaviour
 
         if (!GameManager.isGameOver)
         {
-            bool isMouseButtonClick = Input.GetMouseButton(0);
-            bool isMouseDown = Input.GetMouseButtonDown(0);
+            bool isMouseButtonClick = InputManager.GetTouch();
+            bool isMouseDown = InputManager.GetTouchDown();
             if (isMouseButtonClick || isMouseDown)
             {
                 bool isHaveDecorators = obstacles.Length > 0;
@@ -112,7 +112,9 @@ public class SlicesManager : MonoBehaviour
                 }
             }
 
-            allowToSlice |= !allowToSlice && Input.GetMouseButtonUp(0) && candleObstacles.IsEmpty();
+            bool touchIsUp = InputManager.GetTouchUp();
+
+            allowToSlice |= (!allowToSlice && touchIsUp && candleObstacles.IsEmpty());
 
             CheckSlices();//TODO: We don't have to do this every frame.
             if (timer.ToStopTimer && !GameManager.isGameOver)//the reason !GameManager.isGameOver is checked is that CheckSlices() can lead to a GameOver()
@@ -125,8 +127,9 @@ public class SlicesManager : MonoBehaviour
 
     private Collider2D CheckClicksByLayer(int layer)
     {
-        Vector2 fingerPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Collider2D colliderAtfingerPosition = Physics2D.OverlapPoint(fingerPosition, layer);
+        Vector2 fingerPosition = InputManager.GetTouchPosition();
+        Vector2 normalisedFingerPosition = Camera.main.ScreenToWorldPoint(fingerPosition);
+        Collider2D colliderAtfingerPosition = Physics2D.OverlapPoint(normalisedFingerPosition, layer);
         if (colliderAtfingerPosition != null)
         {
             return colliderAtfingerPosition;
@@ -163,7 +166,6 @@ public class SlicesManager : MonoBehaviour
                 BadSlice(true);
             }
         }
-
     }
 
     private void BadSlice(bool toManySlices = false)
