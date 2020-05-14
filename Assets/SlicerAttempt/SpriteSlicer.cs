@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class SpriteSlicer : MonoBehaviour
 {
+    [SerializeField] private float drawRate = 0.012f;
     [SerializeField] private LayerMask cakesLayerMask;
     private Vector2Int lastHitPixel;
     private SpriteSliceable sliceableBeingSliced;
@@ -52,15 +53,15 @@ public class SpriteSlicer : MonoBehaviour
             clearColours[i] = Color.clear;
         }
         CalculateSlicesRegularly();
-       // InvokeRepeating("CalculateSlices", 2f,0.12f);
+        // InvokeRepeating("CalculateSlices", 2f,0.12f);
     }
 
-   /* public void Restart()
-    {
-        sliceableBeingSliced = null;
-        slicesCount = 0;
-        lastHitPixel = Vector2Int.zero;
-    }*/
+    /* public void Restart()
+     {
+         sliceableBeingSliced = null;
+         slicesCount = 0;
+         lastHitPixel = Vector2Int.zero;
+     }*/
 
     /*private void Update()
     {
@@ -95,13 +96,9 @@ public class SpriteSlicer : MonoBehaviour
             boundsMinY = sliceableBeingSliced.boxCollider.bounds.min.y;
             normalisedMaxY = sliceableBeingSliced.boxCollider.bounds.max.y - boundsMinY;
             boxCollider.enabled = false;
-
            /* lowerDynamicTexture = new Texture2D(currentTexture.width, currentTexture.height/2);
             lowerDynamicTexture.filterMode = currentTexture.filterMode;
             lowerDynamicTexture.SetPixels(currentTexture.GetPixels(0,0, lowerDynamicTexture.width, lowerDynamicTexture.height));*/
-
-
-
             Sprite currentSprite = sliceableBeingSliced.spriteRenderer.sprite;
             Sprite newSprite = Sprite.Create
                 (dynamicTexture, currentSprite.rect, new Vector2(0.5f, 0.5f), currentSprite.pixelsPerUnit);//, 1, SpriteMeshType.FullRect, currentSprite.border);
@@ -127,16 +124,62 @@ public class SpriteSlicer : MonoBehaviour
             return;
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (InputManager.GetTouchUp())
         {
-            // lastHitPixel = Vector2Int.zero;
-            currentTexture.Apply();
-            CalculateSlices();
+            ThingsToDoOnTouchEnded();
+        }
+        if (InputManager.GetTouch())
+        {
+            ThingsToDoWhenTouching(InputManager.GetTouchPosition());
         }
 
-        if (Input.GetMouseButton(0))
+       /* if (GameManager.testingOnPersonalComputer)
         {
-            Vector2 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            if (Input.GetMouseButtonUp(0))
+            {
+                ThingsToDoOnTouchEnded();
+            }
+            if (Input.GetMouseButton(0))
+            {
+                ThingsToDoWhenTouching(Input.mousePosition);
+            }
+        }
+        else
+        {
+            if (Input.touchCount > 0)
+            {
+                //  if (Input.GetMouseButtonUp(0))
+                if (Input.GetTouch(0).phase == TouchPhase.Ended)
+                {
+                    ThingsToDoOnTouchEnded();
+                }
+
+                ThingsToDoWhenTouching(Input.GetTouch(0).position);
+            }
+            else
+            {
+                lastHitPixel = Vector2Int.zero;
+            }
+        }*/
+
+
+      /*  if (Input.GetKeyDown(KeyCode.F))
+        {
+            floodFillTexture = currentTexture;
+            FloodFillNumberOfSlices();
+        }*/
+    }
+
+    private void ThingsToDoOnTouchEnded()
+    {
+        currentTexture.Apply();
+        CalculateSlices();
+        lastHitPixel = Vector2Int.zero;
+    }
+
+    private void ThingsToDoWhenTouching( Vector2 touchPosition)
+    {
+            Vector2 mousePoint = Camera.main.ScreenToWorldPoint(touchPosition);
             Collider2D colliderAtMousePoint = (Physics2D.OverlapPoint(mousePoint, cakesLayerMask));
             overlappedColliderThisFrame = (colliderAtMousePoint != null && colliderAtMousePoint is PolygonCollider2D);
 
@@ -174,7 +217,7 @@ public class SpriteSlicer : MonoBehaviour
                         Vector2Int InterpolatedPoint = new Vector2Int(
                             Mathf.RoundToInt((float)((newHitPixel.x * multiplierA) + (lastHitPixel.x * multiplierB)) / (float)distance),
                             Mathf.RoundToInt((float)((newHitPixel.y * multiplierA) + (lastHitPixel.y * multiplierB)) / (float)distance));
-                        if( MakeCircleHole(InterpolatedPoint.x, InterpolatedPoint.y))
+                        if (MakeCircleHole(InterpolatedPoint.x, InterpolatedPoint.y))
                         {
                             textureChanged = true;
                         }
@@ -190,7 +233,7 @@ public class SpriteSlicer : MonoBehaviour
 
             if (textureChanged)
             {
-                if (Time.time - timeOnLastDraw > 0.02f)
+               if (Time.time - timeOnLastDraw > drawRate)
                 {
                     currentTexture.Apply();
                     timeOnLastDraw = Time.time;
@@ -204,7 +247,7 @@ public class SpriteSlicer : MonoBehaviour
 
             if (overlappedColliderPreviousFrame && !overlappedColliderThisFrame)
             {
-                 Debug.Log("CalculateSlices");
+                Debug.Log("CalculateSlices");
                 currentTexture.Apply();
                 if (shouldCheckWhenEnteringAndExiting)
                 {
@@ -214,17 +257,11 @@ public class SpriteSlicer : MonoBehaviour
             }
 
             overlappedColliderPreviousFrame = overlappedColliderThisFrame;
-        }
-        else
+        
+        /*else
         {
-             lastHitPixel = Vector2Int.zero;
-        }
-
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            floodFillTexture = currentTexture;
-            FloodFillNumberOfSlices();
-        }
+            lastHitPixel = Vector2Int.zero;
+        }*/
     }
 
     private bool MakeSquraeHole(int x, int y)
@@ -303,7 +340,6 @@ public class SpriteSlicer : MonoBehaviour
                 }
             }
         }
-
 
        /* for (int ix = x; ix < holeWidth+x; ix++)//TODO: should this be before or after bounds checks?
         {
