@@ -81,19 +81,17 @@ public static class SaveAndLoadManager
         fileStream.Close();
     }
 
-    public static void TrySaveLevelData(int levelIndex, UInt32 newScore, bool won)
+    public static void TrySaveLevelData(int levelIndex, UInt32 newScore, bool won, bool isUntouched)
     {
         LevelsSavedData loadedLevelsSavedData = LoadLevelsSavedData();//new
         LevelsSavedData.SavedLevelData loadedLevelData = loadedLevelsSavedData.savedLevelsData[levelIndex];
-        if (loadedLevelData.state == LevelStates.UNTOUCHED)
+        if (isUntouched)
         {
             loadedLevelData.score = newScore;
             loadedLevelData.state = 
                 (won ? LevelStates.WON_ON_FIRST_TRY : LevelStates.LOST_ON_FIRST_TRY);
             SaveLevelsData(loadedLevelsSavedData);
             Debug.Log("You " + (won? "won ":"lost ") + "on your first try!");
-
-
         }
         else 
         {

@@ -40,7 +40,7 @@ public class LevelsManager: MonoBehaviour
             Destroy(this);
             Debug.LogWarning("Tried to create more than one singleton");
         }
-
+        Debug.Log("LevelsManager awoke");
         savedData = SaveAndLoadManager.LoadLevelsSavedData();
     }
 
@@ -63,6 +63,7 @@ public class LevelsManager: MonoBehaviour
                 CurrentLevelNumber = levelIndex;
                 CurrentLevel = gameLevels[levelIndex];
                 GameManager.toSetPauseOnEnterLevel = toPauseOnEnter;
+                GameManager.currentLevelIsUntouched = (GetLevelSavedState(levelIndex) == LevelStates.UNTOUCHED);
                 SceneManager.LoadScene(cakesScene);
             }
         }

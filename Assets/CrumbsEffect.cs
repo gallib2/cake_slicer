@@ -11,30 +11,34 @@ public class CrumbsEffect : MonoBehaviour
     private float signtificantDistance;
     [SerializeField]
     private float emissionRateNormaliser;
-    private Vector3 oldMousePosition;
-    private Vector3 newMousePosition;
+    private Vector3 oldTouchPosition;
+    private Vector3 newTouchPosition;
     private float distanceBetweenOldAndNewMousePositions;
     //public static bool isSlicing;
 
     void Update()
     {
-        newMousePosition = Input.mousePosition;
-        distanceBetweenOldAndNewMousePositions= Vector3.Distance(newMousePosition, oldMousePosition) / Time.deltaTime;
+
+        //newMousePosition = Input.mousePosition;
+        newTouchPosition = InputManager.GetTouchPosition();
+        distanceBetweenOldAndNewMousePositions = Vector3.Distance(newTouchPosition, oldTouchPosition) / Time.deltaTime;
         if ((HoleCutController.isSlicing || SpriteSlicer.isSlicing) && distanceBetweenOldAndNewMousePositions > signtificantDistance)
         {
-            transform.position = Camera.main.ScreenToWorldPoint(newMousePosition);
-            transform.position = new Vector3(transform.position.x, transform.position.y, -2);
+            if (InputManager.GetTouch())//TODO: we might be able to remove this line, it is intended for testing
+            {
+                transform.position = Camera.main.ScreenToWorldPoint(newTouchPosition);
+                transform.position = new Vector3(transform.position.x, transform.position.y, -2);
+            }
+
             particleSystem.enableEmission = true;
             particleSystem.emissionRate = distanceBetweenOldAndNewMousePositions * emissionRateNormaliser;
-
 
         }
         else
         {
             particleSystem.enableEmission = false;
         }
-        oldMousePosition = newMousePosition;
+        oldTouchPosition = newTouchPosition;
     }
-
     
 }
