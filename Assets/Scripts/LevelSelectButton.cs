@@ -5,20 +5,23 @@ using UnityEngine.UI;
 
 public class LevelSelectButton : MonoBehaviour
 {
-    [SerializeField] private int levelIndex;
     [SerializeField] private TMPro.TextMeshProUGUI indexText;
     [SerializeField] private Image lockedImage;
     [SerializeField] private Image starsImage;
     [SerializeField] private Image starsPanel;
-
     [SerializeField] private LevelsManager levelsManager;
     //TODO: if we see that all these refferences flood our RAM, we can easily get rid of em.
+    [SerializeField] private int levelIndex;
+
+    public int LevelIndex
+    {
+        get { return levelIndex; }
+    }
 
     private void Start()
     {
         Draw(false);
     }
-
 
     public void Draw( bool areAllLevelsUnlocked = false)
     {
