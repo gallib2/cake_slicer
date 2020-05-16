@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    private const bool testingOnPersonalComputer = false;
+    private const bool testingOnPersonalComputer = true;
+    private static Vector2 lastTouchPosition;
     public static bool GetTouch()
     {
         return (testingOnPersonalComputer ? Input.GetMouseButton(0) : ((Input.touchCount > 0) && (Input.GetTouch(0).phase != TouchPhase.Ended)));
@@ -26,12 +27,12 @@ public class InputManager : MonoBehaviour
     {
         if (testingOnPersonalComputer)
         {
-            return Input.mousePosition;
+            return lastTouchPosition = Input.mousePosition;
         }
         else if (Input.touchCount > 0)
         {
-            return (Input.GetTouch(0).position);
+            return lastTouchPosition = Input.GetTouch(0).position;
         }
-        return Vector2.zero;//TODO: make it nullable?
+        return lastTouchPosition;//TODO: make it nullable?
     }
 }

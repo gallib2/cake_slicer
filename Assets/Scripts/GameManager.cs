@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static event Action<int> OnWin;
+    public static event Action<int,bool> OnWin;
     public static event Action OnLose;
     public static event Action<int> OnGameOver;
     public static event Action OnLevelInitialised;
@@ -146,7 +146,7 @@ public class GameManager : MonoBehaviour
              (LevelsManager.CurrentLevelNumber, (UInt32)Score.score, won, currentLevelIsUntouched);
         if (won) //TODO: hardcoded winning condition(Can be moved to Level)
         {
-            OnWin?.Invoke(score.CurrentStars);//TODO: Record the number of stars or/and score if it's larger than it was previously
+            OnWin?.Invoke(score.CurrentStars, currentLevelIsUntouched);//TODO: Record the number of stars or/and score if it's larger than it was previously
         }
         else
         {

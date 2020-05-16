@@ -147,10 +147,6 @@ public class Score : MonoBehaviour
 
     private void CreateScoreFeedback(int bonuslessScore, int bonus, ScoreData.ScoreLevel scoreLevel)
     {
-        //Vector3 feedbackPosition = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-        // feedbackPosition.x = Mathf.Clamp(feedbackPosition.x, 0,1);
-        //feedbackPosition.y = Mathf.Clamp(feedbackPosition.y, 0, 1);
-        // feedbackPosition = Camera.main.ViewportToWorldPoint(feedbackPosition);
 
         Vector3 feedbackPosition = Camera.main.ScreenToWorldPoint(InputManager.GetTouchPosition());
         feedbackPosition.x = Mathf.Clamp(feedbackPosition.x, scoreFeedbacksBorders.bounds.min.x, scoreFeedbacksBorders.bounds.max.x);
@@ -171,11 +167,9 @@ public class Score : MonoBehaviour
         newScoreFeedback.ScoreFeedbackConstructor(bonuslessScore,bonus, feedbackSprite);
     }
 
-    //private void GameOver()
-    //{
+    //private void GameOver(){
     //    Highscores.AddNewHighScore(GameManager.playerName, score);
-    //    //SetScore(initialScore);
-    //}
+    //    //SetScore(initialScore);}
 
     private void SetScore(int scoreToSet)
     {

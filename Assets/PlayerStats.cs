@@ -105,7 +105,7 @@ public static class PlayerStats
             powerUps.Add(PowerUpTypes.EXTRA_TIME, 2);
             powerUps.Add(PowerUpTypes.GOLDEN_KNIFE, 0);
             powerUps.Add(PowerUpTypes.IMMUNITY, 2);
-            powerUps.Add(PowerUpTypes.SHOW_PERFECT_CUT, 0);
+            powerUps.Add(PowerUpTypes.WHIPPED_CREAM, 0);
         }
     }
 
