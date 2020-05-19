@@ -18,13 +18,13 @@ MonoBehaviour:
       type: 3}
     numberOfSlices: 4
     fractions: []
-  - cakePrefab: {fileID: 8200570759069020071, guid: 8d9b9ea54ad9a764c82c09deb935a13b,
+  - cakePrefab: {fileID: 8200570759069020071, guid: 5478e7f94983bdc499053143bfcc4af4,
       type: 3}
     numberOfSlices: 4
     fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: 250299b456ae5064b85e860011734d84,
       type: 3}
-    numberOfSlices: 4
+    numberOfSlices: 3
     fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: 1e495d9e5a07e97459d1353e9916186d,
       type: 3}
@@ -32,27 +32,15 @@ MonoBehaviour:
     fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: 7d025795d87f4ad43a3f457b9b7ba8f1,
       type: 3}
-    numberOfSlices: 10
+    numberOfSlices: 5
     fractions: []
-  - cakePrefab: {fileID: 8200570759069020071, guid: dafd1d5b7629ba346bb8217b27cca627,
+  - cakePrefab: {fileID: 2935677715139052978, guid: 19e70b3ff2ed9d64b8c7daa467fd3174,
       type: 3}
     numberOfSlices: 6
     fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: 166b18ee2f7140b43b64f7cf36d93af3,
       type: 3}
-    numberOfSlices: 10
-    fractions: []
-  - cakePrefab: {fileID: 2935677715139052978, guid: 037ae15f098998a45bdce07f2e7aa4ce,
-      type: 3}
     numberOfSlices: 8
-    fractions: []
-  - cakePrefab: {fileID: 2935677715139052978, guid: 221d36b24842e6b488078eed48997e8f,
-      type: 3}
-    numberOfSlices: 8
-    fractions: []
-  - cakePrefab: {fileID: 8200570759069020071, guid: dd9635da77ee7fe4f90fbebc0125c169,
-      type: 3}
-    numberOfSlices: 12
     fractions: []
   starRequirements:
   - 0.30000001192092896
