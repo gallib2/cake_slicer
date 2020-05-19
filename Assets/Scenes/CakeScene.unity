@@ -1400,8 +1400,7 @@ MonoBehaviour:
   - {fileID: 1745330519169453344, guid: 908d1eb4059f34d91bc1315c9866df9b, type: 3}
   - {fileID: 5916751930370644777, guid: 8d2e59df959354ab98f003e9e47ad467, type: 3}
   - {fileID: 3243427735086436329, guid: 074807bed0ed34253b8f72a234ba549d, type: 3}
-  scoreFeedback: {fileID: 1170679715502911663, guid: e1e2b01cde3854e82b697b21b1319be9,
-    type: 3}
+  scoreFeedbackPreFab: {fileID: 1859687846}
   scoreFeedbackSprites:
   - scoreLevel: 0
     sprite: {fileID: 21300000, guid: 157c7c7aaec36aa42a822103a2cb6c5f, type: 3}
@@ -20602,6 +20601,18 @@ Transform:
   m_Father: {fileID: 4929157374528160}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1859687846 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1170679715502911663, guid: e1e2b01cde3854e82b697b21b1319be9,
+    type: 3}
+  m_PrefabInstance: {fileID: 331531609}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af32baa608d655347b4707315578a629, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1869795315
 GameObject:
   m_ObjectHideFlags: 0
