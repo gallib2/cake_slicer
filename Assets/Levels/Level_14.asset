@@ -18,11 +18,11 @@ MonoBehaviour:
       type: 3}
     numberOfSlices: 4
     fractions: []
-  - cakePrefab: {fileID: 8200570759069020071, guid: 562545a56a6ac6e49b79f24afd5754ce,
+  - cakePrefab: {fileID: 2935677715139052978, guid: 836fcb5481c68ae4bbd241ec078b6093,
       type: 3}
-    numberOfSlices: 4
+    numberOfSlices: 2
     fractions: []
-  - cakePrefab: {fileID: 8200570759069020071, guid: 250299b456ae5064b85e860011734d84,
+  - cakePrefab: {fileID: 2935677715139052978, guid: 221d36b24842e6b488078eed48997e8f,
       type: 3}
     numberOfSlices: 4
     fractions: []
@@ -36,15 +36,11 @@ MonoBehaviour:
     fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: ed7a43d86da07254da31624e0215f774,
       type: 3}
-    numberOfSlices: 6
+    numberOfSlices: 4
     fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: 3d594b62bdbc7de43bc3aaa5f5cce039,
       type: 3}
     numberOfSlices: 6
-    fractions: []
-  - cakePrefab: {fileID: 2935677715139052978, guid: fd28df93ee335df4fbc81a70689416f7,
-      type: 3}
-    numberOfSlices: 9
     fractions: []
   starRequirements:
   - 0.30000001192092896

@@ -14,68 +14,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Level
   displayName: LVL 21
   cakes:
-  - cakePrefab: {fileID: 8200570759069020071, guid: e98d48f6f79b2a8459b4fff3c50b3667,
+  - cakePrefab: {fileID: 2935677715139052978, guid: 836fcb5481c68ae4bbd241ec078b6093,
       type: 3}
-    numberOfSlices: 2
-    fractions:
-    - numerator: 1
-      denominator: 2
-    - numerator: 1
-      denominator: 2
+    numberOfSlices: 4
+    fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: 7d025795d87f4ad43a3f457b9b7ba8f1,
       type: 3}
     numberOfSlices: 3
-    fractions:
-    - numerator: 2
-      denominator: 6
-    - numerator: 2
-      denominator: 6
-    - numerator: 2
-      denominator: 6
-  - cakePrefab: {fileID: 8200570759069020071, guid: 166b18ee2f7140b43b64f7cf36d93af3,
+    fractions: []
+  - cakePrefab: {fileID: 2935677715139052978, guid: 05b96e7436d1ff647960ac27099dc870,
       type: 3}
-    numberOfSlices: 2
-    fractions:
-    - numerator: 2
-      denominator: 4
+    numberOfSlices: 4
+    fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: 26a775322eba4f846941e3f21a82bb3b,
       type: 3}
-    numberOfSlices: 5
-    fractions:
-    - numerator: 1
-      denominator: 5
-    - numerator: 2
-      denominator: 10
-    - numerator: 2
-      denominator: 10
-    - numerator: 1
-      denominator: 5
-    - numerator: 1
-      denominator: 5
+    numberOfSlices: 8
+    fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: 8f37ef1cb3cc6f94994193ebd07f2e58,
       type: 3}
     numberOfSlices: 8
     fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: dd9635da77ee7fe4f90fbebc0125c169,
       type: 3}
-    numberOfSlices: 10
+    numberOfSlices: 5
     fractions: []
   - cakePrefab: {fileID: 2935677715139052978, guid: 19e70b3ff2ed9d64b8c7daa467fd3174,
       type: 3}
     numberOfSlices: 6
+    fractions: []
+  - cakePrefab: {fileID: 2935677715139052978, guid: b2aae11461c96924a9e497ecfec9f9fc,
+      type: 3}
+    numberOfSlices: 2
     fractions:
     - numerator: 1
-      denominator: 6
+      denominator: 2
     - numerator: 1
-      denominator: 6
-    - numerator: 1
-      denominator: 6
-    - numerator: 1
-      denominator: 6
-    - numerator: 1
-      denominator: 6
-    - numerator: 1
-      denominator: 6
+      denominator: 2
   starRequirements:
   - 0.30000001192092896
   - 0.44999998807907104

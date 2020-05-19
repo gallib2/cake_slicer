@@ -16,51 +16,45 @@ MonoBehaviour:
   cakes:
   - cakePrefab: {fileID: 2935677715139052978, guid: b2aae11461c96924a9e497ecfec9f9fc,
       type: 3}
-    numberOfSlices: 10
-    fractions: []
-  - cakePrefab: {fileID: 8200570759069020071, guid: 3947c58e62bb1b34582ab5c39bde38da,
+    numberOfSlices: 3
+    fractions:
+    - numerator: 1
+      denominator: 3
+    - numerator: 2
+      denominator: 6
+    - numerator: 3
+      denominator: 9
+  - cakePrefab: {fileID: 2935677715139052978, guid: 19e70b3ff2ed9d64b8c7daa467fd3174,
       type: 3}
     numberOfSlices: 8
     fractions: []
-  - cakePrefab: {fileID: 8200570759069020071, guid: bcae8518a48690a47a90d757d18ab7fa,
+  - cakePrefab: {fileID: 2935677715139052978, guid: 836fcb5481c68ae4bbd241ec078b6093,
       type: 3}
-    numberOfSlices: 6
-    fractions:
-    - numerator: 1
-      denominator: 6
-    - numerator: 6
-      denominator: 36
-    - numerator: 2
-      denominator: 12
-    - numerator: 4
-      denominator: 24
-    - numerator: 7
-      denominator: 8
-    - numerator: 7
-      denominator: 8
+    numberOfSlices: 4
+    fractions: []
   - cakePrefab: {fileID: 2935677715139052978, guid: cc83ff2ec840b5144b5bfadf354b701d,
       type: 3}
     numberOfSlices: 8
     fractions: []
-  - cakePrefab: {fileID: 8200570759069020071, guid: 3a5a0d38b346fec45ae2f3d43b4a876b,
+  - cakePrefab: {fileID: 2935677715139052978, guid: 221d36b24842e6b488078eed48997e8f,
       type: 3}
     numberOfSlices: 4
     fractions:
-    - numerator: 6
-      denominator: 24
-    - numerator: 3
-      denominator: 12
     - numerator: 1
       denominator: 4
     - numerator: 2
       denominator: 8
+    - numerator: 3
+      denominator: 12
+    - numerator: 1
+      denominator: 4
   - cakePrefab: {fileID: 8200570759069020071, guid: 8f37ef1cb3cc6f94994193ebd07f2e58,
       type: 3}
     numberOfSlices: 7
     fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: dd9635da77ee7fe4f90fbebc0125c169,
       type: 3}
-    numberOfSlices: 10
+    numberOfSlices: 8
     fractions: []
   starRequirements:
   - 0.30000001192092896

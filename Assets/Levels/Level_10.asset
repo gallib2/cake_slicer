@@ -14,14 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Level
   displayName: LVL 10
   cakes:
-  - cakePrefab: {fileID: 8200570759069020071, guid: 166b18ee2f7140b43b64f7cf36d93af3,
+  - cakePrefab: {fileID: 8200570759069020071, guid: 0ec6566b92cdf2c4d9daee3b5143a442,
       type: 3}
     numberOfSlices: 3
-    fractions:
-    - numerator: 1
-      denominator: 3
-    - numerator: 2
-      denominator: 3
+    fractions: []
   - cakePrefab: {fileID: 2935677715139052978, guid: 037ae15f098998a45bdce07f2e7aa4ce,
       type: 3}
     numberOfSlices: 4
@@ -45,10 +41,6 @@ MonoBehaviour:
   - cakePrefab: {fileID: 2935677715139052978, guid: b2aae11461c96924a9e497ecfec9f9fc,
       type: 3}
     numberOfSlices: 10
-    fractions: []
-  - cakePrefab: {fileID: 8200570759069020071, guid: 1e495d9e5a07e97459d1353e9916186d,
-      type: 3}
-    numberOfSlices: 8
     fractions: []
   starRequirements:
   - 0.30000001192092896

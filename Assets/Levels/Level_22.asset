@@ -18,56 +18,38 @@ MonoBehaviour:
       type: 3}
     numberOfSlices: 2
     fractions:
-    - numerator: 2
-      denominator: 4
-    - numerator: 2
-      denominator: 4
+    - numerator: 1
+      denominator: 2
+    - numerator: 1
+      denominator: 2
   - cakePrefab: {fileID: 2935677715139052978, guid: b2aae11461c96924a9e497ecfec9f9fc,
       type: 3}
     numberOfSlices: 3
-    fractions:
-    - numerator: 4
-      denominator: 12
-    - numerator: 1
-      denominator: 3
-    - numerator: 3
-      denominator: 9
+    fractions: []
   - cakePrefab: {fileID: 2935677715139052978, guid: 19e70b3ff2ed9d64b8c7daa467fd3174,
       type: 3}
     numberOfSlices: 4
     fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: 26a775322eba4f846941e3f21a82bb3b,
       type: 3}
-    numberOfSlices: 4
-    fractions:
-    - numerator: 2
-      denominator: 8
-    - numerator: 1
-      denominator: 4
-    - numerator: 3
-      denominator: 12
-    - numerator: 2
-      denominator: 8
+    numberOfSlices: 5
+    fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: 7d025795d87f4ad43a3f457b9b7ba8f1,
       type: 3}
     numberOfSlices: 8
     fractions: []
-  - cakePrefab: {fileID: 8200570759069020071, guid: e98d48f6f79b2a8459b4fff3c50b3667,
+  - cakePrefab: {fileID: 2935677715139052978, guid: 221d36b24842e6b488078eed48997e8f,
       type: 3}
-    numberOfSlices: 10
+    numberOfSlices: 6
     fractions: []
-  - cakePrefab: {fileID: 2935677715139052978, guid: c59ad47b767bba64daf3483df4f1c03a,
+  - cakePrefab: {fileID: 2935677715139052978, guid: 037ae15f098998a45bdce07f2e7aa4ce,
       type: 3}
-    numberOfSlices: 4
-    fractions:
-    - numerator: 1
-      denominator: 4
-    - numerator: 2
-      denominator: 8
-    - numerator: 12
-      denominator: 3
-    - numerator: 4
-      denominator: 16
+    numberOfSlices: 5
+    fractions: []
+  - cakePrefab: {fileID: 8200570759069020071, guid: dd9635da77ee7fe4f90fbebc0125c169,
+      type: 3}
+    numberOfSlices: 5
+    fractions: []
   starRequirements:
   - 0.30000001192092896
   - 0.44999998807907104
