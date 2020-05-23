@@ -6,6 +6,7 @@ public class InputManager : MonoBehaviour
 {
     private const bool testingOnPersonalComputer = true;
     private static Vector2 lastTouchPosition;
+    
     public static bool GetTouch()
     {
         return (testingOnPersonalComputer ? Input.GetMouseButton(0) : ((Input.touchCount > 0) && (Input.GetTouch(0).phase != TouchPhase.Ended)));
