@@ -24,22 +24,22 @@ MonoBehaviour:
     fractions: []
   - cakePrefab: {fileID: 2935677715139052978, guid: 19e70b3ff2ed9d64b8c7daa467fd3174,
       type: 3}
-    numberOfSlices: 6
+    numberOfSlices: 4
     fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: dd9635da77ee7fe4f90fbebc0125c169,
       type: 3}
-    numberOfSlices: 8
+    numberOfSlices: 2
     fractions: []
   - cakePrefab: {fileID: 2935677715139052978, guid: b2aae11461c96924a9e497ecfec9f9fc,
       type: 3}
-    numberOfSlices: 8
+    numberOfSlices: 4
     fractions: []
   - cakePrefab: {fileID: 2935677715139052978, guid: 221d36b24842e6b488078eed48997e8f,
       type: 3}
     numberOfSlices: 6
     fractions: []
   starRequirements:
-  - 0.30000001192092896
-  - 0.44999998807907104
-  - 0.6000000238418579
+  - 0.20000000298023224
+  - 0.3499999940395355
+  - 0.5
   initialTimeInSeconds: 45

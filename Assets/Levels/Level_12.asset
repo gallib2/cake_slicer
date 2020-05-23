@@ -50,10 +50,6 @@ MonoBehaviour:
       denominator: 16
     - numerator: 3
       denominator: 12
-  - cakePrefab: {fileID: 8200570759069020071, guid: 5478e7f94983bdc499053143bfcc4af4,
-      type: 3}
-    numberOfSlices: 8
-    fractions: []
   starRequirements:
   - 0.30000001192092896
   - 0.44999998807907104
