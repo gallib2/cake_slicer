@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
-    [SerializeField]
-    private ObstacleType type;
+    [SerializeField] private ObstacleType type;
 
     public ObstacleType Type
     {

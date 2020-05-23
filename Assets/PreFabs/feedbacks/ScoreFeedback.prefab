@@ -361,7 +361,7 @@ MonoBehaviour:
   bonusText: {fileID: 8624393128247845422}
   comboObject: {fileID: 9197845255474355822}
   spriteRenderer: {fileID: 5914383434630490679}
-  lifeSpan: 2
+  lifeSpan: 2.5
 --- !u!1 &5426471260611954629
 GameObject:
   m_ObjectHideFlags: 0

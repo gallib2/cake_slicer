@@ -60,11 +60,14 @@ public class SlicesManager : MonoBehaviour
             currentLevel = LevelsManager.CurrentLevel;
         }
         GameManager.OnLevelInitialised += InitialiseLevel;
+        PowerUps.OnWhippedCream += RemoveAllObstacles;
     }
 
     private void OnDisable()
     {
         GameManager.OnLevelInitialised -= InitialiseLevel;
+        PowerUps.OnWhippedCream -= RemoveAllObstacles;
+
     }
 
     private void InitialiseLevel()
@@ -88,7 +91,7 @@ public class SlicesManager : MonoBehaviour
             bool isMouseDown = InputManager.GetTouchDown();
             if (isMouseButtonClick || isMouseDown)
             {
-                bool isHaveDecorators = obstacles.Length > 0;
+                bool isHaveDecorators = obstacles!=null && obstacles.Length > 0;
                 Collider2D collider = isHaveDecorators ? CheckClicksByLayer(obstacleLayerMask) : null;
                 Obstacle decorator = collider ? collider.gameObject.GetComponent<Obstacle>() : null;
                 if (decorator != null)
@@ -283,7 +286,7 @@ public class SlicesManager : MonoBehaviour
         {
             comboCounter = 0;
         }
-        if (PowerUps.goldenKnifeIsActive)
+        if (PowerUps.GoldenKnifeIsActive)
         {
             Debug.Log("goldenKnifeIsActive, multiplyin score." );
             bonuslessScoreToAdd *= 2;//TODO: do we care whter this is hardcoded or not?
@@ -419,5 +422,23 @@ public class SlicesManager : MonoBehaviour
             sliceDemandText.text = slicesToSlice.ToString();
         }
        
+    }
+
+    private void RemoveAllObstacles()
+    {
+        //TODO: animtion and tssssssssss sound
+    
+        if(obstacles != null && obstacles.Length > 0)
+        {
+            foreach (Obstacle obstacle in obstacles)
+            {
+                if (obstacle != null)
+                {
+                    Destroy(obstacle.gameObject);
+                }
+            }
+        }
+        obstacles = null;
+        candleObstacles.Clear();
     }
 }
