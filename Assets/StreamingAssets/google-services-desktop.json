@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "770898649782",
+    "firebase_url": "https://cake-party.firebaseio.com",
+    "project_id": "cake-party",
+    "storage_bucket": "cake-party.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770898649782:android:4368919203e08649b8fc17",
+        "android_client_info": {
+          "package_name": "com.cake.party"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "770898649782-o1fhlmqhu2nqqonao455d0mg7m7hlojb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDx7sXcicLfcSRxajxhJ1pnwVh8bL6XB6E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770898649782-o1fhlmqhu2nqqonao455d0mg7m7hlojb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "770898649782-dr909seph6m99d72jpujvm4h7ufdpqep.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cake.party"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
