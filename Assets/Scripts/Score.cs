@@ -16,12 +16,10 @@ public class Score : MonoBehaviour
     [SerializeField]
     public GameObject[] negativeFeedbackPrefubs;
     GameObject floatingText;
-    [SerializeField]
-    private ScoreFeedback scoreFeedback;
-    [SerializeField]
-    private ScoreFeedbackSprite[] scoreFeedbackSprites;
-    [SerializeField]
-    private UIStar UIStarPrefab;
+    [SerializeField] private ScoreFeedback scoreFeedbackPreFab;
+    private ScoreFeedback[] scoreFeedbacks;
+    [SerializeField] private ScoreFeedbackSprite[] scoreFeedbackSprites;
+    [SerializeField] private UIStar UIStarPrefab;
     private UIStar[] UIStars;
     [SerializeField] private float StarYOffset = 54f;
     [SerializeField] private SoundManager soundManager;
@@ -51,7 +49,30 @@ public class Score : MonoBehaviour
 
     void Awake()
     {
-        //Initialise();
+        InitialiseScoreFeedbacks();
+    }
+
+    private void InitialiseScoreFeedbacks()
+    {
+        scoreFeedbacks = new ScoreFeedback[3];//HARDCODED
+        for (int i = 0; i < scoreFeedbacks.Length; i++)
+        {
+            scoreFeedbacks[i] = Instantiate(scoreFeedbackPreFab, Vector3.zero, Quaternion.identity);
+            scoreFeedbacks[i].gameObject.SetActive(false);
+        }
+    }
+
+    private ScoreFeedback GetAvailableScoreFeedback()
+    {
+        for (int i = 0; i < scoreFeedbacks.Length; i++)
+        {
+            if(!scoreFeedbacks[i].gameObject.activeSelf)
+            {
+                return scoreFeedbacks[i];
+            }
+        }
+        Debug.LogWarning("No score feedbacks available...");
+        return null;
     }
 
     private void InitialiseLevel()
@@ -147,35 +168,31 @@ public class Score : MonoBehaviour
 
     private void CreateScoreFeedback(int bonuslessScore, int bonus, ScoreData.ScoreLevel scoreLevel)
     {
-        //Vector3 feedbackPosition = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-        // feedbackPosition.x = Mathf.Clamp(feedbackPosition.x, 0,1);
-        //feedbackPosition.y = Mathf.Clamp(feedbackPosition.y, 0, 1);
-        // feedbackPosition = Camera.main.ViewportToWorldPoint(feedbackPosition);
 
         Vector3 feedbackPosition = Camera.main.ScreenToWorldPoint(InputManager.GetTouchPosition());
         feedbackPosition.x = Mathf.Clamp(feedbackPosition.x, scoreFeedbacksBorders.bounds.min.x, scoreFeedbacksBorders.bounds.max.x);
         feedbackPosition.y = Mathf.Clamp(feedbackPosition.y, scoreFeedbacksBorders.bounds.min.y, scoreFeedbacksBorders.bounds.max.y);
-
-        ScoreFeedback newScoreFeedback = Instantiate
-            (scoreFeedback, feedbackPosition, Quaternion.identity);
-        //Making sure Z is zero so that the camera actually desplays the damn thing
-        Sprite feedbackSprite=null;
-        for (int i = 0; i < scoreFeedbackSprites.Length; i++)
+        feedbackPosition.z = 0;
+        ScoreFeedback newScoreFeedback = GetAvailableScoreFeedback();
+        if(newScoreFeedback!= null)
         {
-            if(scoreLevel== scoreFeedbackSprites[i].scoreLevel)
+            newScoreFeedback.gameObject.SetActive(true);
+            //Making sure Z is zero so that the camera actually desplays the damn thing
+            Sprite feedbackSprite = null;
+            for (int i = 0; i < scoreFeedbackSprites.Length; i++)
             {
-                feedbackSprite = scoreFeedbackSprites[i].sprite;
+                if (scoreLevel == scoreFeedbackSprites[i].scoreLevel)
+                {
+                    feedbackSprite = scoreFeedbackSprites[i].sprite;
+                }
             }
+            newScoreFeedback.ScoreFeedbackConstructor(bonuslessScore, bonus, feedbackSprite, feedbackPosition);
         }
-        newScoreFeedback.transform.position = new Vector3(newScoreFeedback.transform.position.x, newScoreFeedback.transform.position.y, 0);
-        newScoreFeedback.ScoreFeedbackConstructor(bonuslessScore,bonus, feedbackSprite);
     }
 
-    //private void GameOver()
-    //{
+    //private void GameOver(){
     //    Highscores.AddNewHighScore(GameManager.playerName, score);
-    //    //SetScore(initialScore);
-    //}
+    //    //SetScore(initialScore);}
 
     private void SetScore(int scoreToSet)
     {

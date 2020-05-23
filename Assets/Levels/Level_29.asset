@@ -14,78 +14,56 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Level
   displayName: LVL 29
   cakes:
-  - cakePrefab: {fileID: 8200570759069020071, guid: dd9635da77ee7fe4f90fbebc0125c169,
+  - cakePrefab: {fileID: 2935677715139052978, guid: dcd4139a62812124b8f009caac3834a8,
       type: 3}
     numberOfSlices: 4
     fractions:
     - numerator: 1
       denominator: 4
-    - numerator: 5
-      denominator: 20
+    - numerator: 2
+      denominator: 8
     - numerator: 3
       denominator: 12
-    - numerator: 4
-      denominator: 16
-  - cakePrefab: {fileID: 8200570759069020071, guid: 8d9b9ea54ad9a764c82c09deb935a13b,
+    - numerator: 1
+      denominator: 4
+  - cakePrefab: {fileID: 8200570759069020071, guid: dd9635da77ee7fe4f90fbebc0125c169,
       type: 3}
     numberOfSlices: 3
     fractions:
     - numerator: 2
       denominator: 6
-    - numerator: 10
-      denominator: 30
+    - numerator: 1
+      denominator: 3
     - numerator: 3
       denominator: 9
-  - cakePrefab: {fileID: 8200570759069020071, guid: dafd1d5b7629ba346bb8217b27cca627,
+  - cakePrefab: {fileID: 8200570759069020071, guid: e98d48f6f79b2a8459b4fff3c50b3667,
       type: 3}
     numberOfSlices: 6
-    fractions:
-    - numerator: 5
-      denominator: 6
+    fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: 166b18ee2f7140b43b64f7cf36d93af3,
       type: 3}
-    numberOfSlices: 6
+    numberOfSlices: 2
     fractions:
-    - numerator: 2
-      denominator: 12
-    - numerator: 6
-      denominator: 36
-    - numerator: 5
-      denominator: 30
     - numerator: 1
-      denominator: 6
-    - numerator: 3
-      denominator: 18
+      denominator: 2
     - numerator: 2
-      denominator: 16
+      denominator: 4
   - cakePrefab: {fileID: 8200570759069020071, guid: 4bae5488ff187bc4fbfe7e5f240a0016,
       type: 3}
-    numberOfSlices: 9
+    numberOfSlices: 4
     fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: 7d025795d87f4ad43a3f457b9b7ba8f1,
       type: 3}
     numberOfSlices: 5
-    fractions:
-    - numerator: 2
-      denominator: 10
-    - numerator: 1
-      denominator: 5
-    - numerator: 5
-      denominator: 25
-    - numerator: 6
-      denominator: 35
-    - numerator: 2
-      denominator: 10
-  - cakePrefab: {fileID: 8200570759069020071, guid: 562545a56a6ac6e49b79f24afd5754ce,
+    fractions: []
+  - cakePrefab: {fileID: 2935677715139052978, guid: bde8d9d2588050540aed02fd0987112d,
       type: 3}
     numberOfSlices: 8
     fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: 166b18ee2f7140b43b64f7cf36d93af3,
       type: 3}
     numberOfSlices: 8
-    fractions:
-    - numerator: 6
-      denominator: 8
+    fractions: []
   starRequirements:
   - 0.30000001192092896
   - 0.44999998807907104

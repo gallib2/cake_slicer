@@ -5,31 +5,30 @@ using UnityEngine.UI;
 
 public class WinUIManager : MonoBehaviour
 {
-    [SerializeField]
-    private Sprite emptyStarImage;
-    [SerializeField]
-    private Sprite fullStarImage;
-    [SerializeField]
-    private WinPopUpStar[] stars;
-    [SerializeField]
-    private float fillStarsWait = 0.5f;
-    [SerializeField]
-    private GameObject[] elementsToAppearOnWin;
-    [SerializeField]
-    private GameObject[] elementsToDisppearOnWin;
-    [SerializeField]
-    private GameOverScoreDisplay scoreDisplay;
+    [SerializeField] private Sprite emptyStarImage;
+    [SerializeField] private Sprite fullStarImage;
+    [SerializeField] private WinPopUpStar[] stars;
+    [SerializeField] private float fillStarsWait = 0.5f;
+    [SerializeField] private GameObject[] elementsToAppearOnWin;
+    [SerializeField] private GameObject[] elementsToDisppearOnWin;
+    [SerializeField] private GameOverScoreDisplay scoreDisplay;
+    [SerializeField] private GameObject firstTryPopUp;
+    [SerializeField] private GameObject finalScoreAndStarsPopUp;
+    //bookeeping:
+    private  int numberOfStars;
+    private float firstTryPopUpTimer;
+    private bool isShowingfirstTryPopUp;
 
     private void Awake()
     {
-        GameManager.OnWin += ShowFinalScoreAndStars;
+        GameManager.OnWin += ShowWinScreen;
         GameManager.OnLevelInitialised += HideWinScreen;
        // HideWinScreen();//Should be called by OnLevelInitialised though
     }
 
     private void OnDisable()
     {
-        GameManager.OnWin -= ShowFinalScoreAndStars;
+        GameManager.OnWin -= ShowWinScreen;
         GameManager.OnLevelInitialised -= HideWinScreen;
     }
 
@@ -37,11 +36,7 @@ public class WinUIManager : MonoBehaviour
     {
         for (int i = 0; i < stars.Length; i++)
         {
-            // if (Score.hasStarAt[i])
-            //{
-            //EmptyStar(stars[i]);
             stars[i].EmptyStar();
-            //}
         }
         for (int i = 0; i < elementsToAppearOnWin.Length; i++)
         {
@@ -53,9 +48,7 @@ public class WinUIManager : MonoBehaviour
         }
     }
 
-
-
-    private void ShowFinalScoreAndStars(int numberOfStars)
+    private void ShowWinScreen(int numberOfStars, bool isFirstTry)
     {
         //scoreDisplay.SetText(Score.score.ToString());//Turn into an event maybe?
         for (int i = 0; i < elementsToAppearOnWin.Length; i++)
@@ -66,6 +59,43 @@ public class WinUIManager : MonoBehaviour
         {
             elementsToDisppearOnWin[i].SetActive(false);
         }
+
+        if (isFirstTry)
+        {
+            ShowFirstTryPopUp(numberOfStars);
+        }
+        else
+        {
+            ShowFinalScoreAndStarsPopUp(numberOfStars);
+        }
+    }
+
+    private void ShowFirstTryPopUp(int numberOfStars)
+    {
+        firstTryPopUp.SetActive(true);
+        finalScoreAndStarsPopUp.SetActive(false);
+        this.numberOfStars = numberOfStars;
+        firstTryPopUpTimer = 3f;
+        isShowingfirstTryPopUp = true;
+    }
+
+    private void Update()
+    {
+        if(isShowingfirstTryPopUp)
+        {
+            firstTryPopUpTimer -= Time.deltaTime;
+            if (firstTryPopUpTimer < 0 || InputManager.GetTouchDown())
+            {
+                ShowFinalScoreAndStarsPopUp(numberOfStars);
+                isShowingfirstTryPopUp = false;
+            }
+        }
+    }
+
+    private void ShowFinalScoreAndStarsPopUp(int numberOfStars)
+    {
+        firstTryPopUp.SetActive(false);
+        finalScoreAndStarsPopUp.SetActive(true);
         StartCoroutine(FillStars(numberOfStars));
     }
 
@@ -75,7 +105,7 @@ public class WinUIManager : MonoBehaviour
         for (int i = 0; i < stars.Length; i++)
         {
             yield return new WaitForSeconds(fillStarsWait);
-            bool toFillStars = numberOfStars >= i + 1;
+            bool toFillStars = numberOfStars >= i + 1;//TODO: do we have to ask this? we know the player wins only when at least one star was collected
 
             if (toFillStars)
             {
@@ -85,13 +115,4 @@ public class WinUIManager : MonoBehaviour
         }
     }
 
-    /*private void FillStar(Image star)
-    {
-        star.sprite = fullStarImage;
-    }
-
-    private void EmptyStar(Image star)
-    {
-        star.sprite = emptyStarImage;
-    }*/
 }

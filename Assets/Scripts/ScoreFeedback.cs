@@ -5,20 +5,15 @@ using TMPro;
 
 public class ScoreFeedback : MonoBehaviour
 {
-    [SerializeField]
-    private TextMeshProUGUI bonuslessScoreText;
-    [SerializeField]
-    private TextMeshProUGUI bonusText;
-    [SerializeField]
-    private GameObject comboObject;
-   private float dateOfBirth=0;
-    [SerializeField]
-    private SpriteRenderer spriteRenderer;
-    [SerializeField]
-    private float lifeSpan = 3f;
+    [SerializeField] private TextMeshProUGUI bonuslessScoreText;
+    [SerializeField] private TextMeshProUGUI bonusText;
+    [SerializeField] private GameObject comboObject;
+    private float dateOfBirth=0;
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private float lifeSpan = 3f;
 
 
-    public void ScoreFeedbackConstructor(int bonuslessScore, int bonus, Sprite sprite)
+    public void ScoreFeedbackConstructor(int bonuslessScore, int bonus, Sprite sprite,Vector3 position)
     {
         dateOfBirth = Time.time;
         bonuslessScoreText.text = bonuslessScore.ToString();
@@ -32,6 +27,7 @@ public class ScoreFeedback : MonoBehaviour
         }
        
         spriteRenderer.sprite = sprite;
+        transform.position = position;
     }
  
     void Update()
@@ -39,7 +35,8 @@ public class ScoreFeedback : MonoBehaviour
         if(Time.time - dateOfBirth > lifeSpan)
         {
             Debug.Log(Time.time + " - " + dateOfBirth + " > " + lifeSpan);
-            Destroy(gameObject);
+            gameObject.SetActive(false);
+            //Destroy(gameObject);
         }
     }
 }
