@@ -4,29 +4,37 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    private const bool testingOnPersonalComputer = true;
     private static Vector2 lastTouchPosition;
-    
+    private static bool isTouchDevice;
+
+    private void Start()
+    {
+        if(SystemInfo.deviceType == DeviceType.Handheld)
+        {
+            isTouchDevice = true;
+        }
+    }
+
     public static bool GetTouch()
     {
-        return (testingOnPersonalComputer ? Input.GetMouseButton(0) : ((Input.touchCount > 0) && (Input.GetTouch(0).phase != TouchPhase.Ended)));
+        return isTouchDevice ? ((Input.touchCount > 0) && (Input.GetTouch(0).phase != TouchPhase.Ended)) : Input.GetMouseButton(0);
     }
 
     public static bool GetTouchDown()
     {
-        return (testingOnPersonalComputer ? 
-               Input.GetMouseButtonDown(0) : (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began));
+        return isTouchDevice ? (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+                : Input.GetMouseButtonDown(0);
     }
 
     public static bool GetTouchUp()
     {
-        return (testingOnPersonalComputer ? 
-               Input.GetMouseButtonUp(0) : (Input.touchCount > 0 && (Input.GetTouch(0).phase == TouchPhase.Ended)));
+        return isTouchDevice ? 
+                (Input.touchCount > 0 && (Input.GetTouch(0).phase == TouchPhase.Ended)) : Input.GetMouseButtonUp(0);
     }
 
     public static Vector2 GetTouchPosition()
     {
-        if (testingOnPersonalComputer)
+        if (!isTouchDevice)
         {
             return lastTouchPosition = Input.mousePosition;
         }
