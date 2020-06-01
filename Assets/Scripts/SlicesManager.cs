@@ -33,12 +33,12 @@ public class SlicesManager : MonoBehaviour
     [SerializeField] private GameObject obstacleObjects;
 
     //public int slicesCount = 0;
-    [SerializeField] private Text cakesLeftText;
+    [SerializeField] private TMPro.TextMeshProUGUI cakesLeftText;
     [SerializeField] private SoundManager soundManager;
 
     [SerializeField] private Timer timer;
     [SerializeField] private bool perfectSlicing = false;
-    [SerializeField] private Text sliceDemandText;
+    [SerializeField] private TMPro.TextMeshProUGUI sliceDemandText;
     [SerializeField] private FractionUI[] fractionUIS;
     [SerializeField] private SliceDemandUI sliceDemandUI;
 

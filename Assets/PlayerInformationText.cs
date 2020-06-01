@@ -36,4 +36,26 @@ public class PlayerInformationText : MonoBehaviour
         }
     }
 
+    private float lastPlayerUpdateDateTimeTime = 0;
+    private void Update()
+    {
+        //TODO: This should obviously not stay here.
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            PlayerStats.UpdateDateTime();
+        }
+        if(Time.time - 1 > lastPlayerUpdateDateTimeTime)
+        {
+            lastPlayerUpdateDateTimeTime = Time.time;
+            PlayerStats.UpdateDateTime();
+        }
+        if (Input.GetKeyDown(KeyCode.Minus))
+        {
+            PlayerStats.RemoveLives(1);
+        }
+        if (Input.GetKeyDown(KeyCode.Plus))
+        {
+            PlayerStats.AddLives(1);
+        }
+    }
 }

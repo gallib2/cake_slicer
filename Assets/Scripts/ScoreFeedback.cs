@@ -20,6 +20,8 @@ public class ScoreFeedback : MonoBehaviour
         if (bonus > 0)
         {
             bonusText.text = "+"+bonus.ToString();
+            comboObject.SetActive(true);
+
         }
         else
         {
