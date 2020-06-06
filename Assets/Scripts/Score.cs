@@ -7,11 +7,10 @@ public class Score : MonoBehaviour
 {
     //public int initialScore = 0;
     public static int score = 0;
-    
 
-    public Text scoreText;
-    [SerializeField]
-    private Image scoreSliderFill;
+
+    [SerializeField] private TMPro.TextMeshProUGUI scoreText;
+    [SerializeField] private Image scoreSliderFill;
     public GameObject[] floatingTextPrefubs;
     [SerializeField]
     public GameObject[] negativeFeedbackPrefubs;

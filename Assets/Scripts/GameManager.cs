@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     public static PauseUIManager pauseUIsGeneral;
     public static PauseUIManager pauseUIsOnEnter;
 
-    public static string playerName;
+    public static string playerName;//TODO: Remove
     public static bool isGameOver = false;
     public static bool toSetPauseOnEnterLevel = false;
     public static bool currentLevelIsUntouched;
@@ -37,10 +37,9 @@ public class GameManager : MonoBehaviour
     private static bool gameIsPaused = false;
     public Score score;
 
-    public static bool FunSlicing = false;
+   // public static bool FunSlicing = false;
 
-    [SerializeField]
-    private Level currentLevel;
+    [SerializeField] private Level currentLevel;
 
     private void OnEnable()
     {
