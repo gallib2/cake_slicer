@@ -102,7 +102,9 @@ public class SlicesManager : MonoBehaviour
                     bool isTouchCandle = isMouseDown && decorator.Type == ObstacleType.CANDLE;
                     if (isTouchCherry)
                     {
-                        Handheld.Vibrate();
+                        #if UNITY_ANDROID || UNITY_IOS
+                            Handheld.Vibrate();
+                        #endif
                         BadSlice();
                         NextRound();
                         return;
