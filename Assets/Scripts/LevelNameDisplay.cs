@@ -5,15 +5,13 @@ using UnityEngine.UI;
 
 public class LevelNameDisplay : MonoBehaviour
 {
-    [SerializeField]
-    private TMPro.TextMeshProUGUI text;
+    [SerializeField] private TMPro.TextMeshProUGUI text;
 
     void Start()
     {
         if (LevelsManager.CurrentLevel != null)
         {
             text.text = LevelsManager.CurrentLevel.DisplayName;
-        }
-       
+        } 
     }
 }
