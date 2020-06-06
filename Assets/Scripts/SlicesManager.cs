@@ -43,6 +43,8 @@ public class SlicesManager : MonoBehaviour
     [SerializeField] private SliceDemandUI sliceDemandUI;
 
     [SerializeField] private Animator[] swipedDownObjects;
+    [SerializeField] private GameObject topDish;
+    [SerializeField] private GameObject bottomDish;
 
     public static bool allowToSlice;
     private Obstacle[] obstacles;
@@ -354,10 +356,22 @@ public class SlicesManager : MonoBehaviour
         currentCakeIndex++;
         if (currentCakeIndex < currentLevel.Cakes.Length)
         {
+            #region Animation Related:
+            if (currentCakeIndex == 0)
+            {
+                topDish.SetActive(true);
+                bottomDish.SetActive(false);
+            }
+            else
+            {
+                topDish.SetActive(true);
+                bottomDish.SetActive(true);
+            }
             for (int i = 0; i < swipedDownObjects.Length; i++)
             {
                 swipedDownObjects[i].SetTrigger("SwipeDown");
             }
+            #endregion
             slicesToSlice = currentLevel.Cakes[currentCakeIndex].SlicesToSlice();
             // OnGoalChange.Invoke();
 

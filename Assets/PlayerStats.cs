@@ -41,7 +41,7 @@ public static class PlayerStats
         get {  return data.lives; }
     }
 
-    public static Dictionary<PowerUpTypes, UInt32> PowerUps
+    public static Dictionary<PowerUpTypes, UInt32> PowerUpsDictionary
     {
         get { return data.powerUps; }
     }
@@ -67,6 +67,7 @@ public static class PlayerStats
             if (usesLeft > 0)
             {
                 data.powerUps[powerUp]--;
+                PowerUps.instance.UsePowerUp(powerUp);
                 SaveChanges();
                 return true;
             }

@@ -8,9 +8,11 @@ public class ScoreFeedback : MonoBehaviour
     [SerializeField] private TextMeshProUGUI bonuslessScoreText;
     [SerializeField] private TextMeshProUGUI bonusText;
     [SerializeField] private GameObject comboObject;
-    private float dateOfBirth=0;
+    private float dateOfBirth = 0;
     [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private float lifeSpan = 3f;
+    [SerializeField] private Animator animator;
+    private const float  LIFE_SPAN = 2.5f;
+    private const float MAX_RANDOMISED_ANGLE = 18f;
 
 
     public void ScoreFeedbackConstructor(int bonuslessScore, int bonus, Sprite sprite,Vector3 position)
@@ -30,13 +32,17 @@ public class ScoreFeedback : MonoBehaviour
        
         spriteRenderer.sprite = sprite;
         transform.position = position;
+        transform.rotation = Quaternion.identity;
+        float randomAngle = Random.Range(-MAX_RANDOMISED_ANGLE, MAX_RANDOMISED_ANGLE);
+        transform.Rotate(Vector3.forward, randomAngle);
+        animator.SetTrigger("Play");
     }
  
     void Update()
     {
-        if(Time.time - dateOfBirth > lifeSpan)
+        if(Time.time - dateOfBirth > LIFE_SPAN)
         {
-            Debug.Log(Time.time + " - " + dateOfBirth + " > " + lifeSpan);
+            Debug.Log(Time.time + " - " + dateOfBirth + " > " + LIFE_SPAN);
             gameObject.SetActive(false);
             //Destroy(gameObject);
         }

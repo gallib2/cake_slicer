@@ -24,7 +24,7 @@ public class PlayerInformationText : MonoBehaviour
 
     public void UpdateText()
     {
-        Dictionary<PowerUpTypes, System.UInt32> powerUps = PlayerStats.PowerUps;
+        Dictionary<PowerUpTypes, System.UInt32> powerUps = PlayerStats.PowerUpsDictionary;
         text.text =
             "Welcome, " + PlayerStats.Name + "\n" +
             "You have got: " + "\n"
