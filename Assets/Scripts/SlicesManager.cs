@@ -45,6 +45,7 @@ public class SlicesManager : MonoBehaviour
     [SerializeField] private Animator[] swipedDownObjects;
     [SerializeField] private GameObject topDish;
     [SerializeField] private GameObject bottomDish;
+    private float dishOriginalScale;
 
     public static bool allowToSlice;
     private Obstacle[] obstacles;
@@ -63,6 +64,9 @@ public class SlicesManager : MonoBehaviour
         }
         GameManager.OnLevelInitialised += InitialiseLevel;
         PowerUps.OnWhippedCream += RemoveAllObstacles;
+
+        //TODO: move this away
+        dishOriginalScale = topDish.transform.localScale.x;
     }
 
     private void OnDisable()
@@ -77,7 +81,7 @@ public class SlicesManager : MonoBehaviour
         comboCounter = 0;
         currentLevel.IsLegitimate();
         currentCakeIndex = -1;
-       NextRound();
+        NextRound();
     }
 
     void Update()
@@ -380,7 +384,12 @@ public class SlicesManager : MonoBehaviour
             Cake newCake = currentLevel.Cakes[currentCakeIndex];
             float cameraSeesWidth = Camera.main.orthographicSize * 2.0f * Screen.width / Screen.height;
             GameObject cakeGameObject = Instantiate(newCake.cakePrefab, sliceableObjects.transform, true); // create new cake
-            cakeGameObject.transform.localScale = new Vector3(cameraSeesWidth / relativeCakeToScreenSize, cameraSeesWidth / relativeCakeToScreenSize, cameraSeesWidth / relativeCakeToScreenSize);
+            float sizeModifier = cameraSeesWidth / relativeCakeToScreenSize;
+            cakeGameObject.transform.localScale = new Vector3(sizeModifier, sizeModifier, 1);
+            float dishScale = dishOriginalScale * sizeModifier;
+            topDish.transform.localScale = new Vector3(dishScale, dishScale, 1);
+            bottomDish.transform.localScale = new Vector3(dishScale, dishScale, 1);
+
             obstacles = cakeGameObject.GetComponentsInChildren<Obstacle>();
             candleObstacles = obstacles.Where(dec => dec.Type == ObstacleType.CANDLE).ToList();
             allowToSlice = candleObstacles.Count == 0;
