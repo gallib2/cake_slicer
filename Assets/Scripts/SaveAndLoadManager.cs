@@ -112,7 +112,7 @@ public static class SaveAndLoadManager
     }
     #endregion
     #region Player:
-    [Serializable]
+    /*[Serializable]
     public class PlayerSavedData
     {
         public string name;
@@ -127,21 +127,21 @@ public static class SaveAndLoadManager
             this.lives = lives;
             this.powerUps = powerUps;
         }
-    }
+    }*/
     public static string BuildPlayerSaveFileName()
     {
         return (Application.persistentDataPath + "/player_save" + ".dat");
     }
 
-    public static PlayerSavedData LoadPlayerSavedData()
+    public static PlayerData LoadPlayerSavedData()
     {
         string fileName = BuildPlayerSaveFileName();
         if (File.Exists(fileName))
         {
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             FileStream fileStream = File.Open(fileName, FileMode.Open);
-            PlayerSavedData savedData = new PlayerSavedData();
-            savedData = (PlayerSavedData)binaryFormatter.Deserialize(fileStream);
+            PlayerData savedData = new PlayerData();
+            savedData = (PlayerData)binaryFormatter.Deserialize(fileStream);
             fileStream.Close();
             Debug.Log("Loading from " + fileName);
             return savedData;
@@ -149,7 +149,7 @@ public static class SaveAndLoadManager
         return null;
     }
 
-    public static void SavePlayerData(string name, UInt32 lives, Dictionary<PowerUpTypes, UInt32> powerUps)
+    public static void SavePlayerData(PlayerData data)
     {
         string fileName = BuildPlayerSaveFileName();
         if (!File.Exists(fileName))
@@ -158,7 +158,7 @@ public static class SaveAndLoadManager
         }
         BinaryFormatter BF = new BinaryFormatter();
         FileStream fileStream = File.Open(fileName, FileMode.OpenOrCreate);
-        PlayerSavedData savedData = new PlayerSavedData(name, lives, powerUps);
+        PlayerData savedData = data;// new PlayerStats.PlayerData(name, lives, powerUps);
         BF.Serialize(fileStream, savedData);
         Debug.Log("Saving to " + fileName);
         fileStream.Close();

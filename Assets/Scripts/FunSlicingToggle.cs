@@ -9,7 +9,7 @@ public class FunSlicingToggle : MonoBehaviour
 
     public void SetFunSlicing()
     {
-        GameManager.FunSlicing = toggle.isOn;
+        //GameManager.FunSlicing = toggle.isOn;
     }
     private void Start()
     {

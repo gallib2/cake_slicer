@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class PowerUpButton : MonoBehaviour
 {
-    [SerializeField]
-    private PowerUpTypes powerUp;
-    [SerializeField]
-    private TMPro.TextMeshProUGUI text;
+    [SerializeField] private PowerUpTypes powerUp;
+    [SerializeField]private TMPro.TextMeshProUGUI text;
 
     public void UsePowerUp()
     {
@@ -17,7 +15,7 @@ public class PowerUpButton : MonoBehaviour
         }
         if (PlayerStats.UsePowerUp(powerUp))
         {
-            PowerUps.instance.UsePowerUp(powerUp);
+           // PowerUps.instance.UsePowerUp(powerUp);
             UpdateGraphics();
         }
     }
@@ -29,6 +27,6 @@ public class PowerUpButton : MonoBehaviour
 
     private void UpdateGraphics()
     {
-        text.text = powerUp.ToString() + "\n" + PlayerStats.GetPowerUpUsesLeft(powerUp).ToString();
+        text.text =  PlayerStats.GetPowerUpUsesLeft(powerUp).ToString();
     }
 }

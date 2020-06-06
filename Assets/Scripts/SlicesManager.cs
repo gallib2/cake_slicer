@@ -33,16 +33,18 @@ public class SlicesManager : MonoBehaviour
     [SerializeField] private GameObject obstacleObjects;
 
     //public int slicesCount = 0;
-    [SerializeField] private Text cakesLeftText;
+    [SerializeField] private TMPro.TextMeshProUGUI cakesLeftText;
     [SerializeField] private SoundManager soundManager;
 
     [SerializeField] private Timer timer;
     [SerializeField] private bool perfectSlicing = false;
-    [SerializeField] private Text sliceDemandText;
+    [SerializeField] private TMPro.TextMeshProUGUI sliceDemandText;
     [SerializeField] private FractionUI[] fractionUIS;
     [SerializeField] private SliceDemandUI sliceDemandUI;
 
     [SerializeField] private Animator[] swipedDownObjects;
+    [SerializeField] private GameObject topDish;
+    [SerializeField] private GameObject bottomDish;
 
     public static bool allowToSlice;
     private Obstacle[] obstacles;
@@ -354,10 +356,22 @@ public class SlicesManager : MonoBehaviour
         currentCakeIndex++;
         if (currentCakeIndex < currentLevel.Cakes.Length)
         {
+            #region Animation Related:
+            if (currentCakeIndex == 0)
+            {
+                topDish.SetActive(true);
+                bottomDish.SetActive(false);
+            }
+            else
+            {
+                topDish.SetActive(true);
+                bottomDish.SetActive(true);
+            }
             for (int i = 0; i < swipedDownObjects.Length; i++)
             {
                 swipedDownObjects[i].SetTrigger("SwipeDown");
             }
+            #endregion
             slicesToSlice = currentLevel.Cakes[currentCakeIndex].SlicesToSlice();
             // OnGoalChange.Invoke();
 
