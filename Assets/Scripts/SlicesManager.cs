@@ -405,7 +405,8 @@ public class SlicesManager : MonoBehaviour
             timer.ToStopTimer = true;
             GameOver();
         }
-        soundManager.PlaySoundEffect(SoundEffectNames.NEXT_LEVEL);
+
+        //soundManager.PlaySoundEffect(SoundEffectNames.NEXT_LEVEL);
         particlesEndLevel.Play();
 
     }

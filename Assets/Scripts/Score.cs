@@ -139,12 +139,11 @@ public class Score : MonoBehaviour
         {
             BadSlice(false);
         }
-        else if(floatingTextPrefubs[index])
+        else if(false && floatingTextPrefubs[index])//TODO: remove if we know this isnt gonna be used in the future
         {
             ShowFloatingText(scoreLevel, floatingTextPrefubs[index]);
         }
         CreateScoreFeedback(bonuslessScoreToAdd, bonus, scoreLevel);
-
     }
 
     private void BadSlice(bool isTooManySlices)
