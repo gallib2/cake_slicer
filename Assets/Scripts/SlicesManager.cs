@@ -14,7 +14,7 @@ public class SlicesManager : MonoBehaviour
 
     public static event Action OnGoalChange;
     public static event ScoreChange OnScoreChange;
-    public static event BadSliceHandler OnBadSlice;
+    //public static event BadSliceHandler OnBadSlice;
     public static event Action OnGameOver;
    // public int obstaclesLayer = 9;
     public LayerMask obstacleLayerMask;
@@ -182,7 +182,8 @@ public class SlicesManager : MonoBehaviour
     private void BadSlice(bool toManySlices = false)
     {
         comboCounter = 0;
-        OnBadSlice?.Invoke(toManySlices);
+        OnScoreChange?.Invoke(0, 0, ScoreData.ScoreLevel.Regular);
+       // OnBadSlice?.Invoke(toManySlices);
     }
 
     private void CalculateNewScore()
