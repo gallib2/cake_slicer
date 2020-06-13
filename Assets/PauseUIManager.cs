@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class PauseUIManager : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject[] elementsToAppearOnPause;
-    [SerializeField]
-    private GameObject[] elementsToDisppearOnPause;
+    [SerializeField] private GameObject[] elementsToAppearOnPause;
+    [SerializeField] private GameObject[] elementsToDisppearOnPause;
 
     private void Awake()
     {

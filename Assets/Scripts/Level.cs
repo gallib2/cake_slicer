@@ -7,15 +7,12 @@ using System;
 [CreateAssetMenu(fileName = "Level", menuName = "Level")]
 public class Level : ScriptableObject
 {
-    [SerializeField]
-    private string displayName;
+    /*[SerializeField]
+    private string displayName;*/
 
-    [SerializeField]
-    private Cake[] cakes;
-    [Range(0, 1)] [SerializeField]
-    private double[] starRequirements = { 0.6, 0.76, 0.9 };
-    [SerializeField]
-    private float initialTimeInSeconds = 30f;
+    [SerializeField]private Cake[] cakes;
+    [Range(0, 1)] [SerializeField] private double[] starRequirements = { 0.6, 0.76, 0.9 };
+    [SerializeField] private float initialTimeInSeconds = 30f;
     //[SerializeField]
     //private bool isLocked = true;
     /*  [Range(1,3)][SerializeField]
@@ -31,10 +28,10 @@ public class Level : ScriptableObject
         set { cakes = value; }
     }
 
-    public string DisplayName
+    /*public string DisplayName
     {
         get { return displayName; }
-    }
+    }*/
 
     public double[] StarRequirements
     {
