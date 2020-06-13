@@ -18,6 +18,8 @@ public class Score : MonoBehaviour
     [SerializeField] private ScoreFeedback scoreFeedbackPreFab;
     private ScoreFeedback[] scoreFeedbacks;
     [SerializeField] private ScoreFeedbackSprite[] scoreFeedbackSprites;
+    [SerializeField] private ScoreFeedGradient[] scoreFeedbackGradients;
+
     [SerializeField] private UIStar UIStarPrefab;
     private UIStar[] UIStars;
     [SerializeField] private float StarYOffset = 54f;
@@ -137,12 +139,11 @@ public class Score : MonoBehaviour
         {
             BadSlice(false);
         }
-        else if(floatingTextPrefubs[index])
+        else if(false && floatingTextPrefubs[index])//TODO: remove if we know this isnt gonna be used in the future
         {
             ShowFloatingText(scoreLevel, floatingTextPrefubs[index]);
         }
         CreateScoreFeedback(bonuslessScoreToAdd, bonus, scoreLevel);
-
     }
 
     private void BadSlice(bool isTooManySlices)
@@ -177,15 +178,26 @@ public class Score : MonoBehaviour
         {
             newScoreFeedback.gameObject.SetActive(true);
             //Making sure Z is zero so that the camera actually desplays the damn thing
-            Sprite feedbackSprite = null;
-            for (int i = 0; i < scoreFeedbackSprites.Length; i++)
+            /* Sprite feedbackSprite = null;
+             for (int i = 0; i < scoreFeedbackSprites.Length; i++)
+             {
+                 if (scoreLevel == scoreFeedbackSprites[i].scoreLevel)
+                 {
+                     feedbackSprite = scoreFeedbackSprites[i].sprite;
+                 }
+             }*/
+            Color upperColour = Color.magenta;
+            Color lowerColour = Color.magenta;
+            for (int i = 0; i < scoreFeedbackGradients.Length; i++)
             {
-                if (scoreLevel == scoreFeedbackSprites[i].scoreLevel)
+                if (scoreLevel == scoreFeedbackGradients[i].scoreLevel)
                 {
-                    feedbackSprite = scoreFeedbackSprites[i].sprite;
+                    upperColour = scoreFeedbackGradients[i].upperColour;
+                    lowerColour = scoreFeedbackGradients[i].lowerColour;
+                    break;
                 }
             }
-            newScoreFeedback.ScoreFeedbackConstructor(bonuslessScore, bonus, feedbackSprite, feedbackPosition);
+            newScoreFeedback.ScoreFeedbackConstructor(bonuslessScore, bonus, upperColour, lowerColour , feedbackPosition);
         }
     }
 
@@ -222,9 +234,19 @@ public class Score : MonoBehaviour
     }
 }
 
+//TODO: remove this if it is no longer used
 [Serializable]
 public class ScoreFeedbackSprite
 {
     public ScoreData.ScoreLevel scoreLevel;
     public Sprite sprite;
+}
+
+[Serializable]
+public struct ScoreFeedGradient
+{
+    public ScoreData.ScoreLevel scoreLevel;
+    public Color upperColour;
+    public Color lowerColour;
+
 }
