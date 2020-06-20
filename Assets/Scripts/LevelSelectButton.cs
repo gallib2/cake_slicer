@@ -8,8 +8,11 @@ public class LevelSelectButton : MonoBehaviour
     [SerializeField] private TMPro.TextMeshProUGUI indexText;
     [SerializeField] private Image lockedImage;
     [SerializeField] private Image starsImage;
-    [SerializeField] private Image starsPanel;
-    [SerializeField] private LevelsManager levelsManager;
+    [SerializeField] private GameObject candle;
+    [SerializeField] private Image buttonImage;
+
+    // [SerializeField] private Image starsPanel;
+    [SerializeField] private LevelsManager levelsManager;//TODO: refference a singleton or somethin
     //TODO: if we see that all these refferences flood our RAM, we can easily get rid of em.
     [SerializeField] private int levelIndex;
 
@@ -29,7 +32,7 @@ public class LevelSelectButton : MonoBehaviour
 
         bool isLocked = levelsManager.IsLevelLocked(levelIndex) && !areAllLevelsUnlocked;
         lockedImage.gameObject.SetActive(isLocked);
-        starsPanel.gameObject.SetActive(!isLocked);
+        starsImage.gameObject.SetActive(!isLocked);
 
         if (!isLocked)
         {
@@ -40,9 +43,10 @@ public class LevelSelectButton : MonoBehaviour
                 Debug.LogError("Something's wrong!");
                 return;
             }
-            starsPanel.sprite =
-                (savedState == LevelStates.WON_ON_FIRST_TRY ? SpriteHolder.FirstTryStarsPanel : SpriteHolder.NeutralStarsPanel);
-            starsPanel.SetNativeSize();
+            buttonImage.sprite =
+                (savedState == LevelStates.WON_ON_FIRST_TRY ? SpriteHolder.FirstTryButtonSprite : SpriteHolder.NeutralButtonSprite);
+            candle.SetActive(savedState == LevelStates.WON_ON_FIRST_TRY);
+            //starsPanel.SetNativeSize();
             Level level = levelsManager.GetLevel(levelIndex);
             indexText.text = levelIndex.ToString();
             // text.text = level.DisplayName + "\n SCORE " + savedScore.ToString() + "\n";
