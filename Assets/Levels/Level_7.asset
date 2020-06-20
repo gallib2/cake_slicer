@@ -24,7 +24,7 @@ MonoBehaviour:
     fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: 7d025795d87f4ad43a3f457b9b7ba8f1,
       type: 3}
-    numberOfSlices: 4
+    numberOfSlices: 5
     fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: bcae8518a48690a47a90d757d18ab7fa,
       type: 3}

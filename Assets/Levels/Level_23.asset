@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc59fab1ece227847ab227fcf9a752d0, type: 3}
+  m_Name: Level_23
+  m_EditorClassIdentifier: Assembly-CSharp::Level
+  displayName: LVL 20
+  cakes:
+  - cakePrefab: {fileID: 2935677715139052978, guid: cc83ff2ec840b5144b5bfadf354b701d,
+      type: 3}
+    numberOfSlices: 5
+    fractions: []
+  - cakePrefab: {fileID: 2935677715139052978, guid: fd28df93ee335df4fbc81a70689416f7,
+      type: 3}
+    numberOfSlices: 7
+    fractions: []
+  - cakePrefab: {fileID: 8200570759069020071, guid: e59106774b9b758459a2cec018f8a18a,
+      type: 3}
+    numberOfSlices: 7
+    fractions: []
+  - cakePrefab: {fileID: 8200570759069020071, guid: 6b2a5fa954aec854195ee508ad1effc8,
+      type: 3}
+    numberOfSlices: 8
+    fractions: []
+  - cakePrefab: {fileID: 2935677715139052978, guid: 19e70b3ff2ed9d64b8c7daa467fd3174,
+      type: 3}
+    numberOfSlices: 8
+    fractions: []
+  - cakePrefab: {fileID: 8200570759069020071, guid: 6e175ad39198f7f45a0615a74567a06d,
+      type: 3}
+    numberOfSlices: 6
+    fractions: []
+  - cakePrefab: {fileID: 2935677715139052978, guid: dcd4139a62812124b8f009caac3834a8,
+      type: 3}
+    numberOfSlices: 9
+    fractions: []
+  starRequirements:
+  - 0.30000001192092896
+  - 0.44999998807907104
+  - 0.6499999761581421
+  initialTimeInSeconds: 50

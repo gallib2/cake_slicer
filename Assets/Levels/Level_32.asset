@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Level
   displayName: LVL 32
   cakes:
-  - cakePrefab: {fileID: 8200570759069020071, guid: 166b18ee2f7140b43b64f7cf36d93af3,
+  - cakePrefab: {fileID: 8200570759069020071, guid: dac9bea4041a9c24186cf164849281cb,
       type: 3}
     numberOfSlices: 5
     fractions: []
-  - cakePrefab: {fileID: 2935677715139052978, guid: b2aae11461c96924a9e497ecfec9f9fc,
+  - cakePrefab: {fileID: 8200570759069020071, guid: a0e17dbc6f2f0d64c9acac4547779050,
       type: 3}
     numberOfSlices: 3
     fractions: []
