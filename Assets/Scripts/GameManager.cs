@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
 
     //ToDo: move these out of GaymeManager!
     [SerializeField] private GameObject areYouSureObject;
+    [SerializeField] private GameObject pauseObject;
     [SerializeField] private ConfirmationButton yesButton;
     [SerializeField] private ConfirmationButton noButton;
 
@@ -81,6 +82,10 @@ public class GameManager : MonoBehaviour
     {
         pauseUIsGeneral.ChangeState(to);
         gameIsPaused = to;
+        if (to)
+        {
+            ShowAreYouSure(false);
+        }
     }
 
     public void SetPauseOnEnterGame(bool to)
@@ -93,14 +98,20 @@ public class GameManager : MonoBehaviour
     {
         if (currentLevelIsUntouched)
         {
-            areYouSureObject.SetActive(true);
-            noButton.ClickAction = (delegate () { areYouSureObject.SetActive(false); });
+            ShowAreYouSure(true);
+
+            noButton.ClickAction = (delegate () 
+            {
+                ShowAreYouSure(false);
+
+            });
             yesButton.ClickAction = (delegate () 
             {
                 currentLevelIsUntouched = false;
                 SaveAndLoadManager.TrySaveLevelData(LevelsManager.CurrentLevelNumber, 0, false, true);
                 InitialiseLevel();
-                areYouSureObject.SetActive(false);
+                ShowAreYouSure(false);
+
             });
         }
         else
@@ -109,12 +120,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
     public void GoToHomeScreenFromPause()
     {
         if (currentLevelIsUntouched)
         {
-            areYouSureObject.SetActive(true);
-            noButton.ClickAction = (delegate () { areYouSureObject.SetActive(false); });
+            ShowAreYouSure(true);
+            noButton.ClickAction = (delegate () 
+            {
+                ShowAreYouSure(false);
+            });
             yesButton.ClickAction = (delegate ()
             {
                 SaveAndLoadManager.TrySaveLevelData(LevelsManager.CurrentLevelNumber, 0, false, true);
@@ -125,6 +140,12 @@ public class GameManager : MonoBehaviour
         {
             UnloadScene();
         }
+    }
+
+    private void ShowAreYouSure(bool show)
+    {
+        areYouSureObject.SetActive(show);
+        pauseObject.SetActive(!show);
     }
 
     public void InitialiseLevel()

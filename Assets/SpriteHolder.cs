@@ -5,8 +5,8 @@ using UnityEngine;
 public class SpriteHolder : MonoBehaviour
 {
     [SerializeField]private Sprite[] stars;
-    [SerializeField]private Sprite neutralStarsPanel;
-    [SerializeField]private Sprite firstTryStarsPanel;
+    [SerializeField]private Sprite neutralButtonSprite;
+    [SerializeField]private Sprite firstTryButtonSprite;
 
     private static SpriteHolder instance;
 
@@ -23,18 +23,18 @@ public class SpriteHolder : MonoBehaviour
         }
     }
 
-    public static Sprite FirstTryStarsPanel
+    public static Sprite FirstTryButtonSprite
     {
         get
         {
-            return instance.firstTryStarsPanel;
+            return instance.firstTryButtonSprite;
         }
     }
-    public static Sprite NeutralStarsPanel
+    public static Sprite NeutralButtonSprite
     {
         get
         {
-            return instance.neutralStarsPanel;
+            return instance.neutralButtonSprite;
         }
     }
 
@@ -48,10 +48,10 @@ public class SpriteHolder : MonoBehaviour
         if (instance.stars == null)
         {
             Debug.LogError("instance.stars is null!");
-           return null;
+            return null;
 
         }
-        if (numberOfStars<0||numberOfStars > instance.stars.Length - 1)
+        if (numberOfStars < 0 || numberOfStars > instance.stars.Length - 1)
         {
             Debug.LogError("Recieved an ilegal number of stars!");
             return null;

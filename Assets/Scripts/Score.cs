@@ -35,7 +35,7 @@ public class Score : MonoBehaviour
         //GameManager.OnLose += GameOver;
         //GameManager.OnWin += GameOver;
         SlicesManager.OnScoreChange += ScoreChanged;
-        SlicesManager.OnBadSlice += BadSlice;
+       // SlicesManager.OnBadSlice += BadSlice;
         GameManager.OnLevelInitialised += InitialiseLevel;
     }
 
@@ -44,7 +44,7 @@ public class Score : MonoBehaviour
         //GameManager.OnLose -= GameOver;
         //GameManager.OnWin -= GameOver;
         SlicesManager.OnScoreChange -= ScoreChanged;
-        SlicesManager.OnBadSlice -= BadSlice;
+        //SlicesManager.OnBadSlice -= BadSlice;
         GameManager.OnLevelInitialised -= InitialiseLevel;
     }
 
@@ -148,6 +148,7 @@ public class Score : MonoBehaviour
 
     private void BadSlice(bool isTooManySlices)
     {
+        return; //TODO: get rid of this if it is not needed
         int tooManySlicesIndex = 1;
 
         int index = isTooManySlices ? tooManySlicesIndex : UnityEngine.Random.Range(0, negativeFeedbackPrefubs.Length - 1);
@@ -156,6 +157,8 @@ public class Score : MonoBehaviour
         {
             ShowFloatingText(ScoreData.ScoreLevel.Regular, negativeFeedbackPrefubs[index]);
         }
+        CreateScoreFeedback(0, 0, ScoreData.ScoreLevel.Regular);
+
     }
 
     private void ShowFloatingText(ScoreData.ScoreLevel scoreLevel, GameObject floatingTextPrefub)
