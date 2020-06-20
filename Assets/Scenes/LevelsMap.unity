@@ -173,6 +173,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -417,6 +418,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -952,6 +954,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1207,6 +1210,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1324,6 +1328,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1607,6 +1612,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2007,6 +2013,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2124,6 +2131,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2339,6 +2347,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2412,6 +2421,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2533,6 +2543,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3419,15 +3430,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 01a05d920d5ef5e41bcdee3677e8aa4b, type: 2}
   - {fileID: 11400000, guid: b0efb96f0540c0347a1f8e19a8049621, type: 2}
   - {fileID: 11400000, guid: 4d44f4f307a34d6429a131a0edaf3158, type: 2}
-  - {fileID: 11400000, guid: a5d1775463067ed4ea16e20b2f7d0eaf, type: 2}
-  - {fileID: 11400000, guid: ebd3db6c570f4ef4597ba8c568b15661, type: 2}
-  - {fileID: 11400000, guid: eae8b5f91b57e9a4382431c23f3b3027, type: 2}
-  - {fileID: 11400000, guid: df9fd1d5aa696b846b7e7a7ac627bf48, type: 2}
-  - {fileID: 11400000, guid: 5bbedf22e14945d44ba024a1e3f90c85, type: 2}
-  - {fileID: 11400000, guid: 248f9f9eba0da4440b8f958432617fa4, type: 2}
-  - {fileID: 11400000, guid: bbbb65a8aeab5ec4cb6d9f55532c44b4, type: 2}
-  - {fileID: 11400000, guid: d8643e49bbbff1f4296da6cdb88222f7, type: 2}
-  - {fileID: 11400000, guid: 792654a5ab1398441aadb8168802e410, type: 2}
+  - {fileID: 11400000, guid: 5bfa8c6da5ae4394e88d97fd679898c8, type: 2}
+  - {fileID: 11400000, guid: e5a87e4061bf0db4dac14cd028ddd80a, type: 2}
+  - {fileID: 11400000, guid: 9e97da88f6cf91048841e69a2a362109, type: 2}
+  - {fileID: 11400000, guid: 46f2ba26ff3dbfa44aa551967fc3b414, type: 2}
+  - {fileID: 11400000, guid: db2d732c6316d7542b4a53060f26812a, type: 2}
+  - {fileID: 11400000, guid: 65e0c27ba1d1b9449a59f70d4cc219a0, type: 2}
+  - {fileID: 11400000, guid: a16a265c243fc4644ab7fe854e172baf, type: 2}
+  - {fileID: 11400000, guid: 477597226b76a1e43a6ba6e4ab65fa6c, type: 2}
+  - {fileID: 11400000, guid: de1efed9510977246b46516bdf85745f, type: 2}
   - {fileID: 11400000, guid: 608f837e47665e445a55dde4f3b01b50, type: 2}
   - {fileID: 11400000, guid: a5d1775463067ed4ea16e20b2f7d0eaf, type: 2}
   - {fileID: 11400000, guid: ebd3db6c570f4ef4597ba8c568b15661, type: 2}
@@ -3658,6 +3669,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4033,6 +4045,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4531,6 +4544,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -5480,6 +5494,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -8232,6 +8247,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -8372,6 +8388,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -8457,6 +8474,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []

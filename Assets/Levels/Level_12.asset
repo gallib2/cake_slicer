@@ -38,7 +38,7 @@ MonoBehaviour:
       type: 3}
     numberOfSlices: 4
     fractions: []
-  - cakePrefab: {fileID: 8200570759069020071, guid: dd9635da77ee7fe4f90fbebc0125c169,
+  - cakePrefab: {fileID: 8200570759069020071, guid: 5478e7f94983bdc499053143bfcc4af4,
       type: 3}
     numberOfSlices: 4
     fractions:
