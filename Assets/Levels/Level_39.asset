@@ -48,13 +48,13 @@ MonoBehaviour:
       denominator: 2
     - numerator: 2
       denominator: 4
-  - cakePrefab: {fileID: 8200570759069020071, guid: 4bae5488ff187bc4fbfe7e5f240a0016,
+  - cakePrefab: {fileID: 8200570759069020071, guid: 1333e47c477ceb4438f7ab9c4c5dd81f,
       type: 3}
-    numberOfSlices: 4
+    numberOfSlices: 7
     fractions: []
-  - cakePrefab: {fileID: 8200570759069020071, guid: 7d025795d87f4ad43a3f457b9b7ba8f1,
+  - cakePrefab: {fileID: 8200570759069020071, guid: 5ca2086a28acf5148a5eff07aba09d45,
       type: 3}
-    numberOfSlices: 5
+    numberOfSlices: 10
     fractions: []
   - cakePrefab: {fileID: 2935677715139052978, guid: bde8d9d2588050540aed02fd0987112d,
       type: 3}
