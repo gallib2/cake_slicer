@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc59fab1ece227847ab227fcf9a752d0, type: 3}
   m_Name: TEST
   m_EditorClassIdentifier: Assembly-CSharp::Level
-  displayName: TEST
   cakes:
   - cakePrefab: {fileID: 2935677715139052978, guid: cdeaf0f5939b3e0409d101774ec4ae22,
       type: 3}
@@ -22,7 +21,7 @@ MonoBehaviour:
       denominator: 3
     - numerator: 1
       denominator: 3
-  - cakePrefab: {fileID: 4429666012074374676, guid: f3354f85f3900ac49afec2d0c6574d8f,
+  - cakePrefab: {fileID: 4429666012074374676, guid: a60d30b2e6fc4be4ba5e9620d394ba6a,
       type: 3}
     numberOfSlices: 4
     fractions: []

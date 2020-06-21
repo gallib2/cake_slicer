@@ -17,6 +17,7 @@ public class ObstaclesMovement : MonoBehaviour
     void Update()
     {
         poly = transform.parent.GetComponent<PolygonCollider2D>();
+        // NOTE - The obstacle z position have to be the same as the parent (for the bounds.Contains function)
         bool isPositionInsideParentBounds = poly.bounds.Contains(transform.localPosition);
         if (!isPositionInsideParentBounds)
         {
