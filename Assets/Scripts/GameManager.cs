@@ -75,6 +75,7 @@ public class GameManager : MonoBehaviour
     public void NextLevel()
     {
         int nextlevelNumber = LevelsManager.CurrentLevelNumber + 1;
+        Firebase.Analytics.FirebaseAnalytics.LogEvent("next_level", "level", nextlevelNumber);
         LevelsManager.instance.LoadLevel(nextlevelNumber, Score.score, true);
     }
 
