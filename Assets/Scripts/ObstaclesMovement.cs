@@ -1,62 +1,49 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ObstaclesMovement : MonoBehaviour
 {
     public float speed = 0.5f;
-    PolygonCollider2D poly;
-    private bool changeDirection = true;
-    private bool toMoveHorizontal;
+    PolygonCollider2D parentCollider;
+    Vector2 targetPoint;
 
     void Start()
     {
-        toMoveHorizontal = Random.value < 0.5;
+        parentCollider = transform.parent.GetComponent<PolygonCollider2D>();
+        targetPoint = RandomPointInBounds(parentCollider.bounds);
     }
 
     void Update()
     {
-        poly = transform.parent.GetComponent<PolygonCollider2D>();
-        // NOTE - The obstacle z position have to be the same as the parent (for the bounds.Contains function)
-        bool isPositionInsideParentBounds = poly.bounds.Contains(transform.localPosition);
-        if (!isPositionInsideParentBounds)
-        {
-            changeDirection = !changeDirection;
-            //direction *= -1;
+        float step = speed * Time.deltaTime;
+        bool arriveTarget = IsArriveTarget(transform.position, targetPoint);
 
+        if(arriveTarget)
+        {
+            parentCollider = transform.parent.GetComponent<PolygonCollider2D>();
+            targetPoint = RandomPointInBounds(parentCollider.bounds);
         }
 
-        if (changeDirection)
-        {
-            if(toMoveHorizontal)
-            {
-                MoveHorizontal(1);
-            }
-            else
-            {
-                MoveVertical(1);
-            }
-        }
-        else
-        {
-            if (toMoveHorizontal)
-            {
-                MoveHorizontal(-1);
-            }
-            else
-            {
-                MoveVertical(-1);
-            }
-        }
+        transform.position = Vector2.MoveTowards(transform.position, targetPoint, step);
+
     }
 
-    private void MoveHorizontal(int direction)
+    private bool IsArriveTarget(Vector2 position, Vector2 target)
     {
-        transform.position += direction * transform.right * speed * Time.deltaTime;
+        bool isXEqual = Mathf.Approximately(position.x, target.x);
+        bool isYEqual = Mathf.Approximately(position.y, target.y);
+
+        return isXEqual && isYEqual;
     }
 
-    private void MoveVertical(int direction)
+    public static Vector2 RandomPointInBounds(Bounds bounds)
     {
-        transform.position += direction * transform.up * speed * Time.deltaTime;
+        return new Vector2(
+            UnityEngine.Random.Range(bounds.min.x, bounds.max.x),
+            UnityEngine.Random.Range(bounds.min.y, bounds.max.y)
+        );
     }
+
 }
