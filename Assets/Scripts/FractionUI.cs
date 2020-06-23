@@ -5,8 +5,7 @@ using UnityEngine.UI;
 
 public class FractionUI : MonoBehaviour
 {
-    [SerializeField]
-    private Text text;
+    [SerializeField] private TMPro.TextMeshProUGUI text;
 
     public void ChangeText(Fraction fraction)
     {

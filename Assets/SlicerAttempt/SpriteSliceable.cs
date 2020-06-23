@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class SpriteSliceable : MonoBehaviour
 {
-    /*[HideInInspector]*/ public SpriteRenderer spriteRenderer;
-    [HideInInspector] public BoxCollider2D boxCollider;
+    [HideInInspector] public SpriteRenderer spriteRenderer;
+    [HideInInspector] public BoxCollider2D boxCollider;//TODO: get rid of me
     [HideInInspector] public PolygonCollider2D polygonCollider;
-    private List<Vector2> physicsShape = new List<Vector2>();
-    bool initialised = false;
+    //private List<Vector2> physicsShape = new List<Vector2>();
+    private bool initialised = false;
+
+    public Color outlineColour1;
+    public Color outlineColour2;
     private void Start()
     {
         Initialise();
@@ -25,6 +28,8 @@ public class SpriteSliceable : MonoBehaviour
             boxCollider = gameObject.AddComponent<BoxCollider2D>();
 
             GetNewPolygonCollider();
+            outlineColour1.a = 1;
+            outlineColour2.a = 1;
 
         }
         initialised = true;
@@ -32,6 +37,7 @@ public class SpriteSliceable : MonoBehaviour
 
     public PolygonCollider2D GetNewPolygonCollider()
     {
+        Debug.Log("GetNewPolygonCollider");
         if (polygonCollider != null)
         {
             Destroy(polygonCollider);
