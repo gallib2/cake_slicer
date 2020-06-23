@@ -23,6 +23,8 @@ public class SpriteSlicer : MonoBehaviour
 
     [SerializeField] private int eraseBrushSize = 7;
     [SerializeField] private int interpolationDistance;
+    [SerializeField] private int outlineThickness = 5;
+
     private int halfOfEraseBrushSize;
     private Color[] clearColours;
     private bool changedSinceLastCheck;
@@ -234,10 +236,10 @@ public class SpriteSlicer : MonoBehaviour
             if (textureChanged)
             {
                if (Time.time - timeOnLastDraw > drawRate)
-                {
+               {
                     currentTexture.Apply();
                     timeOnLastDraw = Time.time;
-                }
+               }
             }
             lastHitPixel = newHitPixel;
             if (overlappedColliderThisFrame)
@@ -418,20 +420,34 @@ public class SpriteSlicer : MonoBehaviour
         //x = Mathf.Clamp()
         // currentTexture.SetPixels (x, y, holeWidth, holeHeight, clearColours);
         int radius = halfOfEraseBrushSize;
+        int expandedRadius = radius + outlineThickness;
         Vector2 centre = new Vector2(x, y);
-        if (!(centre.x + radius < 0 || centre.x - radius > textureWidth ||
-           centre.y + radius < 0 || centre.y - radius > textureHeight))
+        if (!(centre.x + expandedRadius < 0 || centre.x - expandedRadius > textureWidth ||
+           centre.y + expandedRadius < 0 || centre.y - expandedRadius > textureHeight))
         {
-            for (int ix = x - radius; ix < x + radius; ix++)
+            for (int ix = x - expandedRadius; ix < x + expandedRadius; ix++)
             {
-                for (int iy = y - radius; iy < y + radius; iy++)
+                for (int iy = y - expandedRadius; iy < y + expandedRadius; iy++)
                 {
-                    if (ix == centre.x || iy == centre.y || Vector2.Distance(new Vector2(ix, iy), centre) <= radius)
+                    float distanse = Vector2.Distance(new Vector2(ix, iy), centre);
+                    if (/*ix == centre.x || iy == centre.y || */distanse <= expandedRadius)// Vector2.Distance(new Vector2(ix, iy), centre) <= radius)
                     {
                         if (ix > -1 && ix < textureWidth &&
                             iy > -1 && iy < textureHeight)
                         {
-                            currentTexture.SetPixel(ix, iy, Color.clear);
+                            if(distanse > radius )
+                            {
+                                if(UnityEngine.Random.Range((float)radius, (float)expandedRadius) > distanse && currentTexture.GetPixel(ix, iy).a > 0.5f )
+                                {
+                                    Color colour =Color.Lerp
+                                        (sliceableBeingSliced.outlineColour1, sliceableBeingSliced.outlineColour2, UnityEngine.Random.Range(0f, 1f));
+                                    currentTexture.SetPixel(ix, iy, colour);
+                                }
+                            }
+                            else
+                            {
+                                currentTexture.SetPixel(ix, iy, Color.clear);
+                            }
                             changed = true;
                         }
                     }

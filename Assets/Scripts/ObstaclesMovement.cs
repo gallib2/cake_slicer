@@ -6,13 +6,14 @@ using UnityEngine;
 public class ObstaclesMovement : MonoBehaviour
 {
     public float speed = 0.5f;
-    PolygonCollider2D parentCollider;
+    //PolygonCollider2D parentCollider;
+    private Bounds bounds;// Removed the ref to the collider cause it might get destroyed
     Vector2 targetPoint;
 
     void Start()
     {
-        parentCollider = transform.parent.GetComponent<PolygonCollider2D>();
-        targetPoint = RandomPointInBounds(parentCollider.bounds);
+        bounds = transform.parent.GetComponent<PolygonCollider2D>().bounds;
+        targetPoint = RandomPointInBounds(bounds);
     }
 
     void Update()
@@ -22,8 +23,8 @@ public class ObstaclesMovement : MonoBehaviour
 
         if(arriveTarget)
         {
-            parentCollider = transform.parent.GetComponent<PolygonCollider2D>();
-            targetPoint = RandomPointInBounds(parentCollider.bounds);
+            bounds = transform.parent.GetComponent<PolygonCollider2D>().bounds;
+            targetPoint = RandomPointInBounds(bounds);
         }
 
         transform.position = Vector2.MoveTowards(transform.position, targetPoint, step);
