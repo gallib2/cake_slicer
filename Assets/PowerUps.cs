@@ -5,7 +5,7 @@ using UnityEngine;
 
 public enum PowerUpTypes
 {
-    EXTRA_TIME = 0, //TODO: Change to freeze time
+    FREEZE_TIME = 0, //TODO: Change to freeze time
     GOLDEN_KNIFE = 1,
     WHIPPED_CREAM = 2,
     IMMUNITY = 3,
@@ -15,9 +15,16 @@ public enum PowerUpTypes
 public class PowerUps : MonoBehaviour
 {
     public static PowerUps instance;
-    [Header("Extra Time")]
-    [SerializeField] private float timeToAdd = 5f;
-    [SerializeField] private Timer timer;
+    [Header("Freeze Time")]
+    [SerializeField] private float timeFreezeDurationInSeconds = 7f;
+    public static bool TimeIsFrozen
+    {
+        get { return remainingFrozenTimeInSeconds > 0;}
+    }
+    private static float remainingFrozenTimeInSeconds = 0;
+    public static event Action OnTimeFrozen;
+    public static event Action OnTimeUnfrozen;
+    //[SerializeField] private Timer timer;
     [Header("Golden Knife")]
     [SerializeField] private float goldenKnifeInitialTime = 5f;
     public static bool GoldenKnifeIsActive
@@ -25,6 +32,9 @@ public class PowerUps : MonoBehaviour
         get; private set;
     }
     private float goldenKnifeTimeLeft;
+    public static event Action OnGoldenKnifeActivated;
+    public static event Action OnGoldenKnifeDeactivated;
+
     //[Header("WhippedCream")]
     public static event Action OnWhippedCream;
 
@@ -45,8 +55,8 @@ public class PowerUps : MonoBehaviour
         Debug.Log("UsePowerUp: " + powerUp.ToString());
         switch (powerUp)
         {
-            case PowerUpTypes.EXTRA_TIME:
-                ExtraTime();break;
+            case PowerUpTypes.FREEZE_TIME:
+                FreezeTime();break;
             case PowerUpTypes.GOLDEN_KNIFE:
                 GoldenKnife(); break;
             case PowerUpTypes.WHIPPED_CREAM:
@@ -55,17 +65,19 @@ public class PowerUps : MonoBehaviour
         
     }
 
-    private void ExtraTime()
+    private void FreezeTime()
     {
-        timer.AddTime(timeToAdd);
+        //timer.AddTime(timeToAdd);
+        OnTimeFrozen();
+        remainingFrozenTimeInSeconds = timeFreezeDurationInSeconds;
     }
 
     private void GoldenKnife()
     {
         Debug.Log("Golden Knife is active!");
-
         GoldenKnifeIsActive = true;
         goldenKnifeTimeLeft = goldenKnifeInitialTime;
+        OnGoldenKnifeActivated();
     }
 
     private void WhippedCream()
@@ -88,7 +100,17 @@ public class PowerUps : MonoBehaviour
                 if(goldenKnifeTimeLeft <= 0)
                 {
                     GoldenKnifeIsActive = false;
+                    OnGoldenKnifeDeactivated();
                     Debug.Log("Golden Knife aint active no more!");
+                }
+            }
+
+            if (remainingFrozenTimeInSeconds > 0)
+            {
+                remainingFrozenTimeInSeconds -= Time.deltaTime;
+                if(remainingFrozenTimeInSeconds <= 0)
+                {
+                    OnTimeUnfrozen();
                 }
             }
         }

@@ -75,6 +75,7 @@ public class GameManager : MonoBehaviour
     public void NextLevel()
     {
         int nextlevelNumber = LevelsManager.CurrentLevelNumber + 1;
+        Firebase.Analytics.FirebaseAnalytics.LogEvent("next_level", "level", nextlevelNumber);
         LevelsManager.instance.LoadLevel(nextlevelNumber, Score.score, true);
     }
 
@@ -160,6 +161,7 @@ public class GameManager : MonoBehaviour
     {
         isGameOver = true;
         bool won = score.CurrentStars >= 1;
+
         //TODO: If we see that saving and oading slows the device, 
         //we can import the loaded data that was loaded previously and thus avoid loading inside TrySaveLevelData
         SaveAndLoadManager.TrySaveLevelData

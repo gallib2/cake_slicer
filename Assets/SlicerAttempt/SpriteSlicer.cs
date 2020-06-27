@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class SpriteSlicer : MonoBehaviour
 {
+    private enum PixelState : byte
+    {
+        UNKOWNN = 0, EMPTY = 1, TOUCHED = 2,
+    }
+
     [SerializeField] private float drawRate = 0.012f;
     [SerializeField] private LayerMask cakesLayerMask;
     private Vector2Int lastHitPixel;
@@ -15,6 +20,7 @@ public class SpriteSlicer : MonoBehaviour
     private float normalisedMaxY;
     private Texture2D currentTexture;
     private Texture2D dynamicTexture;
+    //private bool appliedTextureThisFrame;
    // private Texture2D lowerDynamicTexture;//TODO: continue..
    // private Texture2D upperDynamicTexture;
 
@@ -23,6 +29,18 @@ public class SpriteSlicer : MonoBehaviour
 
     [SerializeField] private int eraseBrushSize = 7;
     [SerializeField] private int interpolationDistance;
+    [Header("Outline")]
+    [SerializeField] private int outlineThickness = 5;
+    [SerializeField] private bool randomiseOutlineShape = false;
+    [SerializeField] private bool generateOutlineColoursProcedurally = false;
+    [SerializeField] private Texture2D outlineTexture;
+    //private Color[,] outlineColours;
+    private float[,] outlineColoursBlackAndWhite;
+    [SerializeField] private Color goldenKnifeOutlineColour1;
+    [SerializeField] private Color goldenKnifeOutlineColour2;
+
+    private PixelState[,] pixelsStates;
+
     private int halfOfEraseBrushSize;
     private Color[] clearColours;
     private bool changedSinceLastCheck;
@@ -30,6 +48,9 @@ public class SpriteSlicer : MonoBehaviour
     [SerializeField] private bool shouldCheckSlicesRegularly;
     [SerializeField] private bool shouldCheckWhenEnteringAndExiting;
     [SerializeField] private double negligibleSliceSize = 0.01;
+    [SerializeField] private bool skipHoleGeneration;
+    [SerializeField] private bool skipInnerHoleGeneration;
+
     public static bool isSlicing;
     private int slicesCount;
     public int SlicesCount
@@ -52,6 +73,7 @@ public class SpriteSlicer : MonoBehaviour
         {
             clearColours[i] = Color.clear;
         }
+
         CalculateSlicesRegularly();
         // InvokeRepeating("CalculateSlices", 2f,0.12f);
     }
@@ -103,6 +125,53 @@ public class SpriteSlicer : MonoBehaviour
             Sprite newSprite = Sprite.Create
                 (dynamicTexture, currentSprite.rect, new Vector2(0.5f, 0.5f), currentSprite.pixelsPerUnit);//, 1, SpriteMeshType.FullRect, currentSprite.border);
             sliceableBeingSliced.spriteRenderer.sprite = newSprite;
+
+            GenerateOutlineColoursMap(sliceableBeingSliced.outlineColour1, sliceableBeingSliced.outlineColour2);
+            ResetPixelsStates();
+        }
+    }
+
+    private void GenerateOutlineColoursMap(Color colour1, Color colour2)
+    {
+        if(outlineColoursBlackAndWhite == null)
+        {
+            outlineColoursBlackAndWhite = new float[outlineTexture.width, outlineTexture.height];
+            for (int x = 0; x < outlineColoursBlackAndWhite.GetLength(0); x++)
+            {
+                for (int y = 0; y < outlineColoursBlackAndWhite.GetLength(1); y++)
+                {
+                    outlineColoursBlackAndWhite[x, y] = outlineTexture.GetPixel(x, y).r;
+                }
+            }
+        }
+       /* int width = outlineColours.GetLength(0);
+        int height = outlineColours.GetLength(1);
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                outlineColours[x, y] = colour1;
+               // outlineColours[x,y] = Color.Lerp(colour1, colour2, outlineColoursBlackAndWhite[x, y]); 
+            }
+        }*/
+    }
+
+    private void ResetPixelsStates()
+    {
+        if (pixelsStates == null)
+        {
+            pixelsStates = new PixelState[outlineTexture.width, outlineTexture.height];
+
+        }
+        int width = pixelsStates.GetLength(0);
+        int height = pixelsStates.GetLength(1);
+         
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                pixelsStates[x, y] = PixelState.UNKOWNN;
+            }
         }
     }
 
@@ -113,6 +182,7 @@ public class SpriteSlicer : MonoBehaviour
     private void Update()
     {
         isSlicing = false;
+        //appliedTextureThisFrame = false;
         if (GameManager.GameIsPaused)
         {
             return;
@@ -128,7 +198,7 @@ public class SpriteSlicer : MonoBehaviour
         {
             ThingsToDoOnTouchEnded();
         }
-        if (InputManager.GetTouch())
+       /* else*/ if (InputManager.GetTouch())
         {
             ThingsToDoWhenTouching(InputManager.GetTouchPosition());
         }
@@ -172,7 +242,10 @@ public class SpriteSlicer : MonoBehaviour
 
     private void ThingsToDoOnTouchEnded()
     {
-        currentTexture.Apply();
+        //if (!appliedTextureThisFrame)
+        {
+            currentTexture.Apply();//TODO: avoid
+        }
         CalculateSlices();
         lastHitPixel = Vector2Int.zero;
     }
@@ -234,10 +307,10 @@ public class SpriteSlicer : MonoBehaviour
             if (textureChanged)
             {
                if (Time.time - timeOnLastDraw > drawRate)
-                {
+               {
                     currentTexture.Apply();
                     timeOnLastDraw = Time.time;
-                }
+               }
             }
             lastHitPixel = newHitPixel;
             if (overlappedColliderThisFrame)
@@ -415,26 +488,97 @@ public class SpriteSlicer : MonoBehaviour
         // if (solidPixelFound)
         bool changed = false;
 
-        //x = Mathf.Clamp()
-        // currentTexture.SetPixels (x, y, holeWidth, holeHeight, clearColours);
         int radius = halfOfEraseBrushSize;
+        int expandedRadius = radius + outlineThickness;
+        bool goldenKnifeIsActive = PowerUps.GoldenKnifeIsActive;
         Vector2 centre = new Vector2(x, y);
-        if (!(centre.x + radius < 0 || centre.x - radius > textureWidth ||
-           centre.y + radius < 0 || centre.y - radius > textureHeight))
+        if (!(centre.x + expandedRadius < 0 || centre.x - expandedRadius > textureWidth ||
+           centre.y + expandedRadius < 0 || centre.y - expandedRadius > textureHeight))
         {
-            for (int ix = x - radius; ix < x + radius; ix++)
+            int XLength = x + expandedRadius;
+            int YLength = y + expandedRadius;
+
+            for (int ix = x - expandedRadius; ix < XLength; ix++)
             {
-                for (int iy = y - radius; iy < y + radius; iy++)
+                for (int iy = y - expandedRadius; iy < YLength; iy++)
                 {
-                    if (ix == centre.x || iy == centre.y || Vector2.Distance(new Vector2(ix, iy), centre) <= radius)
+                    if (!skipHoleGeneration)
                     {
-                        if (ix > -1 && ix < textureWidth &&
-                            iy > -1 && iy < textureHeight)
+                        float distance = Vector2.Distance(new Vector2(ix, iy), centre);//TODO: precalculate
+                        if (/*ix == centre.x || iy == centre.y || */distance <= expandedRadius)// Vector2.Distance(new Vector2(ix, iy), centre) <= radius)
                         {
-                            currentTexture.SetPixel(ix, iy, Color.clear);
-                            changed = true;
+
+                            if (ix > -1 && ix < textureWidth &&
+                                iy > -1 && iy < textureHeight)// && currentTexture.GetPixel(ix, iy).a > 0.5f)
+                            {
+                                if (!skipInnerHoleGeneration)
+                                {
+                                    PixelState pixelState = pixelsStates[ix, iy];
+                                    if (pixelState == PixelState.UNKOWNN)
+                                    {
+                                        if (currentTexture.GetPixel(ix, iy).a < 0.5f)
+                                        {
+                                            pixelState = pixelsStates[ix, iy] = PixelState.EMPTY;
+                                        }
+                                    }
+                                    if (pixelState != PixelState.EMPTY)
+                                    {
+                                        if (distance > radius)
+                                        {
+                                            if (pixelState != PixelState.TOUCHED)
+                                            {
+                                                if (!randomiseOutlineShape || UnityEngine.Random.Range((float)radius, (float)expandedRadius) > distance)
+                                                {
+                                                    if (generateOutlineColoursProcedurally)
+                                                    {
+                                                        //if ((!randomiseOutlineShape || UnityEngine.Random.Range((float)radius, (float)expandedRadius) > distanse))
+                                                        {
+                                                            Color colour = Color.Lerp
+                                                                (sliceableBeingSliced.outlineColour1, sliceableBeingSliced.outlineColour2, UnityEngine.Random.Range(0f, 1f));
+                                                            currentTexture.SetPixel(ix, iy, colour);
+                                                            pixelsStates[ix, iy] = PixelState.TOUCHED;
+                                                        }
+                                                    }
+                                                    else// if (sliceableBeingSliced.outlineTexture != null)
+                                                    {
+                                                        // Color colour = sliceableBeingSliced.outlineTexture.GetPixel(ix, iy);
+                                                        Color colour;
+                                                        if (!goldenKnifeIsActive)
+                                                        {
+                                                            /* colour = Color.Lerp
+                                                                 (sliceableBeingSliced.outlineColour1, sliceableBeingSliced.outlineColour2, colour.r);*/
+                                                            //colour = outlineColours[ix, iy];
+                                                            colour = Color.Lerp
+                                                                 (sliceableBeingSliced.outlineColour1, sliceableBeingSliced.outlineColour2, outlineColoursBlackAndWhite[ix, iy]);
+                                                        }
+                                                        else
+                                                        {
+                                                            colour = Color.Lerp
+                                                                (goldenKnifeOutlineColour1, goldenKnifeOutlineColour2, outlineColoursBlackAndWhite[ix, iy]);
+                                                        }
+                                                        currentTexture.SetPixel(ix, iy, colour);//TODO: make some logical system to avoid setting a pixel to the same value multiple times
+                                                        pixelsStates[ix, iy] = PixelState.TOUCHED;
+
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            currentTexture.SetPixel(ix, iy, Color.clear);
+                                            pixelsStates[ix, iy] = PixelState.EMPTY;
+
+                                        }
+                                        changed = true;
+                                    }
+                                }
+                               
+
+                            }
                         }
                     }
+                    
                 }
             }
         }
