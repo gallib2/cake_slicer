@@ -12,6 +12,7 @@ public class SpriteSliceable : MonoBehaviour
 
     public Color outlineColour1;
     public Color outlineColour2;
+
     private void Start()
     {
         Initialise();

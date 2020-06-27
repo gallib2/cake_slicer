@@ -175,6 +175,7 @@ public class Score : MonoBehaviour
         feedbackPosition.x = Mathf.Clamp(feedbackPosition.x, scoreFeedbacksBorders.bounds.min.x, scoreFeedbacksBorders.bounds.max.x);
         feedbackPosition.y = Mathf.Clamp(feedbackPosition.y, scoreFeedbacksBorders.bounds.min.y, scoreFeedbacksBorders.bounds.max.y);
         feedbackPosition.z = 0;
+        //feedbackPosition = Vector3.zero;
         ScoreFeedback newScoreFeedback = GetAvailableScoreFeedback();
         if(newScoreFeedback!= null)
         {
