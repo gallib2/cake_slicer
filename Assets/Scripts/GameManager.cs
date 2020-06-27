@@ -28,8 +28,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ConfirmationButton yesButton;
     [SerializeField] private ConfirmationButton noButton;
 
-    public GameOverScoreDisplay gameOverScoreDisplay;
-
     public static bool GameIsPaused
     {
         get
