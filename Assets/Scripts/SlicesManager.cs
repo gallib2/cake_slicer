@@ -18,6 +18,7 @@ public class SlicesManager : MonoBehaviour
     public static event Action OnGameOver;
    // public int obstaclesLayer = 9;
     public LayerMask obstacleLayerMask;
+    [SerializeField] private LayerMask untouchablesLayerMask;
 
     [SerializeField] private SpriteSlicer spriteSlicer;
     //List<double> slicesSizeList;
@@ -26,11 +27,11 @@ public class SlicesManager : MonoBehaviour
     [SerializeField] public Level currentLevel;
     private static int slicesToSlice;
     [SerializeField] private float criticalTime = 5f;
-    private int minmumSize;
     public ParticleSystem particlesEndLevel;
+    [SerializeField] private CrumbsEffect crumbsEffect; 
 
     [SerializeField] private GameObject sliceableObjects;
-    [SerializeField] private GameObject obstacleObjects;
+    //[SerializeField] private GameObject obstacleObjects;
 
     //public int slicesCount = 0;
     [SerializeField] private TMPro.TextMeshProUGUI cakesLeftText;
@@ -56,6 +57,11 @@ public class SlicesManager : MonoBehaviour
     [SerializeField]
     private float relativeCakeToScreenSize = 12.0f;
 
+    [SerializeField] private Color defaultOutlineColour1;
+    [SerializeField] private Color defaultOutlineColour2;
+    [SerializeField] private RuntimeAnimatorController cakeAnimatorController; 
+
+
     private void Awake()
     {
         if (LevelsManager.CurrentLevel != null)
@@ -73,7 +79,6 @@ public class SlicesManager : MonoBehaviour
     {
         GameManager.OnLevelInitialised -= InitialiseLevel;
         PowerUps.OnWhippedCream -= RemoveAllObstacles;
-
     }
 
     private void InitialiseLevel()
@@ -98,6 +103,8 @@ public class SlicesManager : MonoBehaviour
             if (isMouseButtonClick || isMouseDown)
             {
                 bool isHaveDecorators = obstacles!=null && obstacles.Length > 0;
+                //Debug.Log("isHaveDecorators: "+ isHaveDecorators);
+
                 Collider2D collider = isHaveDecorators ? CheckClicksByLayer(obstacleLayerMask) : null;
                 Obstacle decorator = collider ? collider.gameObject.GetComponent<Obstacle>() : null;
                 if (decorator != null)
@@ -106,6 +113,9 @@ public class SlicesManager : MonoBehaviour
                     bool isTouchCandle = isMouseDown && decorator.Type == ObstacleType.CANDLE;
                     if (isTouchCherry)
                     {
+                        Destroy(collider.gameObject);//TODO: add some kinf of time gap where the player cannot do anything, including touching bees and cherries
+
+                        Debug.Log("Death by Cherry!");
                         #if UNITY_ANDROID || UNITY_IOS
                             Handheld.Vibrate();
                         #endif
@@ -309,21 +319,48 @@ public class SlicesManager : MonoBehaviour
 
     private void GameOver()
     {
-        DestroyAllLeftPieces();
+        PrepareLeftOversForDestruction();
         OnGameOver?.Invoke();
     }
 
-    void DestroyAllLeftPieces()
+    List<GameObject> leftOvers = new List<GameObject>();
+
+    void PrepareLeftOversForDestruction()
     {
+        //This function is baaaaddd
+
+        RemoveAllObstacles();
         foreach (Transform item in sliceableObjects.transform)
         {
-            Destroy(item.gameObject);
+            item.SetParent(null);
+            leftOvers.Add(item.gameObject);
         }
 
-        foreach (Transform item in obstacleObjects.transform)
+       /* foreach (Transform item in obstacleObjects.transform)
         {
-            Destroy(item.gameObject);
+            item.SetParent(null);
+            leftOvers.Add(item.gameObject);
+        }*/
+
+        foreach (GameObject gameObject in leftOvers)
+        {
+            if (gameObject.GetComponent<Animator>())
+            {
+                gameObject.GetComponent<Animator>().SetTrigger("Out");
+            }
+            gameObject.layer = LayerMask.NameToLayer("Untouchables");// untouchablesLayerMask.value;
         }
+
+        Invoke("DestroyAllLeftOvers", 1.2f);//TODO: connect the time to something less arbitrary
+    }
+
+    void DestroyAllLeftOvers()
+    {
+        foreach (GameObject gameObject in leftOvers)
+        {
+            Destroy(gameObject);
+        }
+        leftOvers.Clear();
     }
 
    /* List<double> SlicesSizesInDoubles()
@@ -359,7 +396,7 @@ public class SlicesManager : MonoBehaviour
         Debug.Log("--------------------- in NextRound!!!");
         //spriteSlicer.Reset();
         timer.ToStopTimer = false;
-        DestroyAllLeftPieces();
+        PrepareLeftOversForDestruction();
         currentCakeIndex++;
         if (currentCakeIndex < currentLevel.Cakes.Length)
         {
@@ -376,7 +413,11 @@ public class SlicesManager : MonoBehaviour
             }
             for (int i = 0; i < swipedDownObjects.Length; i++)
             {
-                swipedDownObjects[i].SetTrigger("SwipeDown");
+                if (swipedDownObjects[i] != null)
+                {
+                    swipedDownObjects[i].SetTrigger("SwipeDown");
+
+                }
             }
             #endregion
             slicesToSlice = currentLevel.Cakes[currentCakeIndex].SlicesToSlice();
@@ -386,6 +427,7 @@ public class SlicesManager : MonoBehaviour
             float cameraSeesWidth = Camera.main.orthographicSize * 2.0f * Screen.width / Screen.height;
             GameObject cakeGameObject = Instantiate(newCake.cakePrefab, sliceableObjects.transform, true); // create new cake
             float sizeModifier = cameraSeesWidth / relativeCakeToScreenSize;
+            Debug.Log("sizeModifier:" + sizeModifier);
             cakeGameObject.transform.localScale = new Vector3(sizeModifier, sizeModifier, 1);
             float dishScale = dishOriginalScale * sizeModifier;
             topDish.transform.localScale = new Vector3(dishScale, dishScale, 1);
@@ -394,8 +436,27 @@ public class SlicesManager : MonoBehaviour
             obstacles = cakeGameObject.GetComponentsInChildren<Obstacle>();
             candleObstacles = obstacles.Where(dec => dec.Type == ObstacleType.CANDLE).ToList();
             allowToSlice = candleObstacles.Count == 0;
-            spriteSlicer.SetNewSliceable(cakeGameObject.AddComponent<SpriteSliceable>());//TODO: make this a public field on the cake object
-
+            SpriteSliceable spriteSliceable = cakeGameObject.GetComponent<SpriteSliceable>();
+            if (spriteSliceable == null)
+            {
+                spriteSliceable = cakeGameObject.AddComponent<SpriteSliceable>();
+                spriteSliceable.outlineColour1 = defaultOutlineColour1;
+                spriteSliceable.outlineColour2 = defaultOutlineColour2;
+            }
+            Animator animator = cakeGameObject.GetComponent<Animator>();
+            if (animator == null)
+            {
+                animator = cakeGameObject.AddComponent<Animator>();
+                animator.runtimeAnimatorController = cakeAnimatorController;
+            }
+            else
+            {
+                Debug.LogWarning("Cake arrived with an animator, watch out for size defects.");
+            }
+            //TODO: insert these into some event
+            spriteSlicer.SetNewSliceable(spriteSliceable);//TODO: make this a public field on the cake object
+            crumbsEffect.ChangeStandardColours(spriteSliceable);
+            
             cakesLeftText.text =
                 (currentLevel.Cakes.Length - currentCakeIndex).ToString();
             UpdateSliceDemandGraphics();
@@ -466,6 +527,10 @@ public class SlicesManager : MonoBehaviour
             }
         }
         obstacles = null;
-        candleObstacles.Clear();
+        if(candleObstacles!= null)
+        {
+            candleObstacles.Clear();
+
+        }
     }
 }

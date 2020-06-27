@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1323264026133684920}
   - component: {fileID: 1816605501629259840}
   - component: {fileID: 2720626988391652686}
+  - component: {fileID: 3905945714479718613}
   m_Layer: 5
   m_Name: UIStar
   m_TagString: Untagged
@@ -61,6 +62,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -90,3 +92,23 @@ MonoBehaviour:
   emptySprite: {fileID: 21300000, guid: 198e260b727e5be41b6113bd2dc444df, type: 3}
   fullSprite: {fileID: 21300000, guid: 6cfd7680dbe014c46bf00bef14e2f7cf, type: 3}
   rectTransform: {fileID: 3167527203505044994}
+  animator: {fileID: 3905945714479718613}
+--- !u!95 &3905945714479718613
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3167527203505044993}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7ef008534ef98dd4b854f7ac66c80286, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

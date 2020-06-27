@@ -37,6 +37,8 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private CookieScoreFeedback[] cookieScoreFeedbacks;
     private CookieScoreFeedback[][] cookieScoreFeedbacksByScoreLevel;
     [SerializeField] private float cookiesPitchModifier = 0.05f;
+     private float frozenTimeMusicPitch = 0.77f;
+
 
     private void OnEnable()
     {
@@ -66,6 +68,31 @@ public class SoundManager : MonoBehaviour
     private void OnGameEnd()
     {
         musicSource.Stop();
+    }
+
+
+    private void Update()
+    {
+        if (PowerUps.TimeIsFrozen)
+        {
+            if(musicSource.pitch > frozenTimeMusicPitch)
+            {
+                musicSource.pitch -= Time.deltaTime * 0.18f;
+                if (musicSource.pitch < frozenTimeMusicPitch)
+                {
+                    musicSource.pitch = frozenTimeMusicPitch;
+                }
+            }
+        }
+        else if (musicSource.pitch < 1)
+        {
+            musicSource.pitch += Time.deltaTime * 0.22f;
+            if(musicSource.pitch > 1)
+            {
+                musicSource.pitch = 1;
+            }
+        }                
+
     }
 
     public void PlaySoundEffect(SoundEffectNames soundEffectName)

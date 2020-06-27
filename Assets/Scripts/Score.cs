@@ -10,6 +10,7 @@ public class Score : MonoBehaviour
 
 
     [SerializeField] private TMPro.TextMeshProUGUI scoreText;
+    [SerializeField] private Animator scoreTextAnimator;
     [SerializeField] private Image scoreSliderFill;
     public GameObject[] floatingTextPrefubs;
     [SerializeField]
@@ -26,9 +27,7 @@ public class Score : MonoBehaviour
     [SerializeField] private SoundManager soundManager;
     [SerializeField] private BoxCollider2D scoreFeedbacksBorders;
 
-
     public int CurrentStars { get; set; }
-
 
     private void OnEnable()
     {
@@ -176,6 +175,7 @@ public class Score : MonoBehaviour
         feedbackPosition.x = Mathf.Clamp(feedbackPosition.x, scoreFeedbacksBorders.bounds.min.x, scoreFeedbacksBorders.bounds.max.x);
         feedbackPosition.y = Mathf.Clamp(feedbackPosition.y, scoreFeedbacksBorders.bounds.min.y, scoreFeedbacksBorders.bounds.max.y);
         feedbackPosition.z = 0;
+        //feedbackPosition = Vector3.zero;
         ScoreFeedback newScoreFeedback = GetAvailableScoreFeedback();
         if(newScoreFeedback!= null)
         {
@@ -210,6 +210,11 @@ public class Score : MonoBehaviour
 
     private void SetScore(int scoreToSet)
     {
+        if(score != scoreToSet)
+        {
+            scoreTextAnimator.SetTrigger("Pop");
+            Debug.Log("Pop");
+        }
         if (LevelsManager.CurrentLevel == null)
         {
             return;
@@ -232,7 +237,7 @@ public class Score : MonoBehaviour
         }
         if (score > levelMaxScore)
         {
-            Debug.LogError("Score is somehow larger than the level's maximum score!");
+            Debug.LogWarning("Score is somehow larger than the level's maximum score!");
         }
     }
 }
