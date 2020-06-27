@@ -8,17 +8,11 @@ public class GameOverScoreDisplay : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.OnGameOver += SetText;
+        SetText();
     }
 
-    private void OnDisable()
+    public void SetText()
     {
-        //TODO: solve synchronisation issues
-        //GameManager.OnGameOver -= SetText;
-    }
-
-    private void SetText(int score)
-    {
-        this.text.text = score.ToString();
+        this.text.text = Score.score.ToString();
     }
 }

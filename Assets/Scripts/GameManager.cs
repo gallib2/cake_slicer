@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ConfirmationButton yesButton;
     [SerializeField] private ConfirmationButton noButton;
 
+    public GameOverScoreDisplay gameOverScoreDisplay;
+
     public static bool GameIsPaused
     {
         get
@@ -161,6 +163,7 @@ public class GameManager : MonoBehaviour
     {
         isGameOver = true;
         bool won = score.CurrentStars >= 1;
+
         //TODO: If we see that saving and oading slows the device, 
         //we can import the loaded data that was loaded previously and thus avoid loading inside TrySaveLevelData
         SaveAndLoadManager.TrySaveLevelData

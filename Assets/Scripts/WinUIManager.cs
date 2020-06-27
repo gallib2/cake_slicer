@@ -11,7 +11,6 @@ public class WinUIManager : MonoBehaviour
     [SerializeField] private float fillStarsWait = 0.5f;
     [SerializeField] private GameObject[] elementsToAppearOnWin;
     [SerializeField] private GameObject[] elementsToDisppearOnWin;
-    [SerializeField] private GameOverScoreDisplay scoreDisplay;
     [SerializeField] private GameObject firstTryPopUp;
     [SerializeField] private GameObject finalScoreAndStarsPopUp;
     //bookeeping:
@@ -50,7 +49,6 @@ public class WinUIManager : MonoBehaviour
 
     private void ShowWinScreen(int numberOfStars, bool isFirstTry)
     {
-        //scoreDisplay.SetText(Score.score.ToString());//Turn into an event maybe?
         for (int i = 0; i < elementsToAppearOnWin.Length; i++)
         {
             elementsToAppearOnWin[i].SetActive(true);
