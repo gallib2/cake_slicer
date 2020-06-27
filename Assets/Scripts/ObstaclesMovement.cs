@@ -9,11 +9,11 @@ public class ObstaclesMovement : MonoBehaviour
     //PolygonCollider2D parentCollider;
     private Bounds bounds;// Removed the ref to the collider cause it might get destroyed
     Vector2 targetPoint;
+   [SerializeField] private SpriteRenderer spriteRenderer;
 
     void Start()
     {
-        bounds = transform.parent.GetComponent<PolygonCollider2D>().bounds;
-        targetPoint = RandomPointInBounds(bounds);
+        changeTarget();
     }
 
     void Update()
@@ -23,11 +23,11 @@ public class ObstaclesMovement : MonoBehaviour
 
         if(arriveTarget)
         {
-            bounds = transform.parent.GetComponent<PolygonCollider2D>().bounds;
-            targetPoint = RandomPointInBounds(bounds);
+            changeTarget();
         }
 
         transform.position = Vector2.MoveTowards(transform.position, targetPoint, step);
+
 
     }
 
@@ -37,6 +37,13 @@ public class ObstaclesMovement : MonoBehaviour
         bool isYEqual = Mathf.Approximately(position.y, target.y);
 
         return isXEqual && isYEqual;
+    }
+
+    private void changeTarget()
+    {
+        bounds = transform.parent.GetComponent<PolygonCollider2D>().bounds;
+        targetPoint = RandomPointInBounds(bounds);
+        spriteRenderer.flipX = (transform.position.x < targetPoint.x);
     }
 
     public static Vector2 RandomPointInBounds(Bounds bounds)

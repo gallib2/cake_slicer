@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class GameOverScoreDisplay : MonoBehaviour
 {
-    [SerializeField]
-    private TMPro.TextMeshProUGUI text;
+    [SerializeField] private TMPro.TextMeshProUGUI text;
 
     private void OnEnable()
     {
@@ -14,7 +13,8 @@ public class GameOverScoreDisplay : MonoBehaviour
 
     private void OnDisable()
     {
-        GameManager.OnGameOver -= SetText;
+        //TODO: solve synchronisation issues
+        //GameManager.OnGameOver -= SetText;
     }
 
     private void SetText(int score)

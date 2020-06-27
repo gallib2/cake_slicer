@@ -427,6 +427,7 @@ public class SlicesManager : MonoBehaviour
             float cameraSeesWidth = Camera.main.orthographicSize * 2.0f * Screen.width / Screen.height;
             GameObject cakeGameObject = Instantiate(newCake.cakePrefab, sliceableObjects.transform, true); // create new cake
             float sizeModifier = cameraSeesWidth / relativeCakeToScreenSize;
+            Debug.Log("sizeModifier:" + sizeModifier);
             cakeGameObject.transform.localScale = new Vector3(sizeModifier, sizeModifier, 1);
             float dishScale = dishOriginalScale * sizeModifier;
             topDish.transform.localScale = new Vector3(dishScale, dishScale, 1);
@@ -448,9 +449,13 @@ public class SlicesManager : MonoBehaviour
                 animator = cakeGameObject.AddComponent<Animator>();
                 animator.runtimeAnimatorController = cakeAnimatorController;
             }
+            else
+            {
+                Debug.LogWarning("Cake arrived with an animator, watch out for size defects.");
+            }
             //TODO: insert these into some event
             spriteSlicer.SetNewSliceable(spriteSliceable);//TODO: make this a public field on the cake object
-            crumbsEffect.ChangeColours(spriteSliceable);
+            crumbsEffect.ChangeStandardColours(spriteSliceable);
             
             cakesLeftText.text =
                 (currentLevel.Cakes.Length - currentCakeIndex).ToString();

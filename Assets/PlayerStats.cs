@@ -178,10 +178,10 @@ public static class PlayerStats
         else
         {
             data = new PlayerData("MRS CORONA", 6, new Dictionary<PowerUpTypes, uint>(), DateTime.Now);
-            data.powerUps.Add(PowerUpTypes.EXTRA_TIME, 2);
-            data.powerUps.Add(PowerUpTypes.GOLDEN_KNIFE, 0);
-            data.powerUps.Add(PowerUpTypes.IMMUNITY, 2);
-            data.powerUps.Add(PowerUpTypes.WHIPPED_CREAM, 0);
+            data.powerUps.Add(PowerUpTypes.FREEZE_TIME, 32);
+            data.powerUps.Add(PowerUpTypes.GOLDEN_KNIFE, 32);
+            data.powerUps.Add(PowerUpTypes.IMMUNITY, 32);
+            data.powerUps.Add(PowerUpTypes.WHIPPED_CREAM, 32);
         }
 
         GameManager.OnLose+= (delegate()

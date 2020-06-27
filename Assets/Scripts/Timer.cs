@@ -7,7 +7,8 @@ public class Timer : MonoBehaviour
 {
     [SerializeField] private Image timerFillImage;
     [SerializeField] private TMPro.TextMeshProUGUI text;
-    [SerializeField] private Animator textAnimator;
+   // [SerializeField] private Animator textAnimator;
+    [SerializeField] private Animator timerAnimator;
 
 
     private float timeLeft;
@@ -19,7 +20,7 @@ public class Timer : MonoBehaviour
     [SerializeField] private Color startFillColour;
     [SerializeField] private Color midFillColour;
     [SerializeField] private Color finalFillColour;
-
+    [SerializeField] private Color frozenFillColour;
 
     private void Awake()
     {
@@ -29,16 +30,38 @@ public class Timer : MonoBehaviour
         }
 
         GameManager.OnLevelInitialised += InitialiseLevel;
+        PowerUps.OnTimeFrozen += FreezeTime;
+        PowerUps.OnTimeUnfrozen += UnfreezeTime;
+
     }
     private void OnDisable()
     {
         GameManager.OnLevelInitialised -= InitialiseLevel;
+        PowerUps.OnTimeFrozen -= FreezeTime;
+        PowerUps.OnTimeUnfrozen -= UnfreezeTime;
     }
 
     private void InitialiseLevel()
     {
         ToStopTimer = false;
         timeLeft = currentLevel.InitialTimeInSeconds;
+        TimerGraphicsUpdate();
+
+    }
+
+    private void FreezeTime()
+    {
+        timerFillImage.color = frozenFillColour;
+        timerAnimator.SetTrigger("Freeze");
+        timerAnimator.SetBool("IsFrozen", true);
+
+    }
+
+    private void UnfreezeTime()
+    {
+        timerAnimator.SetTrigger("Unfreeze");
+        timerAnimator.SetBool("IsFrozen",false);
+
     }
 
     void Update()
@@ -47,7 +70,7 @@ public class Timer : MonoBehaviour
         {
             return;
         }
-        if (!ToStopTimer)
+        if (!ToStopTimer && !PowerUps.TimeIsFrozen)
         {
             timeLeft -= Time.deltaTime;
             TimerGraphicsUpdate();
@@ -99,7 +122,7 @@ public class Timer : MonoBehaviour
         {
             if (timeLeftIntChanged)
             {
-                textAnimator.SetTrigger("Pop");
+                timerAnimator.SetTrigger("Pop");
             }
             timerFillColour = finalFillColour;
         }
