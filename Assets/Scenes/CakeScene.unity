@@ -21484,7 +21484,6 @@ MonoBehaviour:
   elementsToDisppearOnWin:
   - {fileID: 818491573}
   - {fileID: 131853922}
-  scoreDisplay: {fileID: 1724790655}
   firstTryPopUp: {fileID: 1704006559}
   finalScoreAndStarsPopUp: {fileID: 2133518262}
 --- !u!4 &1882227217
