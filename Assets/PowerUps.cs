@@ -5,7 +5,7 @@ using UnityEngine;
 
 public enum PowerUpTypes
 {
-    FREEZE_TIME = 0, //TODO: Change to freeze time
+    FREEZE_TIME = 0,
     GOLDEN_KNIFE = 1,
     WHIPPED_CREAM = 2,
     IMMUNITY = 3,
@@ -20,6 +20,7 @@ public class PowerUps : MonoBehaviour
     public static bool TimeIsFrozen
     {
         get { return remainingFrozenTimeInSeconds > 0;}
+       // private set { remainingFrozenTimeInSeconds = 0; }
     }
     private static float remainingFrozenTimeInSeconds = 0;
     public static event Action OnTimeFrozen;
@@ -29,9 +30,10 @@ public class PowerUps : MonoBehaviour
     [SerializeField] private float goldenKnifeInitialTime = 5f;
     public static bool GoldenKnifeIsActive
     {
-        get; private set;
+        get { return goldenKnifeTimeLeft > 0; }
+        //private set { goldenKnifeTimeLeft = goldenKnifeInitialTime; };
     }
-    private float goldenKnifeTimeLeft;
+    private static float goldenKnifeTimeLeft;
     public static event Action OnGoldenKnifeActivated;
     public static event Action OnGoldenKnifeDeactivated;
 
@@ -48,6 +50,26 @@ public class PowerUps : MonoBehaviour
         {
             Destroy(this);
         }
+
+    }
+
+
+    private void OnEnable()
+    {
+        GameManager.OnLevelInitialised += InitialiseLevel;
+    }
+    private void OnDisable()
+    {
+        GameManager.OnLevelInitialised -= InitialiseLevel;
+    }
+
+    private void InitialiseLevel()
+    {
+        remainingFrozenTimeInSeconds = 0;
+        OnTimeUnfrozen();
+        goldenKnifeTimeLeft = 0;
+        OnGoldenKnifeDeactivated();
+
     }
 
     public void UsePowerUp(PowerUpTypes powerUp)
@@ -75,7 +97,7 @@ public class PowerUps : MonoBehaviour
     private void GoldenKnife()
     {
         Debug.Log("Golden Knife is active!");
-        GoldenKnifeIsActive = true;
+        //GoldenKnifeIsActive = true;
         goldenKnifeTimeLeft = goldenKnifeInitialTime;
         OnGoldenKnifeActivated();
     }
@@ -99,7 +121,7 @@ public class PowerUps : MonoBehaviour
                 goldenKnifeTimeLeft -= Time.deltaTime;
                 if(goldenKnifeTimeLeft <= 0)
                 {
-                    GoldenKnifeIsActive = false;
+                    //GoldenKnifeIsActive = false;
                     OnGoldenKnifeDeactivated();
                     Debug.Log("Golden Knife aint active no more!");
                 }
