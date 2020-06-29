@@ -51,6 +51,7 @@ public class SpriteSlicer : MonoBehaviour
     [SerializeField] private bool skipHoleGeneration;
     [SerializeField] private bool skipInnerHoleGeneration;
 
+    //private bool isLocked
     public static bool isSlicing;
     private int slicesCount;
     public int SlicesCount
@@ -181,6 +182,7 @@ public class SpriteSlicer : MonoBehaviour
 
     private void Update()
     {
+
         isSlicing = false;
         //appliedTextureThisFrame = false;
         if (GameManager.GameIsPaused)
