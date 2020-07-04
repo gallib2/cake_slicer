@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class SpriteSlicer : MonoBehaviour
 {
@@ -36,6 +37,8 @@ public class SpriteSlicer : MonoBehaviour
     [SerializeField] private Texture2D outlineTexture;
     //private Color[,] outlineColours;
     private float[,] outlineColoursBlackAndWhite;
+    private PixelMapping.PixelMap pixelMap;
+
     [SerializeField] private Color goldenKnifeOutlineColour1;
     [SerializeField] private Color goldenKnifeOutlineColour2;
 
@@ -50,7 +53,9 @@ public class SpriteSlicer : MonoBehaviour
     [SerializeField] private double negligibleSliceSize = 0.01;
     [SerializeField] private bool skipHoleGeneration;
     [SerializeField] private bool skipInnerHoleGeneration;
+    [SerializeField] private bool usePixelMaps;
 
+    //private bool isLocked
     public static bool isSlicing;
     private int slicesCount;
     public int SlicesCount
@@ -103,6 +108,7 @@ public class SpriteSlicer : MonoBehaviour
         // Collider2D colliderAtPoint = Physics2D.OverlapPoint(mousePoint);
         // if (colliderAtPoint != null && colliderAtPoint.GetComponent<SpriteSliceable>() != null)
         {
+            //TODO: check if some of these are obselete!
             sliceableBeingSliced = newSliceable;//colliderAtPoint.GetComponent<SpriteSliceable>();
             sliceableBeingSliced.Initialise();
             currentTexture = sliceableBeingSliced.spriteRenderer.sprite.texture;
@@ -126,7 +132,8 @@ public class SpriteSlicer : MonoBehaviour
                 (dynamicTexture, currentSprite.rect, new Vector2(0.5f, 0.5f), currentSprite.pixelsPerUnit);//, 1, SpriteMeshType.FullRect, currentSprite.border);
             sliceableBeingSliced.spriteRenderer.sprite = newSprite;
 
-            GenerateOutlineColoursMap(sliceableBeingSliced.outlineColour1, sliceableBeingSliced.outlineColour2);
+            pixelMap = PixelMapping.PixelMapper.instance.pixelMaps[sliceableBeingSliced.pixelMapIndex];
+            GenerateOutlineColoursMap(pixelMap.outlineColour1, pixelMap.outlineColour2);
             ResetPixelsStates();
         }
     }
@@ -181,6 +188,7 @@ public class SpriteSlicer : MonoBehaviour
 
     private void Update()
     {
+
         isSlicing = false;
         //appliedTextureThisFrame = false;
         if (GameManager.GameIsPaused)
@@ -516,10 +524,30 @@ public class SpriteSlicer : MonoBehaviour
                                     PixelState pixelState = pixelsStates[ix, iy];
                                     if (pixelState == PixelState.UNKOWNN)
                                     {
-                                        if (currentTexture.GetPixel(ix, iy).a < 0.5f)
+                                        //   if (currentTexture.GetPixel(ix, iy).a < 0.5f)
+                                        if (usePixelMaps)
                                         {
-                                            pixelState = pixelsStates[ix, iy] = PixelState.EMPTY;
+                                           // Profiler.BeginSample("PixelHunting");
+
+                                            if (pixelMap.pixelStates[ix, iy] == PixelMapping.PixelState.TRANSPARENT)
+                                            {
+                                                pixelState = pixelsStates[ix, iy] = PixelState.EMPTY;
+                                            }
+                                          //  Profiler.EndSample();
+
                                         }
+                                        else
+                                        {
+                                          //  Profiler.BeginSample("PixelHunting");
+
+                                            if (currentTexture.GetPixel(ix, iy).a < 0.5f)
+                                            {
+                                                pixelState = pixelsStates[ix, iy] = PixelState.EMPTY;
+                                            }
+                                            //Profiler.EndSample();
+
+                                        }
+
                                     }
                                     if (pixelState != PixelState.EMPTY)
                                     {
@@ -534,7 +562,7 @@ public class SpriteSlicer : MonoBehaviour
                                                         //if ((!randomiseOutlineShape || UnityEngine.Random.Range((float)radius, (float)expandedRadius) > distanse))
                                                         {
                                                             Color colour = Color.Lerp
-                                                                (sliceableBeingSliced.outlineColour1, sliceableBeingSliced.outlineColour2, UnityEngine.Random.Range(0f, 1f));
+                                                                (pixelMap.outlineColour1, pixelMap.outlineColour2, UnityEngine.Random.Range(0f, 1f));
                                                             currentTexture.SetPixel(ix, iy, colour);
                                                             pixelsStates[ix, iy] = PixelState.TOUCHED;
                                                         }
@@ -542,21 +570,21 @@ public class SpriteSlicer : MonoBehaviour
                                                     else// if (sliceableBeingSliced.outlineTexture != null)
                                                     {
                                                         // Color colour = sliceableBeingSliced.outlineTexture.GetPixel(ix, iy);
-                                                        Color colour;
+                                                        Color outlineColour;
                                                         if (!goldenKnifeIsActive)
                                                         {
                                                             /* colour = Color.Lerp
                                                                  (sliceableBeingSliced.outlineColour1, sliceableBeingSliced.outlineColour2, colour.r);*/
                                                             //colour = outlineColours[ix, iy];
-                                                            colour = Color.Lerp
-                                                                 (sliceableBeingSliced.outlineColour1, sliceableBeingSliced.outlineColour2, outlineColoursBlackAndWhite[ix, iy]);
+                                                            outlineColour = Color.Lerp
+                                                                 (pixelMap.outlineColour1, pixelMap.outlineColour2, outlineColoursBlackAndWhite[ix, iy]);
                                                         }
                                                         else
                                                         {
-                                                            colour = Color.Lerp
+                                                            outlineColour = Color.Lerp
                                                                 (goldenKnifeOutlineColour1, goldenKnifeOutlineColour2, outlineColoursBlackAndWhite[ix, iy]);
                                                         }
-                                                        currentTexture.SetPixel(ix, iy, colour);//TODO: make some logical system to avoid setting a pixel to the same value multiple times
+                                                        currentTexture.SetPixel(ix, iy, outlineColour);//TODO: make some logical system to avoid setting a pixel to the same value multiple times
                                                         pixelsStates[ix, iy] = PixelState.TOUCHED;
 
                                                     }

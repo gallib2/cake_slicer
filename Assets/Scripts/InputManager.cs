@@ -6,24 +6,32 @@ public class InputManager : MonoBehaviour
 {
     private static Vector2 lastTouchPosition;
     private static bool isTouchDevice;
+    private static bool currentTouchIsIlegitimate=false;
 
     private void Start()
     {
-        if(SystemInfo.deviceType == DeviceType.Handheld)
-        {
-            isTouchDevice = true;
-        }
+        /*if(SystemInfo.deviceType == DeviceType.Handheld)
+        { isTouchDevice = true; }*/
+        isTouchDevice = (SystemInfo.deviceType == DeviceType.Handheld);
     }
 
     public static bool GetTouch()
     {
-        return isTouchDevice ? ((Input.touchCount > 0) && (Input.GetTouch(0).phase != TouchPhase.Ended)) : Input.GetMouseButton(0);
+        if (currentTouchIsIlegitimate)
+        {
+            return false;
+        }
+        else
+        {
+            return isTouchDevice ?
+                ((Input.touchCount > 0) && (Input.GetTouch(0).phase != TouchPhase.Ended)) : Input.GetMouseButton(0);
+        }
     }
 
     public static bool GetTouchDown()
     {
-        return isTouchDevice ? (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-                : Input.GetMouseButtonDown(0);
+        return isTouchDevice ? 
+            (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) : Input.GetMouseButtonDown(0);
     }
 
     public static bool GetTouchUp()
@@ -43,5 +51,20 @@ public class InputManager : MonoBehaviour
             return lastTouchPosition = Input.GetTouch(0).position;
         }
         return lastTouchPosition;//TODO: make it nullable?
+    }
+
+    public static void DelegitimiseCurrentTouch()//TODO: insert into an event?
+    {
+        currentTouchIsIlegitimate = true;
+
+    }
+
+    private void Update()
+    {
+        if (GetTouchDown())
+        {
+            Debug.Log("currentTouchIsIlegitimate = false");
+            currentTouchIsIlegitimate = false;
+        }
     }
 }

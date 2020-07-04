@@ -69,8 +69,10 @@ public class CrumbsEffect : MonoBehaviour
     
     public void ChangeStandardColours(SpriteSliceable spriteSliceable)//TODO: chenge into an event
     {
-        standardColour1 = spriteSliceable.outlineColour1;
-        standardColour2 = spriteSliceable.outlineColour2;
+        standardColour1 = 
+            PixelMapping.PixelMapper.instance.pixelMaps[spriteSliceable.pixelMapIndex].outlineColour1;
+        standardColour2 = 
+            PixelMapping.PixelMapper.instance.pixelMaps[spriteSliceable.pixelMapIndex].outlineColour2;
         if (!PowerUps.GoldenKnifeIsActive)
         {
             SwitchToStandardMode();
