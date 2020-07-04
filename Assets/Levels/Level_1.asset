@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc59fab1ece227847ab227fcf9a752d0, type: 3}
   m_Name: Level_1
   m_EditorClassIdentifier: Assembly-CSharp::Level
-  displayName: LVL 1
   cakes:
   - cakePrefab: {fileID: 2935677715139052978, guid: 221d36b24842e6b488078eed48997e8f,
       type: 3}

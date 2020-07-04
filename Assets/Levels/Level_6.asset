@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc59fab1ece227847ab227fcf9a752d0, type: 3}
   m_Name: Level_6
   m_EditorClassIdentifier: Assembly-CSharp::Level
-  displayName: LVL 6
   cakes:
   - cakePrefab: {fileID: 8200570759069020071, guid: dd9635da77ee7fe4f90fbebc0125c169,
       type: 3}
@@ -22,21 +21,21 @@ MonoBehaviour:
       type: 3}
     numberOfSlices: 2
     fractions: []
-  - cakePrefab: {fileID: 2935677715139052978, guid: b2aae11461c96924a9e497ecfec9f9fc,
+  - cakePrefab: {fileID: 8200570759069020071, guid: a0e17dbc6f2f0d64c9acac4547779050,
       type: 3}
-    numberOfSlices: 5
+    numberOfSlices: 2
     fractions: []
-  - cakePrefab: {fileID: 2935677715139052978, guid: 05b96e7436d1ff647960ac27099dc870,
+  - cakePrefab: {fileID: 8200570759069020071, guid: 8d9b9ea54ad9a764c82c09deb935a13b,
       type: 3}
     numberOfSlices: 4
     fractions: []
   - cakePrefab: {fileID: 2935677715139052978, guid: 19e70b3ff2ed9d64b8c7daa467fd3174,
       type: 3}
-    numberOfSlices: 6
+    numberOfSlices: 7
     fractions: []
   - cakePrefab: {fileID: 8200570759069020071, guid: ed7a43d86da07254da31624e0215f774,
       type: 3}
-    numberOfSlices: 2
+    numberOfSlices: 4
     fractions: []
   - cakePrefab: {fileID: 2935677715139052978, guid: 221d36b24842e6b488078eed48997e8f,
       type: 3}
