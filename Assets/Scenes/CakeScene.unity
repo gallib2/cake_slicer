@@ -23851,6 +23851,7 @@ MonoBehaviour:
   negligibleSliceSize: 0.2
   skipHoleGeneration: 0
   skipInnerHoleGeneration: 0
+  usePixelMaps: 0
 --- !u!1 &1724091152938058
 GameObject:
   m_ObjectHideFlags: 0

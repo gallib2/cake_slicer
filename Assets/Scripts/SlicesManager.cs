@@ -439,9 +439,11 @@ public class SlicesManager : MonoBehaviour
             SpriteSliceable spriteSliceable = cakeGameObject.GetComponent<SpriteSliceable>();
             if (spriteSliceable == null)
             {
+                Debug.LogError("No SpriteSliceable found on cake!");
                 spriteSliceable = cakeGameObject.AddComponent<SpriteSliceable>();
-                spriteSliceable.outlineColour1 = defaultOutlineColour1;
-                spriteSliceable.outlineColour2 = defaultOutlineColour2;
+                spriteSliceable.pixelMapIndex = 1;
+                /*spriteSliceable.outlineColour1 = defaultOutlineColour1;
+                spriteSliceable.outlineColour2 = defaultOutlineColour2;*/
             }
             Animator animator = cakeGameObject.GetComponent<Animator>();
             if (animator == null)

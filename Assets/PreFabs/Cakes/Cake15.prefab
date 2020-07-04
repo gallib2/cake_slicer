@@ -99,3 +99,4 @@ MonoBehaviour:
   polygonCollider: {fileID: 0}
   outlineColour1: {r: 0.93725497, g: 0.6862745, b: 0, a: 0}
   outlineColour2: {r: 0.9843138, g: 0.89019614, b: 0.6901961, a: 0}
+  pixelMapIndex: 6

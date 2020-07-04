@@ -103,6 +103,7 @@ MonoBehaviour:
   polygonCollider: {fileID: 0}
   outlineColour1: {r: 0.5647059, g: 0.30980393, b: 0, a: 0}
   outlineColour2: {r: 0.15686275, g: 0.09019608, b: 0, a: 0}
+  pixelMapIndex: 3
 --- !u!1001 &1613473802730522197
 PrefabInstance:
   m_ObjectHideFlags: 0
