@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8200570759069020068}
   - component: {fileID: 8200570759069020079}
+  - component: {fileID: -7354233791256045557}
   m_Layer: 8
   m_Name: 3CandleCake10-5
   m_TagString: Untagged
@@ -84,6 +85,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-7354233791256045557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8200570759069020071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86296c66a6e3b5c489e3daa3f975bbbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 0}
+  boxCollider: {fileID: 0}
+  polygonCollider: {fileID: 0}
+  outlineColour1: {r: 0, g: 0, b: 0, a: 0}
+  outlineColour2: {r: 0, g: 0, b: 0, a: 0}
+  pixelMapIndex: 18
 --- !u!1001 &167507028616960428
 PrefabInstance:
   m_ObjectHideFlags: 0

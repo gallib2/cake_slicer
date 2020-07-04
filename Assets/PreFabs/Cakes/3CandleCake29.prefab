@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4742262885414832166}
   - component: {fileID: 6288198228885997130}
   m_Layer: 8
-  m_Name: Cake29
+  m_Name: 3CandleCake29
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -102,6 +102,7 @@ MonoBehaviour:
   polygonCollider: {fileID: 0}
   outlineColour1: {r: 0.93725497, g: 0.6862745, b: 0, a: 0}
   outlineColour2: {r: 0.9843138, g: 0.89019614, b: 0.6901961, a: 0}
+  pixelMapIndex: 6
 --- !u!1001 &1690158518845544773
 PrefabInstance:
   m_ObjectHideFlags: 0
