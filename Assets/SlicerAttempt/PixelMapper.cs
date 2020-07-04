@@ -57,15 +57,14 @@ namespace PixelMapping
                 for (int y = 0; y  < height; y++)
                 {
                     pixelStates[x, y] =
-                        (texture.GetPixel(x, y).a > 0.5f ? PixelState.OPAQUE : PixelState.TRANSPARENT);
+                        (texture.GetPixel(x, y).a > 0.5f ? PixelState.OPAQUE_UNTOUCHED : PixelState.TRANSPARENT);
                 }
             }
         }
 
     }
-
-    public enum PixelState:byte
-    {
-        TRANSPARENT=0, OPAQUE = 1,
-    }
+}
+public enum PixelState : byte
+{
+    UNKNOWN = 0, TRANSPARENT = 1, OPAQUE_UNTOUCHED = 2, OPAQUE_TOUCHED = 3,
 }

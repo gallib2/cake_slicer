@@ -6,10 +6,6 @@ using UnityEngine.Profiling;
 
 public class SpriteSlicer : MonoBehaviour
 {
-    private enum PixelState : byte
-    {
-        UNKOWNN = 0, EMPTY = 1, TOUCHED = 2,
-    }
 
     [SerializeField] private float drawRate = 0.012f;
     [SerializeField] private LayerMask cakesLayerMask;
@@ -54,8 +50,8 @@ public class SpriteSlicer : MonoBehaviour
     [SerializeField] private bool skipHoleGeneration;
     [SerializeField] private bool skipInnerHoleGeneration;
     [SerializeField] private bool usePixelMaps;
+    [SerializeField] private bool UsePrealculatedHoleShape = true;
 
-    //private bool isLocked
     public static bool isSlicing;
     private int slicesCount;
     public int SlicesCount
@@ -73,10 +69,10 @@ public class SpriteSlicer : MonoBehaviour
             eraseBrushSize++;
         }
         halfOfEraseBrushSize = eraseBrushSize / 2;
-        clearColours = new Color[eraseBrushSize * eraseBrushSize];
-        for (int i = 0; i < clearColours.Length; i++)
+
+        if(holeShape == null)
         {
-            clearColours[i] = Color.clear;
+            InitialiseHoleShape();
         }
 
         CalculateSlicesRegularly();
@@ -177,7 +173,7 @@ public class SpriteSlicer : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                pixelsStates[x, y] = PixelState.UNKOWNN;
+                pixelsStates[x, y] = PixelState.UNKNOWN;
             }
         }
     }
@@ -454,6 +450,18 @@ public class SpriteSlicer : MonoBehaviour
 
     private bool MakeCircleHole(int x, int y)
     {
+        if (UsePrealculatedHoleShape)
+        {
+            return MakeCircleHoleFromShape(x, y);
+        }
+        else
+        {
+            return MakeCircleHoleByDistanceCalculations(x, y);
+        }
+    }
+
+    private bool MakeCircleHoleByDistanceCalculations(int x, int y)
+    {
         if (textureWidth != currentTexture.width || textureHeight != currentTexture.height)
         {
             Debug.LogError("texture dimentions are incorrect!");
@@ -522,16 +530,16 @@ public class SpriteSlicer : MonoBehaviour
                                 if (!skipInnerHoleGeneration)
                                 {
                                     PixelState pixelState = pixelsStates[ix, iy];
-                                    if (pixelState == PixelState.UNKOWNN)
+                                    if (pixelState == PixelState.UNKNOWN)
                                     {
                                         //   if (currentTexture.GetPixel(ix, iy).a < 0.5f)
                                         if (usePixelMaps)
                                         {
                                            // Profiler.BeginSample("PixelHunting");
 
-                                            if (pixelMap.pixelStates[ix, iy] == PixelMapping.PixelState.TRANSPARENT)
+                                            if (pixelMap.pixelStates[ix, iy] == PixelState.TRANSPARENT)
                                             {
-                                                pixelState = pixelsStates[ix, iy] = PixelState.EMPTY;
+                                                pixelState = pixelsStates[ix, iy] = PixelState.TRANSPARENT;
                                             }
                                           //  Profiler.EndSample();
 
@@ -542,18 +550,18 @@ public class SpriteSlicer : MonoBehaviour
 
                                             if (currentTexture.GetPixel(ix, iy).a < 0.5f)
                                             {
-                                                pixelState = pixelsStates[ix, iy] = PixelState.EMPTY;
+                                                pixelState = pixelsStates[ix, iy] = PixelState.TRANSPARENT;
                                             }
                                             //Profiler.EndSample();
 
                                         }
 
                                     }
-                                    if (pixelState != PixelState.EMPTY)
+                                    if (pixelState != PixelState.TRANSPARENT)
                                     {
                                         if (distance > radius)
                                         {
-                                            if (pixelState != PixelState.TOUCHED)
+                                            if (pixelState != PixelState.OPAQUE_TOUCHED)
                                             {
                                                 if (!randomiseOutlineShape || UnityEngine.Random.Range((float)radius, (float)expandedRadius) > distance)
                                                 {
@@ -564,7 +572,7 @@ public class SpriteSlicer : MonoBehaviour
                                                             Color colour = Color.Lerp
                                                                 (pixelMap.outlineColour1, pixelMap.outlineColour2, UnityEngine.Random.Range(0f, 1f));
                                                             currentTexture.SetPixel(ix, iy, colour);
-                                                            pixelsStates[ix, iy] = PixelState.TOUCHED;
+                                                            pixelsStates[ix, iy] = PixelState.OPAQUE_TOUCHED;
                                                         }
                                                     }
                                                     else// if (sliceableBeingSliced.outlineTexture != null)
@@ -585,7 +593,7 @@ public class SpriteSlicer : MonoBehaviour
                                                                 (goldenKnifeOutlineColour1, goldenKnifeOutlineColour2, outlineColoursBlackAndWhite[ix, iy]);
                                                         }
                                                         currentTexture.SetPixel(ix, iy, outlineColour);//TODO: make some logical system to avoid setting a pixel to the same value multiple times
-                                                        pixelsStates[ix, iy] = PixelState.TOUCHED;
+                                                        pixelsStates[ix, iy] = PixelState.OPAQUE_TOUCHED;
 
                                                     }
                                                 }
@@ -595,7 +603,7 @@ public class SpriteSlicer : MonoBehaviour
                                         else
                                         {
                                             currentTexture.SetPixel(ix, iy, Color.clear);
-                                            pixelsStates[ix, iy] = PixelState.EMPTY;
+                                            pixelsStates[ix, iy] = PixelState.TRANSPARENT;
 
                                         }
                                         changed = true;
@@ -610,6 +618,96 @@ public class SpriteSlicer : MonoBehaviour
                 }
             }
         }
+        if (changed)
+        {
+            changedSinceLastCheck = true;
+            return true;
+        }
+        return false;
+
+    }
+
+    private bool MakeCircleHoleFromShape(int x, int y)
+    {
+        if (textureWidth != currentTexture.width || textureHeight != currentTexture.height)
+        {
+            Debug.LogError("texture dimentions are incorrect!");
+            textureWidth = currentTexture.width;
+            textureHeight = currentTexture.height;
+        }
+
+        bool changed = false;
+
+        bool goldenKnifeIsActive = PowerUps.GoldenKnifeIsActive;
+        Vector2 centre = new Vector2(x, y);
+
+       // Debug.Log(holeShape.Length);
+        for (int i = 0; i < holeShape.Length; i++)
+        {
+            ref ShapePixel shapePixel = ref holeShape[i];
+            int textureX = shapePixel.x + x;
+            int textureY = shapePixel.y + y;
+
+            if (textureX > 0 && textureY > 0 &&
+                textureX < textureWidth && textureY < textureHeight)
+            {
+                PixelState texturePixelState = pixelsStates[textureX, textureY];
+                if (texturePixelState == PixelState.UNKNOWN)
+                {
+                    if (usePixelMaps)
+                    {
+                        // Profiler.BeginSample("PixelHunting");
+                        if (pixelMap.pixelStates[textureX, textureY] == PixelState.TRANSPARENT)
+                        {
+                            texturePixelState = pixelsStates[textureX, textureY] = PixelState.TRANSPARENT;
+                        }
+                        //  Profiler.EndSample();
+
+                    }
+                    else
+                    {
+                        //  Profiler.BeginSample("PixelHunting");
+
+                        if (currentTexture.GetPixel(textureX, textureY).a < 0.5f)
+                        {
+                            texturePixelState = pixelsStates[textureX, textureY] = PixelState.TRANSPARENT;
+                        }
+                        //Profiler.EndSample();
+
+                    }
+
+                }
+                if (texturePixelState != PixelState.TRANSPARENT && texturePixelState != shapePixel.state)
+                {
+                    if (shapePixel.state == PixelState.OPAQUE_TOUCHED)
+                    {
+                        //Outline Generation:
+                        Color outlineColour;
+                         if (!goldenKnifeIsActive)
+                         {
+
+                             outlineColour = Color.Lerp
+                                  (pixelMap.outlineColour1, pixelMap.outlineColour2, outlineColoursBlackAndWhite[textureX, textureY]);
+                         }
+                         else
+                         {
+                             outlineColour = Color.Lerp
+                                 (goldenKnifeOutlineColour1, goldenKnifeOutlineColour2, outlineColoursBlackAndWhite[textureX, textureY]);
+                         }
+                         currentTexture.SetPixel(textureX, textureY, outlineColour);//TODO: make some logical system to avoid setting a pixel to the same value multiple times
+                         pixelsStates[textureX, textureY] = PixelState.OPAQUE_TOUCHED;
+                    }
+                    else
+                    {
+                        currentTexture.SetPixel(textureX, textureY, Color.clear);
+                        pixelsStates[textureX, textureY] = PixelState.TRANSPARENT;
+
+                    }
+                    changed = true;
+                }
+            }   
+        }
+        
         if (changed)
         {
             changedSinceLastCheck = true;
@@ -686,6 +784,52 @@ public class SpriteSlicer : MonoBehaviour
         return slicesSizesInDoubles;
     }
 
+
+    private struct ShapePixel
+    {
+        public PixelState state;
+        public int x;
+        public int y;
+        public ShapePixel(PixelState state, int x, int y)
+        {                                  
+            this.state = state;
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    private static ShapePixel[] holeShape;
+
+    private void InitialiseHoleShape()
+    {
+        int radius = halfOfEraseBrushSize;
+        int expandedRadius = radius + outlineThickness;
+        Vector2 centre = new Vector2(0, 0);
+        List<ShapePixel> pixelStates = new List<ShapePixel>();
+
+        for (int ix = - expandedRadius; ix < expandedRadius; ix++)
+        {
+            for (int iy = - expandedRadius; iy < expandedRadius; iy++)
+            {
+                float distance = Vector2.Distance(new Vector2(ix, iy), centre);//TODO: precalculate
+                if (distance <= expandedRadius)// Vector2.Distance(new Vector2(ix, iy), centre) <= radius)
+                {
+                   // PixelState pixelState = pixelsStates[ix, iy];
+                    if (distance > radius)
+                    {
+                        pixelStates.Add(new ShapePixel( PixelState.OPAQUE_TOUCHED,ix,iy));
+                    }
+                    else
+                    {
+                        pixelStates.Add(new ShapePixel(PixelState.TRANSPARENT, ix, iy));
+                    }
+                }
+            }
+        }
+
+        holeShape = pixelStates.ToArray();
+    }
+
     #region Flood Fill:
     Texture2D floodFillTexture;
     
@@ -696,7 +840,7 @@ public class SpriteSlicer : MonoBehaviour
          Debug.Log(floodFillTexture.GetPixel(32, 32));*/
         //return;
         // byte[,] signatures = new byte[floodFillTexture.width, floodFillTexture.height];
-        Color targetColour = Color.black; ;//= new Color(UnityEngine.Random.Range(0, 255), UnityEngine.Random.Range(0, 255), UnityEngine.Random.Range(0, 255));
+        Color targetColour = Color.black; //= new Color(UnityEngine.Random.Range(0, 255), UnityEngine.Random.Range(0, 255), UnityEngine.Random.Range(0, 255));
         int random = UnityEngine.Random.Range(0, 5);
         switch (random)
         {
