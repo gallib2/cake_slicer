@@ -13,6 +13,8 @@ public class SpriteSliceable : MonoBehaviour
     public Color outlineColour1;
     public Color outlineColour2;
 
+    public int pixelMapIndex;
+
     private void Start()
     {
         Initialise();
@@ -29,9 +31,6 @@ public class SpriteSliceable : MonoBehaviour
             boxCollider = gameObject.AddComponent<BoxCollider2D>();
 
             GetNewPolygonCollider();
-            outlineColour1.a = 1;
-            outlineColour2.a = 1;
-
         }
         initialised = true;
     }
