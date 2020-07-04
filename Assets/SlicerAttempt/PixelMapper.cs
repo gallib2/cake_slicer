@@ -7,32 +7,44 @@ namespace PixelMapping
 {
     public class PixelMapper : MonoBehaviour
     {
-        public static PixelMapper instance;
+       // public static PixelMapper instance;
+        private static bool initialised = false;
         public PixelMap[] pixelMaps;
-
+        public static PixelMap[] staticPixelMaps;
         private void Awake()
         {
-            if (instance == null)
+            if (!initialised)
             {
-                instance = this;
-            }
-            else
-            {
-                Destroy(this);
-            }
-          
-            for (int i = 1; i < pixelMaps.Length; i++)
-            {
-                if(pixelMaps[i] != null)
+                List<string> textureNames = new List<string>();
+                for (int i = 1; i < pixelMaps.Length; i++)
                 {
-                    if (pixelMaps[i].pixelStates == null)
+                    if (pixelMaps[i] != null)
                     {
-                        pixelMaps[i].Initialise();
-                        Debug.Log("Initialising pixel map!");
-                    }
-                }
+                        string textureName = pixelMaps[i].GetTexturwName();
+                        if (textureName != null)
+                        {
+                            for (int j = 0; j < textureNames.Count; j++)
+                            {
+                                if(string.Equals(textureName,textureNames[j]))
+                                {
+                                    Debug.LogWarning("Duplicate found.");
+                                }
+                            }
+                            textureNames.Add(textureName);
 
+                        }
+                        if (pixelMaps[i].pixelStates == null)
+                        {
+                            pixelMaps[i].Initialise();
+                            Debug.Log("Initialising pixel map!");
+                        }
+                    }
+
+                }
+                staticPixelMaps = pixelMaps;
+                initialised = true;
             }
+            
         }
     }
 
@@ -46,6 +58,16 @@ namespace PixelMapping
 
         public void Initialise()
         {
+            if (texture == null)
+            {
+                Debug.LogWarning("PixelMap texture is null.");
+                return;
+            }
+            else if (pixelStates != null)
+            {
+                Debug.LogError("pixelStates had been initialised somehow !");
+                return;
+            }
             outlineColour1.a = 1;
             outlineColour2.a = 1;
 
@@ -62,6 +84,10 @@ namespace PixelMapping
             }
         }
 
+        public string GetTexturwName()
+        {      
+            return ( texture == null ? null : texture.name);
+        }
     }
 }
 public enum PixelState : byte

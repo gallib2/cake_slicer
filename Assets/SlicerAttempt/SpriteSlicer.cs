@@ -128,7 +128,7 @@ public class SpriteSlicer : MonoBehaviour
                 (dynamicTexture, currentSprite.rect, new Vector2(0.5f, 0.5f), currentSprite.pixelsPerUnit);//, 1, SpriteMeshType.FullRect, currentSprite.border);
             sliceableBeingSliced.spriteRenderer.sprite = newSprite;
 
-            pixelMap = PixelMapping.PixelMapper.instance.pixelMaps[sliceableBeingSliced.pixelMapIndex];
+            pixelMap = PixelMapping.PixelMapper.staticPixelMaps[sliceableBeingSliced.pixelMapIndex];
             GenerateOutlineColoursMap(pixelMap.outlineColour1, pixelMap.outlineColour2);
             ResetPixelsStates();
         }
