@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc59fab1ece227847ab227fcf9a752d0, type: 3}
   m_Name: Level_2
   m_EditorClassIdentifier: Assembly-CSharp::Level
-  displayName: LVL 2
   cakes:
   - cakePrefab: {fileID: 2935677715139052978, guid: 037ae15f098998a45bdce07f2e7aa4ce,
       type: 3}
@@ -36,7 +35,7 @@ MonoBehaviour:
     fractions: []
   - cakePrefab: {fileID: 2935677715139052978, guid: 836fcb5481c68ae4bbd241ec078b6093,
       type: 3}
-    numberOfSlices: 2
+    numberOfSlices: 8
     fractions: []
   starRequirements:
   - 0.20000000298023224
