@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2935677715139052983}
   - component: {fileID: 4742262885414832166}
   - component: {fileID: 1776561131156464383}
+  - component: {fileID: -6073887737985946214}
   m_Layer: 8
   m_Name: Cake26
   m_TagString: Untagged
@@ -108,7 +109,25 @@ MonoBehaviour:
   polygonCollider: {fileID: 0}
   outlineColour1: {r: 0.5568628, g: 0.2901961, b: 0.25490198, a: 0}
   outlineColour2: {r: 0.7924528, g: 0.6256395, b: 0.3700605, a: 0}
-  pixelMapIndex: 11
+  pixelMapIndex: 15
+--- !u!114 &-6073887737985946214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2935677715139052978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86296c66a6e3b5c489e3daa3f975bbbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 0}
+  boxCollider: {fileID: 0}
+  polygonCollider: {fileID: 0}
+  outlineColour1: {r: 0, g: 0, b: 0, a: 0}
+  outlineColour2: {r: 0, g: 0, b: 0, a: 0}
+  pixelMapIndex: 15
 --- !u!1001 &403778261615533149
 PrefabInstance:
   m_ObjectHideFlags: 0

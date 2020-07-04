@@ -3632,9 +3632,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pixelMaps:
-  - texture: {fileID: 0}
-    outlineColour1: {r: 0, g: 0, b: 0, a: 0}
-    outlineColour2: {r: 0, g: 0, b: 0, a: 0}
+  - texture: {fileID: 2800000, guid: 4784276c50fc554428e1a17b9040df6a, type: 3}
+    outlineColour1: {r: 0.31764707, g: 0.18039216, b: 0.14117648, a: 0}
+    outlineColour2: {r: 0.227451, g: 0.10196079, b: 0.003921569, a: 0}
   - texture: {fileID: 2800000, guid: 229f1e8b450537d41b6b9932cbb3dec2, type: 3}
     outlineColour1: {r: 0.5568628, g: 0.2627451, b: 0.003921569, a: 0}
     outlineColour2: {r: 0.22745098, g: 0.101960786, b: 0.003921569, a: 0}
@@ -3674,12 +3674,72 @@ MonoBehaviour:
   - texture: {fileID: 2800000, guid: 6fa0666259ea0d94d9d39a6d18327e3c, type: 3}
     outlineColour1: {r: 0.8679245, g: 0.19241722, b: 0.5280733, a: 0}
     outlineColour2: {r: 1, g: 0.5801887, b: 0.7874373, a: 0}
-  - texture: {fileID: 2800000, guid: e765c74819aa0264492fe9290d167da2, type: 3}
+  - texture: {fileID: 2800000, guid: 95e741f3d49d9b147a04e0ca9b1cc06b, type: 3}
+    outlineColour1: {r: 0.122641504, g: 0.12009316, b: 0.11165005, a: 1}
+    outlineColour2: {r: 0.33962262, g: 0.20805089, b: 0.033641864, a: 0}
+  - texture: {fileID: 2800000, guid: 7faa3ad81f058164aadc5e4b48d18ec9, type: 3}
+    outlineColour1: {r: 0.8962264, g: 0.56078434, b: 0.8627451, a: 0}
+    outlineColour2: {r: 0.5568628, g: 0.2901961, b: 0.25490198, a: 0}
+  - texture: {fileID: 2800000, guid: 12ed517a762c56e4aa997b92993d1c0a, type: 3}
+    outlineColour1: {r: 0.4339623, g: 0.25719148, b: 0.04298683, a: 0}
+    outlineColour2: {r: 1, g: 0.83137256, b: 0.60784316, a: 0}
+  - texture: {fileID: 2800000, guid: 93864616a1b7721478bd0fbd6df85410, type: 3}
+    outlineColour1: {r: 0.2924528, g: 0.16833502, b: 0.017933436, a: 0}
+    outlineColour2: {r: 0.41509432, g: 0.26270378, b: 0.06069775, a: 0}
+  - texture: {fileID: 2800000, guid: c4382f39ef1a76e468fb317e10f53570, type: 3}
+    outlineColour1: {r: 0.8901961, g: 0.5568628, b: 0.15294118, a: 0}
+    outlineColour2: {r: 0.8980393, g: 0.23529412, b: 0.86274517, a: 0}
+  - texture: {fileID: 2800000, guid: 70f46cffd44ce2641a3fb95bd75802ec, type: 3}
+    outlineColour1: {r: 0.6726648, g: 0.8301887, b: 0.5991456, a: 0}
+    outlineColour2: {r: 0.990566, g: 0.94501734, b: 0.6401299, a: 0}
+  - texture: {fileID: 2800000, guid: 3cde76dbed847ec4986a256821bb5df7, type: 3}
+    outlineColour1: {r: 0.9433962, g: 0.92126465, b: 0.89444643, a: 0}
+    outlineColour2: {r: 0.88807327, g: 0.6045301, b: 0.8962264, a: 0}
+  - texture: {fileID: 2800000, guid: d1851dfd77725e144806954eed47efc1, type: 3}
+    outlineColour1: {r: 0.9923228, g: 1, b: 0.6745283, a: 0}
+    outlineColour2: {r: 1, g: 0.60784316, b: 0.9803922, a: 0}
+  - texture: {fileID: 2800000, guid: dd5bd7fec2881654598a5612eca5ae17, type: 3}
+    outlineColour1: {r: 1, g: 1, b: 1, a: 0}
+    outlineColour2: {r: 1, g: 0.60784316, b: 0.9785956, a: 0}
+  - texture: {fileID: 2800000, guid: c23137ce68df6f94cb8b4b2e053e39b7, type: 3}
     outlineColour1: {r: 0.8901961, g: 0.5568628, b: 0.15294118, a: 0}
     outlineColour2: {r: 1, g: 0.83137256, b: 0.60784316, a: 0}
-  - texture: {fileID: 2800000, guid: e765c74819aa0264492fe9290d167da2, type: 3}
+  - texture: {fileID: 2800000, guid: b14c456cfd5daea42a641d50e3745ce6, type: 3}
     outlineColour1: {r: 0.8901961, g: 0.5568628, b: 0.15294118, a: 0}
-    outlineColour2: {r: 1, g: 0.83137256, b: 0.60784316, a: 0}
+    outlineColour2: {r: 0.8867924, g: 0.28862584, b: 0.28862584, a: 0}
+  - texture: {fileID: 2800000, guid: 932513139fc75bc4884fcaf52e31b80a, type: 3}
+    outlineColour1: {r: 0.4433962, g: 0.28925997, b: 0.102483094, a: 0}
+    outlineColour2: {r: 0.2924528, g: 0.17681313, b: 0.034487356, a: 0}
+  - texture: {fileID: 2800000, guid: 25a71562d4408594d876ad23b0ab010f, type: 3}
+    outlineColour1: {r: 0.8901961, g: 0.5568628, b: 0.15294118, a: 0}
+    outlineColour2: {r: 0.5660378, g: 0.3582325, b: 0.08276967, a: 0}
+  - texture: {fileID: 2800000, guid: 9dcf953a5916fae4ca3f8d865bd0635c, type: 3}
+    outlineColour1: {r: 0.4431373, g: 0.2901961, b: 0.10196079, a: 0}
+    outlineColour2: {r: 0.8396226, g: 0.6407125, b: 0.099012084, a: 0}
+  - texture: {fileID: 2800000, guid: dc163eaa382883a4db5dd685fcacc940, type: 3}
+    outlineColour1: {r: 0.4431373, g: 0.2901961, b: 0.10196079, a: 0}
+    outlineColour2: {r: 0.29411766, g: 0.1764706, b: 0.03529412, a: 0}
+  - texture: {fileID: 2800000, guid: ec1ee78d64ddfa7468443c1625070791, type: 3}
+    outlineColour1: {r: 1, g: 0.96763605, b: 0.5424528, a: 0}
+    outlineColour2: {r: 0.5647059, g: 0.35686275, b: 0.08235294, a: 0}
+  - texture: {fileID: 2800000, guid: 76e40176a085ff24db7173e570afd18a, type: 3}
+    outlineColour1: {r: 1, g: 0.9686275, b: 0.5411765, a: 0}
+    outlineColour2: {r: 0.9339623, g: 0.5724098, b: 0.2775454, a: 0}
+  - texture: {fileID: 2800000, guid: 11cca443d1da1b04a9373ada8dfd013b, type: 3}
+    outlineColour1: {r: 0.29411766, g: 0.1764706, b: 0.03529412, a: 0}
+    outlineColour2: {r: 0.8584906, g: 0.33268127, b: 0.1822268, a: 0}
+  - texture: {fileID: 2800000, guid: c6a802157b8eaf84884b4853e17f84c3, type: 3}
+    outlineColour1: {r: 0.9333334, g: 0.57254905, b: 0.2784314, a: 0}
+    outlineColour2: {r: 0.7030298, g: 0.4253738, b: 0.745283, a: 0}
+  - texture: {fileID: 2800000, guid: ffe8186ccaff9c54c9c332234d1844e5, type: 3}
+    outlineColour1: {r: 1, g: 0.9686275, b: 0.5411765, a: 0}
+    outlineColour2: {r: 1, g: 0.9686275, b: 0.3529412, a: 0}
+  - texture: {fileID: 2800000, guid: 76e40176a085ff24db7173e570afd18a, type: 3}
+    outlineColour1: {r: 1, g: 0.9686275, b: 0.5411765, a: 0}
+    outlineColour2: {r: 1, g: 0.9686275, b: 0.3529412, a: 0}
+  - texture: {fileID: 2800000, guid: 76e40176a085ff24db7173e570afd18a, type: 3}
+    outlineColour1: {r: 1, g: 0.9686275, b: 0.5411765, a: 0}
+    outlineColour2: {r: 0.9339623, g: 0.5724098, b: 0.2775454, a: 0}
 --- !u!4 &580360810
 Transform:
   m_ObjectHideFlags: 0

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7180909399309840821}
   - component: {fileID: 5293569048203646896}
+  - component: {fileID: 4645127220093609915}
   m_Layer: 0
   m_Name: Cake_12
   m_TagString: Untagged
@@ -81,3 +82,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4645127220093609915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3211752005229506160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86296c66a6e3b5c489e3daa3f975bbbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 0}
+  boxCollider: {fileID: 0}
+  polygonCollider: {fileID: 0}
+  outlineColour1: {r: 0, g: 0, b: 0, a: 0}
+  outlineColour2: {r: 0, g: 0, b: 0, a: 0}
+  pixelMapIndex: 22
