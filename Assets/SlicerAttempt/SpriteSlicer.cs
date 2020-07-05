@@ -128,8 +128,16 @@ public class SpriteSlicer : MonoBehaviour
                 (dynamicTexture, currentSprite.rect, new Vector2(0.5f, 0.5f), currentSprite.pixelsPerUnit);//, 1, SpriteMeshType.FullRect, currentSprite.border);
             sliceableBeingSliced.spriteRenderer.sprite = newSprite;
 
-            pixelMap = PixelMapping.PixelMapper.staticPixelMaps[sliceableBeingSliced.pixelMapIndex];
-            GenerateOutlineColoursMap(pixelMap.outlineColour1, pixelMap.outlineColour2);
+            PixelMapping.PixelMap map = PixelMapping.PixelMapper.GetPixelMap(sliceableBeingSliced.pixelMapIndex);
+            if (map==null)
+            {
+                pixelMap = PixelMapping.PixelMap.GetEmergencyPixelMap(dynamicTexture);
+            }
+            else
+            {
+                pixelMap = map;
+            }
+            GenerateOutlineColoursMap(pixelMap.outlineColour1, pixelMap.outlineColour2);//TODO:Move and change name
             ResetPixelsStates();
         }
     }
@@ -178,6 +186,7 @@ public class SpriteSlicer : MonoBehaviour
         }
     }
 
+    //Bookeeping:
     private bool overlappedColliderThisFrame;
     private bool overlappedColliderPreviousFrame;
     private float timeOnLastDraw;
@@ -298,11 +307,6 @@ public class SpriteSlicer : MonoBehaviour
                         {
                             textureChanged = true;
                         }
-                        /* currentTexture.SetPixel(InterpolatedPoint.x, InterpolatedPoint.y, Color.clear);
-  currentTexture.SetPixel(InterpolatedPoint.x + 1, InterpolatedPoint.y, Color.clear);
-  currentTexture.SetPixel(InterpolatedPoint.x - 1, InterpolatedPoint.y, Color.clear);
-  currentTexture.SetPixel(InterpolatedPoint.x, InterpolatedPoint.y + 1, Color.clear);
-  currentTexture.SetPixel(InterpolatedPoint.x, InterpolatedPoint.y - 1, Color.clear);*/
                     }
                     //Vector2Int InterpolatedPoint = new Vector2Int((newHitPixel.x + lastHitPixel.x) / 2, (newHitPixel.y + lastHitPixel.y) / 2);
                 }
@@ -324,7 +328,6 @@ public class SpriteSlicer : MonoBehaviour
 
             if (overlappedColliderPreviousFrame && !overlappedColliderThisFrame)
             {
-                Debug.Log("CalculateSlices");
                 currentTexture.Apply();
                 if (shouldCheckWhenEnteringAndExiting)
                 {
@@ -341,113 +344,6 @@ public class SpriteSlicer : MonoBehaviour
         }*/
     }
 
-    private bool MakeSquraeHole(int x, int y)
-    {
-        if(textureWidth!= currentTexture.width|| textureHeight != currentTexture.height)
-        {
-            Debug.LogError("texture dimentions are incorrect!");
-            textureWidth = currentTexture.width;
-            textureHeight = currentTexture.height;
-        }
-        x = x - halfOfEraseBrushSize;
-        y = y - halfOfEraseBrushSize;
-        int holeWidth = eraseBrushSize;
-        int holeHeight = eraseBrushSize;
-        bool solidPixelFound = false;
-
-        // Color[] coloursInTexture = currentTexture.GetPixels(x, y, eraseBrushSize, eraseBrushSize);//TODO: Optimise
-        /*for (int i = 0; i < coloursInTexture.Length; i++)
-        {
-            if( coloursInTexture[i]!= Color.clear)
-            {
-                emptyPixelFound = true;
-                 break;
-            }
-        }*/
-        if (x < 0)
-        {
-            //Debug.Log("x:" + x);
-            holeWidth += x;
-            // Debug.Log("x:"+x);
-            if (holeWidth <= 0)
-            {
-                return false;
-            }
-            else
-            {
-                x = 0;
-            }
-        }
-        else
-        {
-            int textureWidthMinusHoleX = textureWidth - (x + holeWidth);
-            if (textureWidthMinusHoleX < 0)
-            {
-                holeWidth += textureWidthMinusHoleX;
-                if (holeWidth <= 0)
-                {
-                    return false;
-                }
-            }
-        }
-
-        if (y < 0)
-        {
-            //Debug.Log("x:" + x);
-            holeHeight += y;
-            // Debug.Log("x:"+x);
-            if (holeHeight <= 0)
-            {
-                return false;
-            }
-            else
-            {
-                y = 0;
-            }
-        }
-        else
-        {
-            int textureHeightMinusHoleY = textureHeight - (y + holeHeight);
-            if (textureHeightMinusHoleY < 0)
-            {
-                holeHeight += textureHeightMinusHoleY;
-                if (holeHeight <= 0)
-                {
-                    return false;
-                }
-            }
-        }
-
-       /* for (int ix = x; ix < holeWidth+x; ix++)//TODO: should this be before or after bounds checks?
-        {
-            for (int iy = y; iy < holeHeight+y; iy++)
-            {
-                if (currentTexture.GetPixel(ix, iy) != Color.clear)
-                {
-                    Debug.Log("emptyPixelFound:"+ currentTexture.GetPixel(ix, iy));
-                    Debug.Log("x:" + ix+"y:" + iy);
-                    Debug.Log("width:" + textureWidth + "height:" + textureHeight);
-
-                    currentTexture.SetPixel(ix, iy, Color.magenta);
-                    solidPixelFound = true;
-                    return true;
-                    break;
-                }
-            }
-        }*/
-       // if (solidPixelFound)
-        {
-            changedSinceLastCheck = true;
-            //x = Mathf.Clamp()
-            currentTexture.SetPixels
-                (x, y, holeWidth, holeHeight, clearColours);
-
-            return true;
-        }
-       // return solidPixelFound;
-
-    }
-
     private bool MakeCircleHole(int x, int y)
     {
         if (UsePrealculatedHoleShape)
@@ -462,6 +358,8 @@ public class SpriteSlicer : MonoBehaviour
 
     private bool MakeCircleHoleByDistanceCalculations(int x, int y)
     {
+        //TODO: this function might be obselete and sholud be deleted
+
         if (textureWidth != currentTexture.width || textureHeight != currentTexture.height)
         {
             Debug.LogError("texture dimentions are incorrect!");
@@ -639,7 +537,6 @@ public class SpriteSlicer : MonoBehaviour
         bool changed = false;
 
         bool goldenKnifeIsActive = PowerUps.GoldenKnifeIsActive;
-        Vector2 centre = new Vector2(x, y);
 
        // Debug.Log(holeShape.Length);
         for (int i = 0; i < holeShape.Length; i++)
@@ -648,7 +545,7 @@ public class SpriteSlicer : MonoBehaviour
             int textureX = shapePixel.x + x;
             int textureY = shapePixel.y + y;
 
-            if (textureX > 0 && textureY > 0 &&
+            if (textureX >= 0 && textureY >= 0 &&
                 textureX < textureWidth && textureY < textureHeight)
             {
                 PixelState texturePixelState = pixelsStates[textureX, textureY];
@@ -668,7 +565,7 @@ public class SpriteSlicer : MonoBehaviour
                     {
                         //  Profiler.BeginSample("PixelHunting");
 
-                        if (currentTexture.GetPixel(textureX, textureY).a < 0.5f)
+                        if (currentTexture.GetPixel(textureX, textureY).a < 0.15f)
                         {
                             texturePixelState = pixelsStates[textureX, textureY] = PixelState.TRANSPARENT;
                         }
@@ -694,14 +591,13 @@ public class SpriteSlicer : MonoBehaviour
                              outlineColour = Color.Lerp
                                  (goldenKnifeOutlineColour1, goldenKnifeOutlineColour2, outlineColoursBlackAndWhite[textureX, textureY]);
                          }
-                         currentTexture.SetPixel(textureX, textureY, outlineColour);//TODO: make some logical system to avoid setting a pixel to the same value multiple times
+                         currentTexture.SetPixel(textureX, textureY, outlineColour);
                          pixelsStates[textureX, textureY] = PixelState.OPAQUE_TOUCHED;
                     }
                     else
                     {
                         currentTexture.SetPixel(textureX, textureY, Color.clear);
                         pixelsStates[textureX, textureY] = PixelState.TRANSPARENT;
-
                     }
                     changed = true;
                 }
@@ -719,8 +615,11 @@ public class SpriteSlicer : MonoBehaviour
 
     private void CalculateSlices()
     {
+
         if (changedSinceLastCheck)
         {
+            Debug.Log("CalculateSlices");
+
             List<Polygon2D> polygons = Polygon2DList.CreateFromPolygonCollider(sliceableBeingSliced.GetNewPolygonCollider());
             if (polygons.Count > 1)//Optimisation..
             {
@@ -811,10 +710,9 @@ public class SpriteSlicer : MonoBehaviour
         {
             for (int iy = - expandedRadius; iy < expandedRadius; iy++)
             {
-                float distance = Vector2.Distance(new Vector2(ix, iy), centre);//TODO: precalculate
-                if (distance <= expandedRadius)// Vector2.Distance(new Vector2(ix, iy), centre) <= radius)
+                float distance = Vector2.Distance(new Vector2(ix, iy), centre);
+                if (distance <= expandedRadius)
                 {
-                   // PixelState pixelState = pixelsStates[ix, iy];
                     if (distance > radius)
                     {
                         pixelStates.Add(new ShapePixel( PixelState.OPAQUE_TOUCHED,ix,iy));

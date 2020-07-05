@@ -30,7 +30,10 @@ public class SlicesManager : MonoBehaviour
     public ParticleSystem particlesEndLevel;
     [SerializeField] private CrumbsEffect crumbsEffect; 
 
-    [SerializeField] private GameObject sliceableObjects;
+    [SerializeField] private GameObject sliceableObjects;//TODO: can be removed by adding in animation
+    private GameObject cakeParent;
+    private List<GameObject> leftovers = new List<GameObject>();
+
     //[SerializeField] private GameObject obstacleObjects;
 
     //public int slicesCount = 0;
@@ -319,48 +322,45 @@ public class SlicesManager : MonoBehaviour
 
     private void GameOver()
     {
-        PrepareLeftOversForDestruction();
+        PrepareLeftoversForDestruction();
         OnGameOver?.Invoke();
     }
 
-    List<GameObject> leftOvers = new List<GameObject>();
-
-    void PrepareLeftOversForDestruction()
+    private void PrepareLeftoversForDestruction()
     {
         //This function is baaaaddd
 
         RemoveAllObstacles();
-        foreach (Transform item in sliceableObjects.transform)
+        foreach (Transform t in sliceableObjects.transform)
         {
-            item.SetParent(null);
-            leftOvers.Add(item.gameObject);
+            t.SetParent(null);
+            leftovers.Add(t.gameObject);
         }
 
-       /* foreach (Transform item in obstacleObjects.transform)
+        foreach (GameObject go in leftovers)
         {
-            item.SetParent(null);
-            leftOvers.Add(item.gameObject);
-        }*/
-
-        foreach (GameObject gameObject in leftOvers)
-        {
-            if (gameObject.GetComponent<Animator>())
+            Animator animator = go.GetComponentInChildren<Animator>();
+            if (animator!=null)
             {
-                gameObject.GetComponent<Animator>().SetTrigger("Out");
+                animator.SetTrigger("Out");
             }
-            gameObject.layer = LayerMask.NameToLayer("Untouchables");// untouchablesLayerMask.value;
+            go.layer = LayerMask.NameToLayer("Untouchables");// untouchablesLayerMask.value;
+            for (int i = 0; i < go.transform.childCount; i++)
+            {
+                go.transform.GetChild(i).gameObject.layer = LayerMask.NameToLayer("Untouchables");
+            }
         }
 
-        Invoke("DestroyAllLeftOvers", 1.2f);//TODO: connect the time to something less arbitrary
+        Invoke("DestroyAllLeftovers", 1.2f);//TODO: connect the time to something less arbitrary
     }
 
-    void DestroyAllLeftOvers()
+    void DestroyAllLeftovers()
     {
-        foreach (GameObject gameObject in leftOvers)
+        foreach (GameObject go in leftovers)
         {
-            Destroy(gameObject);
+            Destroy(go);
         }
-        leftOvers.Clear();
+        leftovers.Clear();
     }
 
    /* List<double> SlicesSizesInDoubles()
@@ -396,7 +396,7 @@ public class SlicesManager : MonoBehaviour
         Debug.Log("--------------------- in NextRound!!!");
         //spriteSlicer.Reset();
         timer.ToStopTimer = false;
-        PrepareLeftOversForDestruction();
+        PrepareLeftoversForDestruction();
         currentCakeIndex++;
         if (currentCakeIndex < currentLevel.Cakes.Length)
         {
@@ -425,36 +425,37 @@ public class SlicesManager : MonoBehaviour
 
             Cake newCake = currentLevel.Cakes[currentCakeIndex];
             float cameraSeesWidth = Camera.main.orthographicSize * 2.0f * Screen.width / Screen.height;
-            GameObject cakeGameObject = Instantiate(newCake.cakePrefab, sliceableObjects.transform, true); // create new cake
+            cakeParent = new GameObject();
+            cakeParent.transform.parent = sliceableObjects.transform;
+            GameObject cakeGameObject = Instantiate(newCake.cakePrefab, cakeParent.transform, true); // create new cake
             float sizeModifier = cameraSeesWidth / relativeCakeToScreenSize;
-            Debug.Log("sizeModifier:" + sizeModifier);
-            cakeGameObject.transform.localScale = new Vector3(sizeModifier, sizeModifier, 1);
+            //Debug.Log("sizeModifier:" + sizeModifier);
+            cakeParent.transform.localScale = new Vector3(sizeModifier, sizeModifier, 1);
             float dishScale = dishOriginalScale * sizeModifier;
             topDish.transform.localScale = new Vector3(dishScale, dishScale, 1);
             bottomDish.transform.localScale = new Vector3(dishScale, dishScale, 1);
+            cakeParent.layer = LayerMask.NameToLayer("Cakes");
+            cakeGameObject.layer = LayerMask.NameToLayer("Cakes");
 
             obstacles = cakeGameObject.GetComponentsInChildren<Obstacle>();
             candleObstacles = obstacles.Where(dec => dec.Type == ObstacleType.CANDLE).ToList();
-            allowToSlice = candleObstacles.Count == 0;
+            allowToSlice = (candleObstacles.Count == 0);
             SpriteSliceable spriteSliceable = cakeGameObject.GetComponent<SpriteSliceable>();
             if (spriteSliceable == null)
             {
                 Debug.LogError("No SpriteSliceable found on cake!");
                 spriteSliceable = cakeGameObject.AddComponent<SpriteSliceable>();
-                spriteSliceable.pixelMapIndex = 1;
+                spriteSliceable.pixelMapIndex = 0;
                 /*spriteSliceable.outlineColour1 = defaultOutlineColour1;
                 spriteSliceable.outlineColour2 = defaultOutlineColour2;*/
             }
-            Animator animator = cakeGameObject.GetComponent<Animator>();
-            if (animator == null)
+           // Animator animator = cakeParent.GetComponent<Animator>();
+            //if (animator == null)
             {
-                animator = cakeGameObject.AddComponent<Animator>();
+                Animator animator = cakeGameObject.AddComponent<Animator>();
                 animator.runtimeAnimatorController = cakeAnimatorController;
             }
-            else
-            {
-                Debug.LogWarning("Cake arrived with an animator, watch out for size defects.");
-            }
+
             //TODO: insert these into some event
             spriteSlicer.SetNewSliceable(spriteSliceable);//TODO: make this a public field on the cake object
             crumbsEffect.ChangeStandardColours(spriteSliceable);

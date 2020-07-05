@@ -10,7 +10,20 @@ namespace PixelMapping
        // public static PixelMapper instance;
         private static bool initialised = false;
         public PixelMap[] pixelMaps;
-        public static PixelMap[] staticPixelMaps;
+        private static PixelMap[] staticPixelMaps;
+
+        public static PixelMap GetPixelMap(int index)
+        {
+            if(staticPixelMaps==null||index < 1 || index>= staticPixelMaps.Length )
+            {
+                return null;
+            }
+            else
+            {
+                return staticPixelMaps[index];
+            }
+        }
+
         private void Awake()
         {
             if (!initialised)
@@ -20,7 +33,7 @@ namespace PixelMapping
                 {
                     if (pixelMaps[i] != null)
                     {
-                        string textureName = pixelMaps[i].GetTexturwName();
+                        string textureName = pixelMaps[i].GetTextureName();
                         if (textureName != null)
                         {
                             for (int j = 0; j < textureNames.Count; j++)
@@ -56,6 +69,8 @@ namespace PixelMapping
         public Color outlineColour1;
         public Color outlineColour2;
 
+        private const float ALPHA_THRESHOLD = 0.15f;
+
         public void Initialise()
         {
             if (texture == null)
@@ -79,14 +94,29 @@ namespace PixelMapping
                 for (int y = 0; y  < height; y++)
                 {
                     pixelStates[x, y] =
-                        (texture.GetPixel(x, y).a > 0.5f ? PixelState.OPAQUE_UNTOUCHED : PixelState.TRANSPARENT);
+                        (texture.GetPixel(x, y).a > ALPHA_THRESHOLD ? PixelState.OPAQUE_UNTOUCHED : PixelState.TRANSPARENT);
                 }
             }
         }
 
-        public string GetTexturwName()
+        public string GetTextureName()
         {      
             return ( texture == null ? null : texture.name);
+        }
+
+
+        public static PixelMap GetEmergencyPixelMap(Texture2D texture)
+        {
+            Debug.LogWarning("Generating emergency pixel map.");
+            PixelMap pixelMap = new PixelMap(texture);
+            pixelMap.Initialise();
+            return pixelMap;
+        }
+        private PixelMap (Texture2D texture)
+        {
+            this.texture = texture;
+            outlineColour1 = Color.black;
+            outlineColour2 = Color.white;
         }
     }
 }
