@@ -23848,11 +23848,16 @@ MonoBehaviour:
   SliceChecksSpeed: 0.85
   shouldCheckSlicesRegularly: 0
   shouldCheckWhenEnteringAndExiting: 0
-  negligibleSliceSize: 0.2
-  skipHoleGeneration: 0
-  skipInnerHoleGeneration: 0
+  negligiblePolygonSliceSize: 0.01
   usePixelMaps: 1
   UsePrealculatedHoleShape: 1
+  useInHouseLerp: 0
+  useFloodFill: 1
+  floodFillScale: 6
+  DebugOutput: 1
+  floodFillOutputTexture: {fileID: 0}
+  negligibleFloodFillSliceSize: 16
+  floodFillSlicesSizes: []
 --- !u!1 &1724091152938058
 GameObject:
   m_ObjectHideFlags: 0

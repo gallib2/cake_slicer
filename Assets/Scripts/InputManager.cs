@@ -24,7 +24,7 @@ public class InputManager : MonoBehaviour
         else
         {
             return isTouchDevice ?
-                ((Input.touchCount > 0) /*&& (Input.GetTouch(0).phase != TouchPhase.Ended)*/) //TODO: does removing this improve accuracy??
+                ((Input.touchCount > 0) && (Input.GetTouch(0).phase != TouchPhase.Ended)) 
                 : Input.GetMouseButton(0);
         }
     }

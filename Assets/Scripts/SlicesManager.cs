@@ -36,7 +36,6 @@ public class SlicesManager : MonoBehaviour
 
     //[SerializeField] private GameObject obstacleObjects;
 
-    //public int slicesCount = 0;
     [SerializeField] private TMPro.TextMeshProUGUI cakesLeftText;
     [SerializeField] private SoundManager soundManager;
 
