@@ -24,7 +24,8 @@ public class InputManager : MonoBehaviour
         else
         {
             return isTouchDevice ?
-                ((Input.touchCount > 0) && (Input.GetTouch(0).phase != TouchPhase.Ended)) : Input.GetMouseButton(0);
+                ((Input.touchCount > 0) && (Input.GetTouch(0).phase != TouchPhase.Ended)) 
+                : Input.GetMouseButton(0);
         }
     }
 
@@ -48,7 +49,7 @@ public class InputManager : MonoBehaviour
         }
         else if (Input.touchCount > 0)
         {
-            return lastTouchPosition = Input.GetTouch(0).position;
+            return lastTouchPosition = Input.GetTouch(0).position;//TODO: check what the position is on touch end
         }
         return lastTouchPosition;//TODO: make it nullable?
     }
@@ -56,15 +57,26 @@ public class InputManager : MonoBehaviour
     public static void DelegitimiseCurrentTouch()//TODO: insert into an event?
     {
         currentTouchIsIlegitimate = true;
-
     }
 
     private void Update()
     {
         if (GetTouchDown())
         {
-            Debug.Log("currentTouchIsIlegitimate = false");
+            //Debug.Log("currentTouchIsIlegitimate = false");
             currentTouchIsIlegitimate = false;
         }
+
+       /* Debug.Log("--------");
+        if (Input.GetMouseButton(0))
+        {
+            Debug.Log("Mouse Pressed");
+
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            Debug.Log("Mouse Up");
+        }*/
+
     }
 }

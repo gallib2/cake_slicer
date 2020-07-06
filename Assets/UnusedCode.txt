@@ -1,0 +1,576 @@
+﻿
+
+private bool MakeSquraeHole(int x, int y)
+{
+    if (textureWidth != currentTexture.width || textureHeight != currentTexture.height)
+    {
+        Debug.LogError("texture dimentions are incorrect!");
+        textureWidth = currentTexture.width;
+        textureHeight = currentTexture.height;
+    }
+    x = x - halfOfEraseBrushSize;
+    y = y - halfOfEraseBrushSize;
+    int holeWidth = eraseBrushSize;
+    int holeHeight = eraseBrushSize;
+    bool solidPixelFound = false;
+
+    // Color[] coloursInTexture = currentTexture.GetPixels(x, y, eraseBrushSize, eraseBrushSize);//TODO: Optimise
+    /*for (int i = 0; i < coloursInTexture.Length; i++)
+    {
+        if( coloursInTexture[i]!= Color.clear)
+        {
+            emptyPixelFound = true;
+             break;
+        }
+    }*/
+    if (x < 0)
+    {
+        //Debug.Log("x:" + x);
+        holeWidth += x;
+        // Debug.Log("x:"+x);
+        if (holeWidth <= 0)
+        {
+            return false;
+        }
+        else
+        {
+            x = 0;
+        }
+    }
+    else
+    {
+        int textureWidthMinusHoleX = textureWidth - (x + holeWidth);
+        if (textureWidthMinusHoleX < 0)
+        {
+            holeWidth += textureWidthMinusHoleX;
+            if (holeWidth <= 0)
+            {
+                return false;
+            }
+        }
+    }
+
+    if (y < 0)
+    {
+        //Debug.Log("x:" + x);
+        holeHeight += y;
+        // Debug.Log("x:"+x);
+        if (holeHeight <= 0)
+        {
+            return false;
+        }
+        else
+        {
+            y = 0;
+        }
+    }
+    else
+    {
+        int textureHeightMinusHoleY = textureHeight - (y + holeHeight);
+        if (textureHeightMinusHoleY < 0)
+        {
+            holeHeight += textureHeightMinusHoleY;
+            if (holeHeight <= 0)
+            {
+                return false;
+            }
+        }
+    }
+
+    /* for (int ix = x; ix < holeWidth+x; ix++)//TODO: should this be before or after bounds checks?
+     {
+         for (int iy = y; iy < holeHeight+y; iy++)
+         {
+             if (currentTexture.GetPixel(ix, iy) != Color.clear)
+             {
+                 Debug.Log("emptyPixelFound:"+ currentTexture.GetPixel(ix, iy));
+                 Debug.Log("x:" + ix+"y:" + iy);
+                 Debug.Log("width:" + textureWidth + "height:" + textureHeight);
+
+                 currentTexture.SetPixel(ix, iy, Color.magenta);
+                 solidPixelFound = true;
+                 return true;
+                 break;
+             }
+         }
+     }*/
+    // if (solidPixelFound)
+    {
+        changedSinceLastCheck = true;
+        //x = Mathf.Clamp()
+        currentTexture.SetPixels
+            (x, y, holeWidth, holeHeight, clearColours);
+
+        return true;
+    }
+    // return solidPixelFound;
+
+}
+
+/*public class ColliderCreator : MonoBehaviour
+{
+    void Start()
+    {
+        // Stop if no mesh filter exists or there's already a collider
+        if (GetComponent<PolygonCollider2D>() || GetComponent<SpriteRenderer>() == null)
+        {
+            return;
+        }
+
+        // Get triangles and vertices from mesh
+        ushort[] triangles = GetComponent<SpriteRenderer>().sprite.triangles;
+        Vector2[] vertices = GetComponent<SpriteRenderer>().sprite.vertices;
+
+        // Get just the outer edges from the mesh's triangles (ignore or remove any shared edges)
+        Dictionary<string, KeyValuePair<int, int>> edges = new Dictionary<string, KeyValuePair<int, int>>();
+        for (int i = 0; i < triangles.Length; i += 3)
+        {
+            for (int e = 0; e < 3; e++)
+            {
+                int vert1 = triangles[i + e];
+                int vert2 = triangles[i + e + 1 > i + 2 ? i : i + e + 1];
+                string edge = Mathf.Min(vert1, vert2) + ":" + Mathf.Max(vert1, vert2);
+                if (edges.ContainsKey(edge))
+                {
+                    edges.Remove(edge);
+                }
+                else
+                {
+                    edges.Add(edge, new KeyValuePair<int, int>(vert1, vert2));
+                }
+            }
+        }
+
+        // Create edge lookup (Key is first vertex, Value is second vertex, of each edge)
+        Dictionary<int, int> lookup = new Dictionary<int, int>();
+        foreach (KeyValuePair<int, int> edge in edges.Values)
+        {
+            if (lookup.ContainsKey(edge.Key) == false)
+            {
+                lookup.Add(edge.Key, edge.Value);
+            }
+        }
+
+        // Create empty polygon collider
+        PolygonCollider2D polygonCollider = gameObject.AddComponent<PolygonCollider2D>();
+        polygonCollider.pathCount = 0;
+
+        // Loop through edge vertices in order
+        int startVert = 0;
+        int nextVert = startVert;
+        int highestVert = startVert;
+        List<Vector2> colliderPath = new List<Vector2>();
+        while (true)
+        {
+
+            // Add vertex to collider path
+            colliderPath.Add(vertices[nextVert]);
+
+            // Get next vertex
+            nextVert = lookup[nextVert];
+
+            // Store highest vertex (to know what shape to move to next)
+            if (nextVert > highestVert)
+            {
+                highestVert = nextVert;
+            }
+
+            // Shape complete
+            if (nextVert == startVert)
+            {
+
+                // Add path to polygon collider
+                polygonCollider.pathCount++;
+                polygonCollider.SetPath(polygonCollider.pathCount - 1, colliderPath.ToArray());
+                colliderPath.Clear();
+
+                // Go to next shape if one exists
+                if (lookup.ContainsKey(highestVert + 1))
+                {
+
+                    // Set starting and next vertices
+                    startVert = highestVert + 1;
+                    nextVert = startVert;
+
+                    // Continue to next loop
+                    continue;
+                }
+
+                // No more verts
+                break;
+            }
+        }
+    }
+}
+*/
+
+
+for (int x = 0; x < PIXEL_STATES_MAP_SIZE; x += floodFillScale)
+        {
+            for (int y = 0; y < PIXEL_STATES_MAP_SIZE; y += floodFillScale)
+            {
+
+                int px = x / floodFillScale;//TODO: division can be avoided
+                int py = y / floodFillScale;
+
+                if (x >= currentMapWidth || y >= currentMapHeight)
+                {
+                    floodFillMap[px, py] = TRANSPARENT;
+                }
+                else
+                {
+                    floodFillMap[px, py] = 
+                        (pixelsStatesMap[x, y] == PixelState.TRANSPARENT ? TRANSPARENT : UNMARKED_SOLID);
+                }
+
+               // Color colour = value == TRANSPARENT ? Color.black : Color.white;
+                //outputTexture2D.SetPixel(px, py, colour);
+            }
+        }
+
+		 #region Old Attempts:
+    Texture2D floodFillTexture;
+
+    private void FloodFillNumberOfSlices(/*Texture2D texture*/)
+    {
+        /* Debug.Log(floodFillTexture.GetPixel(32, 32));
+         floodFillTexture.SetPixel(32,32,  Color.black);
+         Debug.Log(floodFillTexture.GetPixel(32, 32));*/
+        //return;
+        // byte[,] signatures = new byte[floodFillTexture.width, floodFillTexture.height];
+        Color targetColour = Color.black; //= new Color(UnityEngine.Random.Range(0, 255), UnityEngine.Random.Range(0, 255), UnityEngine.Random.Range(0, 255));
+        int random = UnityEngine.Random.Range(0, 5);
+        switch (random)
+        {
+            case 0:
+                targetColour = Color.black; break;
+            case 1:
+                targetColour = Color.white; break;
+            case 2:
+                targetColour = Color.green; break;
+            case 3:
+                targetColour = Color.red; break;
+            case 4:
+                targetColour = Color.blue; break;
+        }
+        List<Color> previousColours = new List<Color>();
+        previousColours.Add(targetColour);
+        floodFillFuncs.Clear();
+
+        // byte sig = 1;
+        for (int x = 0; x < floodFillTexture.width; x++)
+        {
+            for (int y = 0; y < floodFillTexture.height; y++)
+            {
+                Color thisColour = floodFillTexture.GetPixel(x, y);
+
+                if (thisColour != Color.clear && thisColour != targetColour)
+                {
+                    bool shouldContinue = false;
+                    for (int i = 0; i < previousColours.Count; i++)
+                    {
+                        if(thisColour == previousColours[i])
+                        {
+                            shouldContinue = true;
+                            break;
+                        }
+                    }
+                    if (shouldContinue)
+                    {
+                        continue;
+                    }
+                    FloodFill((byte)x, (byte)y, targetColour);
+                    int newCalls = 0;
+                    while (floodFillFuncs.Count > 0)
+                    {
+                        int oldCalls = floodFillFuncs.Count;
+                        for (int i = 0; i < oldCalls; i++)
+                        {
+                            floodFillFuncs[i]();
+                        }
+                        newCalls = floodFillFuncs.Count - oldCalls;
+                       if ( oldCalls  > 0)
+                       {
+                            floodFillFuncs.RemoveRange(0, oldCalls);
+                       }
+                       else
+                       {
+                            floodFillFuncs.Clear();
+                           break;
+                       }
+
+                    }
+                   // return;
+                    //break;
+                    //StartCoroutine( FloodFillCR(x, y, targetColour));
+                    //return;
+                  //  previousColours.Add(targetColour);
+                   //targetColour = new Color(Random.Range(0, 255), Random.Range(0, 255), Random.Range(0, 255));
+                 //  previousColours.Add(targetColour);
+
+                    /* if (signatures[x, y] == 0)
+                     {
+                         int ix = x;
+                         int iy = y;
+
+                         if(texture.GetPixel(ix+1, iy) != Color.clear)
+                         {
+                             signatures[ix + 1, iy] = sig;
+                             ix++;
+
+                         }
+
+                         while (texture.GetPixel(ix+1, iy) != Color.clear)
+                         {
+                             signatures[ix+1, iy] = sig;
+                             ix++;
+
+                         }
+                         while
+                     }*/
+                }
+            }
+        }
+
+        floodFillTexture.Apply();
+    }
+
+    /*IEnumerator FloodFillCR(int x, int y, Color target)
+    {
+        Color thisColour = floodFillTexture.GetPixel(x, y);
+        if (thisColour != target && thisColour != Color.clear)
+        {
+            //Debug.Log(thisColour.ToString() + "," + target.ToString());
+            floodFillTexture.SetPixel(x, y, target);
+            floodFillTexture.Apply();
+            yield return new WaitForSeconds(0.1f);
+            StartCoroutine(FloodFillCR(x + 1, y, target));
+            yield return new WaitForSeconds(0.1f);
+
+            StartCoroutine(FloodFillCR(x - 1, y, target));
+            yield return new WaitForSeconds(0.1f);
+
+            StartCoroutine(FloodFillCR(x, y + 1, target));
+            yield return new WaitForSeconds(0.1f);
+
+            StartCoroutine(FloodFillCR(x, y - 1, target));
+            yield return new WaitForSeconds(0.1f);
+
+
+        }
+    }*/
+    //public delegate void FloodFillDelegate(byte x, byte y, Color target);
+    public List<Action> floodFillFuncs = new List<Action>();
+
+    private void FloodFill(byte x, byte y,  Color target)
+    {
+       // Color thisColour = floodFillTexture.GetPixel(x, y);
+       // if (thisColour!= target && thisColour != Color.clear)
+        {
+            //Debug.Log(thisColour.ToString() + "," + target.ToString());
+            //floodFillTexture.SetPixel(x, y, target);
+
+            Color neighbourColour;
+            neighbourColour = floodFillTexture.GetPixel(x + 1, y);
+            if(neighbourColour != target && neighbourColour != Color.clear)
+            {
+                //floodFillFuncs.Add(new FloodFillDelegate (FloodFill((byte)(x + 1), y, ref target)));
+                floodFillTexture.SetPixel(x+1, y, target);
+                floodFillFuncs.Add(delegate () { FloodFill((byte)(x + 1), y,  target); });
+            }
+            neighbourColour = floodFillTexture.GetPixel(x - 1, y);
+            if (neighbourColour != target && neighbourColour != Color.clear)
+            {
+                floodFillTexture.SetPixel(x - 1, y, target);
+
+                floodFillFuncs.Add(delegate () { FloodFill((byte)(x - 1), y, target); });
+            }
+            neighbourColour = floodFillTexture.GetPixel(x, y+1);
+            if (neighbourColour != target && neighbourColour != Color.clear)
+            {
+                floodFillTexture.SetPixel(x , y + 1, target);
+
+                floodFillFuncs.Add(delegate () { FloodFill(x, (byte)(y + 1), target); });
+            }
+            neighbourColour = floodFillTexture.GetPixel(x , y - 1);
+             if (neighbourColour != target && neighbourColour != Color.clear)
+             {
+                floodFillTexture.SetPixel(x, y - 1, target);
+
+                floodFillFuncs.Add(delegate () { FloodFill(x, (byte)(y - 1), target); });
+
+             }
+
+        }        
+    }
+
+    #endregion
+
+
+	private bool MakeCircleHoleByDistanceCalculations(int x, int y)
+    {
+        //TODO: this function might be obselete and sholud be deleted
+
+        if (textureWidth != currentTexture.width || textureHeight != currentTexture.height)
+        {
+            Debug.LogError("texture dimentions are incorrect!");
+            textureWidth = currentTexture.width;
+            textureHeight = currentTexture.height;
+        }
+       /* x = x - halfOfEraseBrushSize;
+        y = y - halfOfEraseBrushSize;*/
+       // int holeWidth = eraseBrushSize;
+       // int holeHeight = eraseBrushSize;
+       // bool solidPixelFound = false;
+
+        // Color[] coloursInTexture = currentTexture.GetPixels(x, y, eraseBrushSize, eraseBrushSize);//TODO: Optimise
+        /*for (int i = 0; i < coloursInTexture.Length; i++)
+        {
+            if( coloursInTexture[i]!= Color.clear)
+            {
+                emptyPixelFound = true;
+                 break;
+            }
+        }*/
+
+        /* for (int ix = x; ix < holeWidth+x; ix++)//TODO: should this be before or after bounds checks?
+         {
+             for (int iy = y; iy < holeHeight+y; iy++)
+             {
+                 if (currentTexture.GetPixel(ix, iy) != Color.clear)
+                 {
+                     Debug.Log("emptyPixelFound:"+ currentTexture.GetPixel(ix, iy));
+                     Debug.Log("x:" + ix+"y:" + iy);
+                     Debug.Log("width:" + textureWidth + "height:" + textureHeight);
+
+                     currentTexture.SetPixel(ix, iy, Color.magenta);
+                     solidPixelFound = true;
+                     return true;
+                     break;
+                 }
+             }
+         }*/
+        // if (solidPixelFound)
+        bool changed = false;
+
+        int radius = halfOfEraseBrushSize;
+        int expandedRadius = radius + outlineThickness;
+        bool goldenKnifeIsActive = PowerUps.GoldenKnifeIsActive;
+        Vector2 centre = new Vector2(x, y);
+        if (!(centre.x + expandedRadius < 0 || centre.x - expandedRadius > textureWidth ||
+           centre.y + expandedRadius < 0 || centre.y - expandedRadius > textureHeight))
+        {
+            int XLength = x + expandedRadius;
+            int YLength = y + expandedRadius;
+
+            for (int ix = x - expandedRadius; ix < XLength; ix++)
+            {
+                for (int iy = y - expandedRadius; iy < YLength; iy++)
+                {
+                    //if (!skipHoleGeneration)
+                    {
+                        float distance = Vector2.Distance(new Vector2(ix, iy), centre);//TODO: precalculate
+                        if (/*ix == centre.x || iy == centre.y || */distance <= expandedRadius)// Vector2.Distance(new Vector2(ix, iy), centre) <= radius)
+                        {
+
+                            if (ix > -1 && ix < textureWidth &&
+                                iy > -1 && iy < textureHeight)// && currentTexture.GetPixel(ix, iy).a > 0.5f)
+                            {
+                                //if (!skipInnerHoleGeneration)
+                                {
+                                    PixelState pixelState = pixelsStatesMap[ix, iy];
+                                    if (pixelState == PixelState.UNKNOWN)
+                                    {
+                                        //   if (currentTexture.GetPixel(ix, iy).a < 0.5f)
+                                        if (usePixelMaps)
+                                        {
+                                           // Profiler.BeginSample("PixelHunting");
+
+                                            if (currentPixelMap.pixelStates[ix, iy] == PixelState.TRANSPARENT)
+                                            {
+                                                pixelState = pixelsStatesMap[ix, iy] = PixelState.TRANSPARENT;
+                                            }
+                                          //  Profiler.EndSample();
+
+                                        }
+                                        else
+                                        {
+                                          //  Profiler.BeginSample("PixelHunting");
+
+                                            if (currentTexture.GetPixel(ix, iy).a < 0.5f)
+                                            {
+                                                pixelState = pixelsStatesMap[ix, iy] = PixelState.TRANSPARENT;
+                                            }
+                                            //Profiler.EndSample();
+
+                                        }
+
+                                    }
+                                    if (pixelState != PixelState.TRANSPARENT)
+                                    {
+                                        if (distance > radius)
+                                        {
+                                            if (pixelState != PixelState.OPAQUE_TOUCHED)
+                                            {
+                                                if (!randomiseOutlineShape || UnityEngine.Random.Range((float)radius, (float)expandedRadius) > distance)
+                                                {
+                                                    if (generateOutlineColoursProcedurally)
+                                                    {
+                                                        //if ((!randomiseOutlineShape || UnityEngine.Random.Range((float)radius, (float)expandedRadius) > distanse))
+                                                        {
+                                                            Color colour = Color.Lerp
+                                                                (currentPixelMap.outlineColour1, currentPixelMap.outlineColour2, UnityEngine.Random.Range(0f, 1f));
+                                                            currentTexture.SetPixel(ix, iy, colour);
+                                                            pixelsStatesMap[ix, iy] = PixelState.OPAQUE_TOUCHED;
+                                                        }
+                                                    }
+                                                    else// if (sliceableBeingSliced.outlineTexture != null)
+                                                    {
+                                                        // Color colour = sliceableBeingSliced.outlineTexture.GetPixel(ix, iy);
+                                                        Color outlineColour;
+                                                        if (!goldenKnifeIsActive)
+                                                        {
+                                                            /* colour = Color.Lerp
+                                                                 (sliceableBeingSliced.outlineColour1, sliceableBeingSliced.outlineColour2, colour.r);*/
+                                                            //colour = outlineColours[ix, iy];
+                                                            outlineColour = Color.LerpUnclamped
+                                                                 (currentPixelMap.outlineColour1, currentPixelMap.outlineColour2, outlineColoursBlackAndWhite[ix, iy]);
+                                                        }
+                                                        else
+                                                        {
+                                                            outlineColour = Color.LerpUnclamped
+                                                                (goldenKnifeOutlineColour1, goldenKnifeOutlineColour2, outlineColoursBlackAndWhite[ix, iy]);
+                                                        }
+                                                        currentTexture.SetPixel(ix, iy, outlineColour);//TODO: make some logical system to avoid setting a pixel to the same value multiple times
+                                                        pixelsStatesMap[ix, iy] = PixelState.OPAQUE_TOUCHED;
+
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            currentTexture.SetPixel(ix, iy, Color.clear);
+                                            pixelsStatesMap[ix, iy] = PixelState.TRANSPARENT;
+
+                                        }
+                                        changed = true;
+                                    }
+                                }
+                               
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (changed)
+        {
+            changedSinceLastCheck = true;
+            return true;
+        }
+        return false;
+
+    }

@@ -31,26 +31,26 @@ public class SpriteSlicer : MonoBehaviour
     [SerializeField] private bool randomiseOutlineShape = false;
     [SerializeField] private bool generateOutlineColoursProcedurally = false;
     [SerializeField] private Texture2D outlineTexture;
-    //private Color[,] outlineColours;
     private float[,] outlineColoursBlackAndWhite;
-    private PixelMapping.PixelMap pixelMap;
+    private PixelMapping.PixelMap currentPixelMap;
 
     [SerializeField] private Color goldenKnifeOutlineColour1;
     [SerializeField] private Color goldenKnifeOutlineColour2;
 
-    private PixelState[,] pixelsStates;
+    private PixelState[,] pixelsStatesMap;
+    private const int PIXEL_STATES_MAP_SIZE = 600;
 
     private int halfOfEraseBrushSize;
-    private Color[] clearColours;
     private bool changedSinceLastCheck;
     [SerializeField] private float SliceChecksSpeed = 0.2f;
     [SerializeField] private bool shouldCheckSlicesRegularly;
     [SerializeField] private bool shouldCheckWhenEnteringAndExiting;
-    [SerializeField] private double negligibleSliceSize = 0.01;
-    [SerializeField] private bool skipHoleGeneration;
-    [SerializeField] private bool skipInnerHoleGeneration;
+    [SerializeField] private double negligiblePolygonSliceSize = 0.01;
     [SerializeField] private bool usePixelMaps;
-    [SerializeField] private bool UsePrealculatedHoleShape = true;
+    //[SerializeField] private bool UsePrealculatedHoleShape = true;
+    [SerializeField] private bool useInHouseLerp = true;
+    [SerializeField] private bool useFloodFill = true;
+
 
     public static bool isSlicing;
     private int slicesCount;
@@ -128,9 +128,19 @@ public class SpriteSlicer : MonoBehaviour
                 (dynamicTexture, currentSprite.rect, new Vector2(0.5f, 0.5f), currentSprite.pixelsPerUnit);//, 1, SpriteMeshType.FullRect, currentSprite.border);
             sliceableBeingSliced.spriteRenderer.sprite = newSprite;
 
-            pixelMap = PixelMapping.PixelMapper.instance.pixelMaps[sliceableBeingSliced.pixelMapIndex];
-            GenerateOutlineColoursMap(pixelMap.outlineColour1, pixelMap.outlineColour2);
+            PixelMapping.PixelMap map = PixelMapping.PixelMapper.GetPixelMap(sliceableBeingSliced.pixelMapIndex);
+            if (map==null)
+            {
+                currentPixelMap = PixelMapping.PixelMap.GetEmergencyPixelMap(dynamicTexture);
+            }
+            else
+            {
+                currentPixelMap = map;
+            }
+            GenerateOutlineColoursMap(currentPixelMap.outlineColour1, currentPixelMap.outlineColour2);//TODO:Move and change name
             ResetPixelsStates();
+            GenerateFloodFillMap();
+
         }
     }
 
@@ -161,23 +171,33 @@ public class SpriteSlicer : MonoBehaviour
 
     private void ResetPixelsStates()
     {
-        if (pixelsStates == null)
+        if (pixelsStatesMap == null)
         {
-            pixelsStates = new PixelState[outlineTexture.width, outlineTexture.height];
-
+            pixelsStatesMap = new PixelState[PIXEL_STATES_MAP_SIZE, PIXEL_STATES_MAP_SIZE];
         }
-        int width = pixelsStates.GetLength(0);
-        int height = pixelsStates.GetLength(1);
-         
-        for (int x = 0; x < width; x++)
+
+        int pixelMapWidth = pixelsStatesMap.GetLength(0);
+        int pixelMapHeight = pixelsStatesMap.GetLength(1);
+        int currentMapWidth = currentPixelMap.pixelStates.GetLength(0);
+        int currentMapHeight = currentPixelMap.pixelStates.GetLength(1);
+        for (int x = 0; x < pixelMapWidth; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < pixelMapHeight; y++)
             {
-                pixelsStates[x, y] = PixelState.UNKNOWN;
+                //pixelsStatesMap[x, y] = PixelState.UNKNOWN;
+                if(x >= currentMapWidth || y >= currentMapHeight)
+                {
+                    pixelsStatesMap[x, y] = PixelState.TRANSPARENT;
+                }
+                else
+                {
+                    pixelsStatesMap[x, y] = currentPixelMap.pixelStates[x, y];
+                }
             }
         }
     }
 
+    //Bookeeping:
     private bool overlappedColliderThisFrame;
     private bool overlappedColliderPreviousFrame;
     private float timeOnLastDraw;
@@ -256,84 +276,78 @@ public class SpriteSlicer : MonoBehaviour
 
     private void ThingsToDoWhenTouching( Vector2 touchPosition)
     {
-            Vector2 mousePoint = Camera.main.ScreenToWorldPoint(touchPosition);
-            Collider2D colliderAtMousePoint = (Physics2D.OverlapPoint(mousePoint, cakesLayerMask));
-            overlappedColliderThisFrame = (colliderAtMousePoint != null && colliderAtMousePoint is PolygonCollider2D);
+         Vector2 mousePoint = Camera.main.ScreenToWorldPoint(touchPosition);
+         Collider2D colliderAtMousePoint = (Physics2D.OverlapPoint(mousePoint, cakesLayerMask));
+         overlappedColliderThisFrame = (colliderAtMousePoint != null && colliderAtMousePoint is PolygonCollider2D);//TODO: improve, get rid of collider?
 
-            if (sliceableBeingSliced == null)
+         if (sliceableBeingSliced == null)
+         {
+             return;
+         }
+         currentTexture = sliceableBeingSliced.spriteRenderer.sprite.texture;
+         float normalisedHitPointX = mousePoint.x - boundsMinX;
+         float fractionX = normalisedHitPointX / normalisedMaxX;
+
+         float normalisedHitPointY = mousePoint.y - boundsMinY;
+         float fractionY = normalisedHitPointY / normalisedMaxY;
+
+         int hitPixelX = Mathf.RoundToInt((float)textureWidth * fractionX);
+         int hitPixelY = Mathf.RoundToInt((float)textureHeight * fractionY);
+         Vector2Int newHitPixel = new Vector2Int(hitPixelX, hitPixelY);
+         bool textureChanged = false;
+
+         //Texture Creation:
+         if (MakeCircleHole(hitPixelX, hitPixelY))
+         {
+             textureChanged = true;
+         }
+
+         if (lastHitPixel != Vector2Int.zero)
+         {
+             int distance = Mathf.RoundToInt(Vector2.Distance(newHitPixel, lastHitPixel));
+             //Debug.Log("distance" + distance);
+             if (distance > interpolationDistance)
+             {
+                 for (int multiplierA = interpolationDistance; multiplierA < distance; multiplierA += interpolationDistance)
+                 {
+                     int multiplierB = distance - multiplierA;
+                     Vector2Int InterpolatedPoint = new Vector2Int(
+                         Mathf.RoundToInt((float)((newHitPixel.x * multiplierA) + (lastHitPixel.x * multiplierB)) / (float)distance),
+                         Mathf.RoundToInt((float)((newHitPixel.y * multiplierA) + (lastHitPixel.y * multiplierB)) / (float)distance));
+                     if (MakeCircleHole(InterpolatedPoint.x, InterpolatedPoint.y))
+                     {
+                         textureChanged = true;
+                     }
+                 }
+                 //Vector2Int InterpolatedPoint = new Vector2Int((newHitPixel.x + lastHitPixel.x) / 2, (newHitPixel.y + lastHitPixel.y) / 2);
+             }
+         }
+
+         if (textureChanged)
+         {
+            if (Time.time - timeOnLastDraw > drawRate)
             {
-                return;
+                 currentTexture.Apply();
+                 timeOnLastDraw = Time.time;
             }
-            currentTexture = sliceableBeingSliced.spriteRenderer.sprite.texture;
-            float normalisedHitPointX = mousePoint.x - boundsMinX;
-            float fractionX = normalisedHitPointX / normalisedMaxX;
+         }
+         lastHitPixel = newHitPixel;
+         if (overlappedColliderThisFrame)
+         {
+             isSlicing = true;
+         }
 
-            float normalisedHitPointY = mousePoint.y - boundsMinY;
-            float fractionY = normalisedHitPointY / normalisedMaxY;
+         if (overlappedColliderPreviousFrame && !overlappedColliderThisFrame)
+         {
+             currentTexture.Apply();
+             if (shouldCheckWhenEnteringAndExiting)
+             {
+                 CalculateSlices();
 
-            int hitPixelX = Mathf.RoundToInt((float)textureWidth * fractionX);
-            int hitPixelY = Mathf.RoundToInt((float)textureHeight * fractionY);
-            Vector2Int newHitPixel = new Vector2Int(hitPixelX, hitPixelY);
-            bool textureChanged = false;
+             }
+         }
 
-            //Texture Creation:
-            if (MakeCircleHole(hitPixelX, hitPixelY))
-            {
-                textureChanged = true;
-            }
-
-            if (lastHitPixel != Vector2Int.zero)
-            {
-                int distance = Mathf.RoundToInt(Vector2.Distance(newHitPixel, lastHitPixel));
-                //Debug.Log("distance" + distance);
-                if (distance > interpolationDistance)
-                {
-                    for (int multiplierA = interpolationDistance; multiplierA < distance; multiplierA += interpolationDistance)
-                    {
-                        int multiplierB = distance - multiplierA;
-                        Vector2Int InterpolatedPoint = new Vector2Int(
-                            Mathf.RoundToInt((float)((newHitPixel.x * multiplierA) + (lastHitPixel.x * multiplierB)) / (float)distance),
-                            Mathf.RoundToInt((float)((newHitPixel.y * multiplierA) + (lastHitPixel.y * multiplierB)) / (float)distance));
-                        if (MakeCircleHole(InterpolatedPoint.x, InterpolatedPoint.y))
-                        {
-                            textureChanged = true;
-                        }
-                        /* currentTexture.SetPixel(InterpolatedPoint.x, InterpolatedPoint.y, Color.clear);
-  currentTexture.SetPixel(InterpolatedPoint.x + 1, InterpolatedPoint.y, Color.clear);
-  currentTexture.SetPixel(InterpolatedPoint.x - 1, InterpolatedPoint.y, Color.clear);
-  currentTexture.SetPixel(InterpolatedPoint.x, InterpolatedPoint.y + 1, Color.clear);
-  currentTexture.SetPixel(InterpolatedPoint.x, InterpolatedPoint.y - 1, Color.clear);*/
-                    }
-                    //Vector2Int InterpolatedPoint = new Vector2Int((newHitPixel.x + lastHitPixel.x) / 2, (newHitPixel.y + lastHitPixel.y) / 2);
-                }
-            }
-
-            if (textureChanged)
-            {
-               if (Time.time - timeOnLastDraw > drawRate)
-               {
-                    currentTexture.Apply();
-                    timeOnLastDraw = Time.time;
-               }
-            }
-            lastHitPixel = newHitPixel;
-            if (overlappedColliderThisFrame)
-            {
-                isSlicing = true;
-            }
-
-            if (overlappedColliderPreviousFrame && !overlappedColliderThisFrame)
-            {
-                Debug.Log("CalculateSlices");
-                currentTexture.Apply();
-                if (shouldCheckWhenEnteringAndExiting)
-                {
-                    CalculateSlices();
-
-                }
-            }
-
-            overlappedColliderPreviousFrame = overlappedColliderThisFrame;
+         overlappedColliderPreviousFrame = overlappedColliderThisFrame;
         
         /*else
         {
@@ -341,291 +355,18 @@ public class SpriteSlicer : MonoBehaviour
         }*/
     }
 
-    private bool MakeSquraeHole(int x, int y)
-    {
-        if(textureWidth!= currentTexture.width|| textureHeight != currentTexture.height)
-        {
-            Debug.LogError("texture dimentions are incorrect!");
-            textureWidth = currentTexture.width;
-            textureHeight = currentTexture.height;
-        }
-        x = x - halfOfEraseBrushSize;
-        y = y - halfOfEraseBrushSize;
-        int holeWidth = eraseBrushSize;
-        int holeHeight = eraseBrushSize;
-        bool solidPixelFound = false;
-
-        // Color[] coloursInTexture = currentTexture.GetPixels(x, y, eraseBrushSize, eraseBrushSize);//TODO: Optimise
-        /*for (int i = 0; i < coloursInTexture.Length; i++)
-        {
-            if( coloursInTexture[i]!= Color.clear)
-            {
-                emptyPixelFound = true;
-                 break;
-            }
-        }*/
-        if (x < 0)
-        {
-            //Debug.Log("x:" + x);
-            holeWidth += x;
-            // Debug.Log("x:"+x);
-            if (holeWidth <= 0)
-            {
-                return false;
-            }
-            else
-            {
-                x = 0;
-            }
-        }
-        else
-        {
-            int textureWidthMinusHoleX = textureWidth - (x + holeWidth);
-            if (textureWidthMinusHoleX < 0)
-            {
-                holeWidth += textureWidthMinusHoleX;
-                if (holeWidth <= 0)
-                {
-                    return false;
-                }
-            }
-        }
-
-        if (y < 0)
-        {
-            //Debug.Log("x:" + x);
-            holeHeight += y;
-            // Debug.Log("x:"+x);
-            if (holeHeight <= 0)
-            {
-                return false;
-            }
-            else
-            {
-                y = 0;
-            }
-        }
-        else
-        {
-            int textureHeightMinusHoleY = textureHeight - (y + holeHeight);
-            if (textureHeightMinusHoleY < 0)
-            {
-                holeHeight += textureHeightMinusHoleY;
-                if (holeHeight <= 0)
-                {
-                    return false;
-                }
-            }
-        }
-
-       /* for (int ix = x; ix < holeWidth+x; ix++)//TODO: should this be before or after bounds checks?
-        {
-            for (int iy = y; iy < holeHeight+y; iy++)
-            {
-                if (currentTexture.GetPixel(ix, iy) != Color.clear)
-                {
-                    Debug.Log("emptyPixelFound:"+ currentTexture.GetPixel(ix, iy));
-                    Debug.Log("x:" + ix+"y:" + iy);
-                    Debug.Log("width:" + textureWidth + "height:" + textureHeight);
-
-                    currentTexture.SetPixel(ix, iy, Color.magenta);
-                    solidPixelFound = true;
-                    return true;
-                    break;
-                }
-            }
-        }*/
-       // if (solidPixelFound)
-        {
-            changedSinceLastCheck = true;
-            //x = Mathf.Clamp()
-            currentTexture.SetPixels
-                (x, y, holeWidth, holeHeight, clearColours);
-
-            return true;
-        }
-       // return solidPixelFound;
-
-    }
-
     private bool MakeCircleHole(int x, int y)
     {
-        if (UsePrealculatedHoleShape)
+       // if (UsePrealculatedHoleShape)
         {
             return MakeCircleHoleFromShape(x, y);
         }
-        else
+        /*else
         {
             return MakeCircleHoleByDistanceCalculations(x, y);
-        }
-    }
-
-    private bool MakeCircleHoleByDistanceCalculations(int x, int y)
-    {
-        if (textureWidth != currentTexture.width || textureHeight != currentTexture.height)
-        {
-            Debug.LogError("texture dimentions are incorrect!");
-            textureWidth = currentTexture.width;
-            textureHeight = currentTexture.height;
-        }
-       /* x = x - halfOfEraseBrushSize;
-        y = y - halfOfEraseBrushSize;*/
-       // int holeWidth = eraseBrushSize;
-       // int holeHeight = eraseBrushSize;
-       // bool solidPixelFound = false;
-
-        // Color[] coloursInTexture = currentTexture.GetPixels(x, y, eraseBrushSize, eraseBrushSize);//TODO: Optimise
-        /*for (int i = 0; i < coloursInTexture.Length; i++)
-        {
-            if( coloursInTexture[i]!= Color.clear)
-            {
-                emptyPixelFound = true;
-                 break;
-            }
         }*/
-
-        /* for (int ix = x; ix < holeWidth+x; ix++)//TODO: should this be before or after bounds checks?
-         {
-             for (int iy = y; iy < holeHeight+y; iy++)
-             {
-                 if (currentTexture.GetPixel(ix, iy) != Color.clear)
-                 {
-                     Debug.Log("emptyPixelFound:"+ currentTexture.GetPixel(ix, iy));
-                     Debug.Log("x:" + ix+"y:" + iy);
-                     Debug.Log("width:" + textureWidth + "height:" + textureHeight);
-
-                     currentTexture.SetPixel(ix, iy, Color.magenta);
-                     solidPixelFound = true;
-                     return true;
-                     break;
-                 }
-             }
-         }*/
-        // if (solidPixelFound)
-        bool changed = false;
-
-        int radius = halfOfEraseBrushSize;
-        int expandedRadius = radius + outlineThickness;
-        bool goldenKnifeIsActive = PowerUps.GoldenKnifeIsActive;
-        Vector2 centre = new Vector2(x, y);
-        if (!(centre.x + expandedRadius < 0 || centre.x - expandedRadius > textureWidth ||
-           centre.y + expandedRadius < 0 || centre.y - expandedRadius > textureHeight))
-        {
-            int XLength = x + expandedRadius;
-            int YLength = y + expandedRadius;
-
-            for (int ix = x - expandedRadius; ix < XLength; ix++)
-            {
-                for (int iy = y - expandedRadius; iy < YLength; iy++)
-                {
-                    if (!skipHoleGeneration)
-                    {
-                        float distance = Vector2.Distance(new Vector2(ix, iy), centre);//TODO: precalculate
-                        if (/*ix == centre.x || iy == centre.y || */distance <= expandedRadius)// Vector2.Distance(new Vector2(ix, iy), centre) <= radius)
-                        {
-
-                            if (ix > -1 && ix < textureWidth &&
-                                iy > -1 && iy < textureHeight)// && currentTexture.GetPixel(ix, iy).a > 0.5f)
-                            {
-                                if (!skipInnerHoleGeneration)
-                                {
-                                    PixelState pixelState = pixelsStates[ix, iy];
-                                    if (pixelState == PixelState.UNKNOWN)
-                                    {
-                                        //   if (currentTexture.GetPixel(ix, iy).a < 0.5f)
-                                        if (usePixelMaps)
-                                        {
-                                           // Profiler.BeginSample("PixelHunting");
-
-                                            if (pixelMap.pixelStates[ix, iy] == PixelState.TRANSPARENT)
-                                            {
-                                                pixelState = pixelsStates[ix, iy] = PixelState.TRANSPARENT;
-                                            }
-                                          //  Profiler.EndSample();
-
-                                        }
-                                        else
-                                        {
-                                          //  Profiler.BeginSample("PixelHunting");
-
-                                            if (currentTexture.GetPixel(ix, iy).a < 0.5f)
-                                            {
-                                                pixelState = pixelsStates[ix, iy] = PixelState.TRANSPARENT;
-                                            }
-                                            //Profiler.EndSample();
-
-                                        }
-
-                                    }
-                                    if (pixelState != PixelState.TRANSPARENT)
-                                    {
-                                        if (distance > radius)
-                                        {
-                                            if (pixelState != PixelState.OPAQUE_TOUCHED)
-                                            {
-                                                if (!randomiseOutlineShape || UnityEngine.Random.Range((float)radius, (float)expandedRadius) > distance)
-                                                {
-                                                    if (generateOutlineColoursProcedurally)
-                                                    {
-                                                        //if ((!randomiseOutlineShape || UnityEngine.Random.Range((float)radius, (float)expandedRadius) > distanse))
-                                                        {
-                                                            Color colour = Color.Lerp
-                                                                (pixelMap.outlineColour1, pixelMap.outlineColour2, UnityEngine.Random.Range(0f, 1f));
-                                                            currentTexture.SetPixel(ix, iy, colour);
-                                                            pixelsStates[ix, iy] = PixelState.OPAQUE_TOUCHED;
-                                                        }
-                                                    }
-                                                    else// if (sliceableBeingSliced.outlineTexture != null)
-                                                    {
-                                                        // Color colour = sliceableBeingSliced.outlineTexture.GetPixel(ix, iy);
-                                                        Color outlineColour;
-                                                        if (!goldenKnifeIsActive)
-                                                        {
-                                                            /* colour = Color.Lerp
-                                                                 (sliceableBeingSliced.outlineColour1, sliceableBeingSliced.outlineColour2, colour.r);*/
-                                                            //colour = outlineColours[ix, iy];
-                                                            outlineColour = Color.Lerp
-                                                                 (pixelMap.outlineColour1, pixelMap.outlineColour2, outlineColoursBlackAndWhite[ix, iy]);
-                                                        }
-                                                        else
-                                                        {
-                                                            outlineColour = Color.Lerp
-                                                                (goldenKnifeOutlineColour1, goldenKnifeOutlineColour2, outlineColoursBlackAndWhite[ix, iy]);
-                                                        }
-                                                        currentTexture.SetPixel(ix, iy, outlineColour);//TODO: make some logical system to avoid setting a pixel to the same value multiple times
-                                                        pixelsStates[ix, iy] = PixelState.OPAQUE_TOUCHED;
-
-                                                    }
-                                                }
-                                            }
-
-                                        }
-                                        else
-                                        {
-                                            currentTexture.SetPixel(ix, iy, Color.clear);
-                                            pixelsStates[ix, iy] = PixelState.TRANSPARENT;
-
-                                        }
-                                        changed = true;
-                                    }
-                                }
-                               
-
-                            }
-                        }
-                    }
-                    
-                }
-            }
-        }
-        if (changed)
-        {
-            changedSinceLastCheck = true;
-            return true;
-        }
-        return false;
-
     }
+
 
     private bool MakeCircleHoleFromShape(int x, int y)
     {
@@ -639,27 +380,25 @@ public class SpriteSlicer : MonoBehaviour
         bool changed = false;
 
         bool goldenKnifeIsActive = PowerUps.GoldenKnifeIsActive;
-        Vector2 centre = new Vector2(x, y);
 
-       // Debug.Log(holeShape.Length);
         for (int i = 0; i < holeShape.Length; i++)
         {
             ref ShapePixel shapePixel = ref holeShape[i];
             int textureX = shapePixel.x + x;
             int textureY = shapePixel.y + y;
 
-            if (textureX > 0 && textureY > 0 &&
+            if (textureX >= 0 && textureY >= 0 &&
                 textureX < textureWidth && textureY < textureHeight)
             {
-                PixelState texturePixelState = pixelsStates[textureX, textureY];
+                PixelState texturePixelState = pixelsStatesMap[textureX, textureY];
                 if (texturePixelState == PixelState.UNKNOWN)
                 {
                     if (usePixelMaps)
                     {
                         // Profiler.BeginSample("PixelHunting");
-                        if (pixelMap.pixelStates[textureX, textureY] == PixelState.TRANSPARENT)
+                        if (currentPixelMap.pixelStates[textureX, textureY] == PixelState.TRANSPARENT)
                         {
-                            texturePixelState = pixelsStates[textureX, textureY] = PixelState.TRANSPARENT;
+                            texturePixelState = pixelsStatesMap[textureX, textureY] = PixelState.TRANSPARENT;
                         }
                         //  Profiler.EndSample();
 
@@ -668,9 +407,9 @@ public class SpriteSlicer : MonoBehaviour
                     {
                         //  Profiler.BeginSample("PixelHunting");
 
-                        if (currentTexture.GetPixel(textureX, textureY).a < 0.5f)
+                        if (currentTexture.GetPixel(textureX, textureY).a < 0.15f)
                         {
-                            texturePixelState = pixelsStates[textureX, textureY] = PixelState.TRANSPARENT;
+                            texturePixelState = pixelsStatesMap[textureX, textureY] = PixelState.TRANSPARENT;
                         }
                         //Profiler.EndSample();
 
@@ -684,24 +423,44 @@ public class SpriteSlicer : MonoBehaviour
                         //Outline Generation:
                         Color outlineColour;
                          if (!goldenKnifeIsActive)
-                         {
+                         {      
+                            if (useInHouseLerp)
+                            {
+                                Profiler.BeginSample("In House Lerp");
+                                float normaliser = outlineColoursBlackAndWhite[textureX, textureY];
+                                Color colour1 = currentPixelMap.outlineColour1;
+                                Color colour2 = currentPixelMap.outlineColour2;
 
-                             outlineColour = Color.Lerp
-                                  (pixelMap.outlineColour1, pixelMap.outlineColour2, outlineColoursBlackAndWhite[textureX, textureY]);
+                                //Wow, no need to check max and min..
+                                outlineColour.r =
+                                   (normaliser * (colour1.r - colour2.r)) + colour2.r;          
+                                outlineColour.g =
+                                   (normaliser * (colour1.g - colour2.g)) + colour2.g;
+                                outlineColour.b =
+                                   (normaliser * (colour1.b - colour2.b)) + colour2.b;
+
+                                outlineColour.a = 1;
+
+                                Profiler.EndSample();  //Why is this slower than unity's function and why does it give dark results??
+                            }
+                            else
+                            {
+                                outlineColour = Color.LerpUnclamped
+                                    (currentPixelMap.outlineColour1, currentPixelMap.outlineColour2, outlineColoursBlackAndWhite[textureX, textureY]);
+                            }
                          }
                          else
                          {
-                             outlineColour = Color.Lerp
+                             outlineColour = Color.LerpUnclamped
                                  (goldenKnifeOutlineColour1, goldenKnifeOutlineColour2, outlineColoursBlackAndWhite[textureX, textureY]);
                          }
-                         currentTexture.SetPixel(textureX, textureY, outlineColour);//TODO: make some logical system to avoid setting a pixel to the same value multiple times
-                         pixelsStates[textureX, textureY] = PixelState.OPAQUE_TOUCHED;
+                         currentTexture.SetPixel(textureX, textureY, outlineColour);
+                         pixelsStatesMap[textureX, textureY] = PixelState.OPAQUE_TOUCHED;
                     }
                     else
                     {
                         currentTexture.SetPixel(textureX, textureY, Color.clear);
-                        pixelsStates[textureX, textureY] = PixelState.TRANSPARENT;
-
+                        pixelsStatesMap[textureX, textureY] = PixelState.TRANSPARENT;
                     }
                     changed = true;
                 }
@@ -721,31 +480,48 @@ public class SpriteSlicer : MonoBehaviour
     {
         if (changedSinceLastCheck)
         {
-            List<Polygon2D> polygons = Polygon2DList.CreateFromPolygonCollider(sliceableBeingSliced.GetNewPolygonCollider());
-            if (polygons.Count > 1)//Optimisation..
+            Debug.Log("CalculateSlices");
+
+            if (useFloodFill)
             {
-                //Debug.Log("polygons.Count :" + polygons.Count);
-                /*for (int i = 0; i < polygons.Count;)//TODO: must be inefficient
+                CalculateSlicesByFloodFill();
+            }
+            else 
+            {
+                CalculateSlicesByPolygonCalculations();
+            }
+
+            changedSinceLastCheck = false;
+
+        }
+
+        //Invoke("CalculateSlices", SliceChecksSpeed);
+    }
+
+    private void CalculateSlicesByPolygonCalculations()
+    {
+        List<Polygon2D> polygons = Polygon2DList.CreateFromPolygonCollider(sliceableBeingSliced.GetNewPolygonCollider());
+        if (polygons.Count > 1)//Optimisation..
+        {
+            //Debug.Log("polygons.Count :" + polygons.Count);
+            /*for (int i = 0; i < polygons.Count;)//TODO: must be inefficient
+            {
+                Debug.Log("Area:" + polygons[i].GetArea());
+                i++;
+            }*/
+            for (int i = 0; i < polygons.Count;)//TODO: must be inefficient//TODO: add this feature to floodfill system
+            {
+                if (polygons[i].GetArea() < negligiblePolygonSliceSize)
                 {
-                    Debug.Log("Area:" + polygons[i].GetArea());
+                    polygons.RemoveAt(i);
+                }
+                else
+                {
                     i++;
-                }*/
-                for (int i = 0; i < polygons.Count;)//TODO: must be inefficient
-                {
-                    if (polygons[i].GetArea() < negligibleSliceSize)
-                    {
-                        polygons.RemoveAt(i);
-                    }
-                    else
-                    {
-                        i++;
-                    }
                 }
             }
-            slicesCount = polygons.Count;
         }
-        changedSinceLastCheck = false;
-        //Invoke("CalculateSlices", SliceChecksSpeed);
+        slicesCount = polygons.Count;
     }
 
     private void CalculateSlicesRegularly()
@@ -755,10 +531,16 @@ public class SpriteSlicer : MonoBehaviour
             CalculateSlices();
         }
         Invoke("CalculateSlicesRegularly", SliceChecksSpeed);
-
     }
 
+
     public List<double> SlicesSizesInDoubles()
+    {
+        return (useFloodFill ?
+            floodFillSlicesSizes : SlicesSizesInDoublesByPolygonCalculations());
+    }
+
+    public List<double> SlicesSizesInDoublesByPolygonCalculations()
     {
         List<double> slicesSizesInDoubles = new List<double>();
 
@@ -775,7 +557,7 @@ public class SpriteSlicer : MonoBehaviour
         {
             double size = polygons[i].GetArea();
             Debug.Log("size " + size);
-            if (size > negligibleSliceSize)
+            if (size > negligiblePolygonSliceSize)
             {
                 slicesSizesInDoubles.Add(polygons[i].GetArea());
             }
@@ -783,7 +565,6 @@ public class SpriteSlicer : MonoBehaviour
 
         return slicesSizesInDoubles;
     }
-
 
     private struct ShapePixel
     {
@@ -811,10 +592,9 @@ public class SpriteSlicer : MonoBehaviour
         {
             for (int iy = - expandedRadius; iy < expandedRadius; iy++)
             {
-                float distance = Vector2.Distance(new Vector2(ix, iy), centre);//TODO: precalculate
-                if (distance <= expandedRadius)// Vector2.Distance(new Vector2(ix, iy), centre) <= radius)
+                float distance = Vector2.Distance(new Vector2(ix, iy), centre);
+                if (distance <= expandedRadius)
                 {
-                   // PixelState pixelState = pixelsStates[ix, iy];
                     if (distance > radius)
                     {
                         pixelStates.Add(new ShapePixel( PixelState.OPAQUE_TOUCHED,ix,iy));
@@ -831,179 +611,243 @@ public class SpriteSlicer : MonoBehaviour
     }
 
     #region Flood Fill:
-    Texture2D floodFillTexture;
-    
-    private void FloodFillNumberOfSlices(/*Texture2D texture*/)
+    [Header("Flood Fill")]
+
+    [SerializeField] private int floodFillScale = 8;
+    [SerializeField] private bool _debugFloodFillOutput = false;
+    private bool DebugFloodFillOutput
     {
-        /* Debug.Log(floodFillTexture.GetPixel(32, 32));
-         floodFillTexture.SetPixel(32,32,  Color.black);
-         Debug.Log(floodFillTexture.GetPixel(32, 32));*/
-        //return;
-        // byte[,] signatures = new byte[floodFillTexture.width, floodFillTexture.height];
-        Color targetColour = Color.black; //= new Color(UnityEngine.Random.Range(0, 255), UnityEngine.Random.Range(0, 255), UnityEngine.Random.Range(0, 255));
-        int random = UnityEngine.Random.Range(0, 5);
-        switch (random)
-        {
-            case 0:
-                targetColour = Color.black; break;
-            case 1:
-                targetColour = Color.white; break;
-            case 2:
-                targetColour = Color.green; break;
-            case 3:
-                targetColour = Color.red; break;
-            case 4:
-                targetColour = Color.blue; break;
-        }
-        List<Color> previousColours = new List<Color>();
-        previousColours.Add(targetColour);
-        floodFillFuncs.Clear();
+        get { return (_debugFloodFillOutput && (SystemInfo.deviceType != DeviceType.Handheld)); }
+    }
+    public Texture2D floodFillOutputTexture;
+    [SerializeField] private double negligibleFloodFillSliceSize = 4;
 
-        // byte sig = 1;
-        for (int x = 0; x < floodFillTexture.width; x++)
+    private byte[,] floodFillMap;
+    public List<double> floodFillSlicesSizes;
+    private const byte UNMARKED_SOLID = 1;
+    private const byte TRANSPARENT = 0;
+    const double FLOOD_FILL_PIXEL_SIZE = 1;
+
+    private List<FillUnit> fills = new List<FillUnit>();
+    private List<FillUnit> fillsNext = new List<FillUnit>();
+
+
+    public void CalculateSlicesByFloodFill()
+    {
+        UpdateFloodFillMap();
+        //StartCoroutine( CalculateFill());
+        CalculateFill();
+        for (int i = 0; i < floodFillSlicesSizes.Count;)
         {
-            for (int y = 0; y < floodFillTexture.height; y++)
+            if (floodFillSlicesSizes[i] < negligibleFloodFillSliceSize)
             {
-                Color thisColour = floodFillTexture.GetPixel(x, y);
+                Debug.Log("Removed slice of size " + floodFillSlicesSizes[i]);
+                floodFillSlicesSizes.RemoveAt(i);
+            }
+            else
+            {
+                i++;
+            }
+        }
+        slicesCount = floodFillSlicesSizes.Count;
 
-                if (thisColour != Color.clear && thisColour != targetColour)
+    }
+
+    private void GenerateFloodFillMap()
+    {
+
+        Debug_InitTexture();
+
+        if (floodFillMap == null)
+        {
+            floodFillMap = new byte[PIXEL_STATES_MAP_SIZE / floodFillScale, PIXEL_STATES_MAP_SIZE / floodFillScale];
+        }
+
+        int currentMapWidth = currentPixelMap.pixelStates.GetLength(0);
+        int currentMapHeight = currentPixelMap.pixelStates.GetLength(1);
+        int width = currentMapWidth / floodFillScale;
+        int height = currentMapHeight / floodFillScale;
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                floodFillMap[x, y] =
+                     (pixelsStatesMap[x * floodFillScale, y * floodFillScale] == PixelState.TRANSPARENT 
+                      ? TRANSPARENT : UNMARKED_SOLID);
+                // Color colour = value == TRANSPARENT ? Color.black : Color.white;
+                //outputTexture2D.SetPixel(px, py, colour);
+            }
+        }
+        // outputTexture2D.Apply();
+    }
+
+    private void UpdateFloodFillMap()
+    {
+        Debug_InitTexture();
+
+        int currentMapWidth = currentPixelMap.pixelStates.GetLength(0);
+        int currentMapHeight = currentPixelMap.pixelStates.GetLength(1);
+        int width = currentMapWidth / floodFillScale;
+        int height = currentMapHeight / floodFillScale;
+
+        for (int x = 0; x < width; x ++)
+        {
+            for (int y = 0; y < height; y ++)
+            {
+                //if(floodFillMap[x, y] != TRANSPARENT)
                 {
-                    bool shouldContinue = false;
-                    for (int i = 0; i < previousColours.Count; i++)
+                    floodFillMap[x, y] =
+                        (pixelsStatesMap[x * floodFillScale, y * floodFillScale] == PixelState.TRANSPARENT 
+                        ? TRANSPARENT : UNMARKED_SOLID);
+                }
+                // Color colour = value == TRANSPARENT ? Color.black : Color.white;
+                //outputTexture2D.SetPixel(px, py, colour);
+            }
+        }
+        // outputTexture2D.Apply();
+    }
+
+    private void Debug_InitTexture()
+    {
+        if (DebugFloodFillOutput)
+        {
+            if (floodFillOutputTexture == null)
+            {
+                floodFillOutputTexture = new Texture2D
+                    (PIXEL_STATES_MAP_SIZE / floodFillScale, PIXEL_STATES_MAP_SIZE / floodFillScale, TextureFormat.RGBA32, false);
+            }
+            else
+            {
+                Color32 resetColor = new Color32(0, 0, 0, 0);
+                Color32[] resetColorArray = floodFillOutputTexture.GetPixels32();
+                for (int i = 0; i < resetColorArray.Length; i++)
+                {
+                    resetColorArray[i] = resetColor;
+                }
+                floodFillOutputTexture.SetPixels32(resetColorArray);
+            }
+        }
+    }
+
+    public struct FillUnit
+    {
+        public byte x;
+        public byte y;
+        public byte id;
+
+        public FillUnit(byte px, byte py, byte pId)
+        {
+            x = px;
+            y = py;
+            id = pId;
+        }
+    }
+
+    private void CalculateFill()
+    {
+        int width = currentPixelMap.pixelStates.GetLength(0) / floodFillScale;
+        int height = currentPixelMap.pixelStates.GetLength(1) / floodFillScale;
+       // Debug.Log("width" + width);
+       // Debug.Log("height" + height);
+       // int count = 0;
+        //int loopCount = 0;
+        byte currentID = UNMARKED_SOLID;
+        int currentSliceSizeIndex = 0;
+
+        fills.Clear();
+        fillsNext.Clear();
+        floodFillSlicesSizes.Clear();
+
+        Color currentColour = new Color();
+        bool shouldDebugFloodFillOutput = DebugFloodFillOutput;
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+
+                if (floodFillMap[x, y] == UNMARKED_SOLID)
+                {
+                    currentID += 1;
+                    currentSliceSizeIndex = currentID - 2;
+                    floodFillSlicesSizes.Add(0);
+                    floodFillMap[x, y] = currentID;
+                    fills.Add(new FillUnit((byte)x, (byte)y, currentID));
+                    currentColour = new Color
+                        (UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
+                }
+
+                while (fills.Count > 0)
+                {
+                   // yield return new WaitForSeconds(0.004f);
+                    //loopCount += 1;
+                    foreach (FillUnit fill in fills)
                     {
-                        if(thisColour == previousColours[i])
+                       // yield return new WaitForSeconds(0.002f);
+
+                        byte fx = fill.x;
+                        byte fy = fill.y;
+
+                        if (shouldDebugFloodFillOutput)
                         {
-                            shouldContinue = true;
-                            break;
+                            floodFillOutputTexture.SetPixel(fx, fy, currentColour);
+                           // floodFillOutputTexture.Apply();
+                        }
+
+                        //floodFillMap[fx, fy] = currentID;
+                        // Debug.Log("currentID:" + currentID);
+                        floodFillSlicesSizes[currentSliceSizeIndex] += FLOOD_FILL_PIXEL_SIZE;//TODO: bad writing
+
+                        //count++;
+
+                        /* if (fy <= 0 || fx <= 0 || fx >= width - 1 || fy >= height - 1)//TODO: find out what this is all about
+                         {
+                             floodFillMap[fx, fy] = TRANSPARENT;
+                             continue;
+                         }*/
+
+                        int xStart = (fx == 0 ? 0 : -1);
+                        int yStart = (fy == 0 ? 0 : -1);
+                        int xEnd = (fx == width -1 ? 0 : 1);
+                        int yEnd = (fy == height - 1 ? 0 : 1);
+                        for (int ix = xStart; ix <= xEnd; ix++)
+                        {
+                            for (int iy = yStart; iy <= yEnd; iy++)
+                            {
+                                int nx = fx + ix;
+                                int ny = fy + iy;
+                               /* if (nx<0||ny<0|| nx >= width|| ny >= height)
+                                {
+                                    continue;
+                                }*/
+                                if (floodFillMap[nx, ny] == UNMARKED_SOLID)
+                                {
+                                    floodFillMap[nx, ny] = currentID;
+                                    fillsNext.Add(new FillUnit((byte)nx, (byte)ny, currentID));
+                                }
+                            }
                         }
                     }
-                    if (shouldContinue)
-                    {
-                        continue;
-                    }
-                    FloodFill((byte)x, (byte)y, targetColour);
-                    int newCalls = 0;
-                    while (floodFillFuncs.Count > 0)
-                    {
-                        int oldCalls = floodFillFuncs.Count;
-                        for (int i = 0; i < oldCalls; i++)
-                        {
-                            floodFillFuncs[i]();
-                        }
-                        newCalls = floodFillFuncs.Count - oldCalls;
-                       if ( oldCalls  > 0)
-                       {
-                            floodFillFuncs.RemoveRange(0, oldCalls);
-                       }
-                       else
-                       {
-                            floodFillFuncs.Clear();
-                           break;
-                       }
 
-                    }
-                   // return;
-                    //break;
-                    //StartCoroutine( FloodFillCR(x, y, targetColour));
-                    //return;
-                  //  previousColours.Add(targetColour);
-                   //targetColour = new Color(Random.Range(0, 255), Random.Range(0, 255), Random.Range(0, 255));
-                 //  previousColours.Add(targetColour);
+                    // Debug.Log("fills" + fills.Count);
+                    // Debug.Log("fillsNext" + fillsNext.Count);
 
-                    /* if (signatures[x, y] == 0)
-                     {
-                         int ix = x;
-                         int iy = y;
-
-                         if(texture.GetPixel(ix+1, iy) != Color.clear)
-                         {
-                             signatures[ix + 1, iy] = sig;
-                             ix++;
-
-                         }
-
-                         while (texture.GetPixel(ix+1, iy) != Color.clear)
-                         {
-                             signatures[ix+1, iy] = sig;
-                             ix++;
-
-                         }
-                         while
-                     }*/
+                    List<FillUnit> swap = fills;
+                    swap.Clear();
+                    fills = fillsNext;
+                    fillsNext = swap;
                 }
             }
         }
-
-        floodFillTexture.Apply();
-    }
-
-    /*IEnumerator FloodFillCR(int x, int y, Color target)
-    {
-        Color thisColour = floodFillTexture.GetPixel(x, y);
-        if (thisColour != target && thisColour != Color.clear)
+        
+        // For visual represantion / Only Testing Purposes
+        if (DebugFloodFillOutput)
         {
-            //Debug.Log(thisColour.ToString() + "," + target.ToString());
-            floodFillTexture.SetPixel(x, y, target);
-            floodFillTexture.Apply();
-            yield return new WaitForSeconds(0.1f);
-            StartCoroutine(FloodFillCR(x + 1, y, target));
-            yield return new WaitForSeconds(0.1f);
-
-            StartCoroutine(FloodFillCR(x - 1, y, target));
-            yield return new WaitForSeconds(0.1f);
-
-            StartCoroutine(FloodFillCR(x, y + 1, target));
-            yield return new WaitForSeconds(0.1f);
-
-            StartCoroutine(FloodFillCR(x, y - 1, target));
-            yield return new WaitForSeconds(0.1f);
-
-
+            floodFillOutputTexture.Apply();
         }
-    }*/
-    //public delegate void FloodFillDelegate(byte x, byte y, Color target);
-    public List<Action> floodFillFuncs = new List<Action>();
 
-    private void FloodFill(byte x, byte y,  Color target)
-    {
-       // Color thisColour = floodFillTexture.GetPixel(x, y);
-       // if (thisColour!= target && thisColour != Color.clear)
-        {
-            //Debug.Log(thisColour.ToString() + "," + target.ToString());
-            //floodFillTexture.SetPixel(x, y, target);
-
-            Color neighbourColour;
-            neighbourColour = floodFillTexture.GetPixel(x + 1, y);
-            if(neighbourColour != target && neighbourColour != Color.clear)
-            {
-                //floodFillFuncs.Add(new FloodFillDelegate (FloodFill((byte)(x + 1), y, ref target)));
-                floodFillTexture.SetPixel(x+1, y, target);
-                floodFillFuncs.Add(delegate () { FloodFill((byte)(x + 1), y,  target); });
-            }
-            neighbourColour = floodFillTexture.GetPixel(x - 1, y);
-            if (neighbourColour != target && neighbourColour != Color.clear)
-            {
-                floodFillTexture.SetPixel(x - 1, y, target);
-
-                floodFillFuncs.Add(delegate () { FloodFill((byte)(x - 1), y, target); });
-            }
-            neighbourColour = floodFillTexture.GetPixel(x, y+1);
-            if (neighbourColour != target && neighbourColour != Color.clear)
-            {
-                floodFillTexture.SetPixel(x , y + 1, target);
-
-                floodFillFuncs.Add(delegate () { FloodFill(x, (byte)(y + 1), target); });
-            }
-            neighbourColour = floodFillTexture.GetPixel(x , y - 1);
-             if (neighbourColour != target && neighbourColour != Color.clear)
-             {
-                floodFillTexture.SetPixel(x, y - 1, target);
-
-                floodFillFuncs.Add(delegate () { FloodFill(x, (byte)(y - 1), target); });
-
-             }
-
-        }        
+        //textInput.text = width + "x" + height + " : Count: " + count + " | Loop Count: " + loopCount + " | Pieces: " + currentID;
     }
 
     #endregion

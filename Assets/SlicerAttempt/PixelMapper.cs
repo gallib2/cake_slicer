@@ -7,32 +7,57 @@ namespace PixelMapping
 {
     public class PixelMapper : MonoBehaviour
     {
-        public static PixelMapper instance;
+       // public static PixelMapper instance;
+        private static bool initialised = false;
         public PixelMap[] pixelMaps;
+        private static PixelMap[] staticPixelMaps;
 
-        private void Awake()
+        public static PixelMap GetPixelMap(int index)
         {
-            if (instance == null)
+            if(staticPixelMaps==null||index < 1 || index>= staticPixelMaps.Length )
             {
-                instance = this;
+                return null;
             }
             else
             {
-                Destroy(this);
+                return staticPixelMaps[index];
             }
-          
-            for (int i = 1; i < pixelMaps.Length; i++)
-            {
-                if(pixelMaps[i] != null)
-                {
-                    if (pixelMaps[i].pixelStates == null)
-                    {
-                        pixelMaps[i].Initialise();
-                        Debug.Log("Initialising pixel map!");
-                    }
-                }
+        }
 
+        private void Awake()
+        {
+            if (!initialised)
+            {
+                List<string> textureNames = new List<string>();
+                for (int i = 1; i < pixelMaps.Length; i++)
+                {
+                    if (pixelMaps[i] != null)
+                    {
+                        string textureName = pixelMaps[i].GetTextureName();
+                        if (textureName != null)
+                        {
+                            for (int j = 0; j < textureNames.Count; j++)
+                            {
+                                if(string.Equals(textureName,textureNames[j]))
+                                {
+                                    Debug.LogWarning("Duplicate found.");
+                                }
+                            }
+                            textureNames.Add(textureName);
+
+                        }
+                        if (pixelMaps[i].pixelStates == null)
+                        {
+                            pixelMaps[i].Initialise();
+                            Debug.Log("Initialising pixel map!");
+                        }
+                    }
+
+                }
+                staticPixelMaps = pixelMaps;
+                initialised = true;
             }
+            
         }
     }
 
@@ -44,8 +69,20 @@ namespace PixelMapping
         public Color outlineColour1;
         public Color outlineColour2;
 
+        private const float ALPHA_THRESHOLD = 0.15f;
+
         public void Initialise()
         {
+            if (texture == null)
+            {
+                Debug.LogWarning("PixelMap texture is null.");
+                return;
+            }
+            else if (pixelStates != null)
+            {
+                Debug.LogError("pixelStates had been initialised somehow !");
+                return;
+            }
             outlineColour1.a = 1;
             outlineColour2.a = 1;
 
@@ -57,11 +94,30 @@ namespace PixelMapping
                 for (int y = 0; y  < height; y++)
                 {
                     pixelStates[x, y] =
-                        (texture.GetPixel(x, y).a > 0.5f ? PixelState.OPAQUE_UNTOUCHED : PixelState.TRANSPARENT);
+                        (texture.GetPixel(x, y).a > ALPHA_THRESHOLD ? PixelState.OPAQUE_UNTOUCHED : PixelState.TRANSPARENT);
                 }
             }
         }
 
+        public string GetTextureName()
+        {      
+            return ( texture == null ? null : texture.name);
+        }
+
+
+        public static PixelMap GetEmergencyPixelMap(Texture2D texture)
+        {
+            Debug.LogWarning("Generating emergency pixel map.");
+            PixelMap pixelMap = new PixelMap(texture);
+            pixelMap.Initialise();
+            return pixelMap;
+        }
+        private PixelMap (Texture2D texture)
+        {
+            this.texture = texture;
+            outlineColour1 = Color.black;
+            outlineColour2 = Color.white;
+        }
     }
 }
 public enum PixelState : byte

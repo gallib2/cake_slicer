@@ -3665,7 +3665,7 @@ MonoBehaviour:
   - texture: {fileID: 2800000, guid: fc377dbf603d4ea4a9e7175bf8c71bc9, type: 3}
     outlineColour1: {r: 0.31764707, g: 0.18039216, b: 0.14117648, a: 0}
     outlineColour2: {r: 0.75686276, g: 0.79607844, b: 0.7058824, a: 0}
-  - texture: {fileID: 2800000, guid: 7faa3ad81f058164aadc5e4b48d18ec9, type: 3}
+  - texture: {fileID: 0}
     outlineColour1: {r: 0.5568628, g: 0.2901961, b: 0.25490198, a: 0}
     outlineColour2: {r: 0.7921569, g: 0.627451, b: 0.36862746, a: 0}
   - texture: {fileID: 2800000, guid: e765c74819aa0264492fe9290d167da2, type: 3}
