@@ -574,3 +574,7 @@ for (int x = 0; x < PIXEL_STATES_MAP_SIZE; x += floodFillScale)
         return false;
 
     }
+
+	           /* lowerDynamicTexture = new Texture2D(currentTexture.width, currentTexture.height/2);
+            lowerDynamicTexture.filterMode = currentTexture.filterMode;
+            lowerDynamicTexture.SetPixels(currentTexture.GetPixels(0,0, lowerDynamicTexture.width, lowerDynamicTexture.height));*/

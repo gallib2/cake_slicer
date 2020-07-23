@@ -106,11 +106,13 @@ public class SpriteSlicer : MonoBehaviour
         {
             //TODO: check if some of these are obselete!
             sliceableBeingSliced = newSliceable;//colliderAtPoint.GetComponent<SpriteSliceable>();
+            PixelMapping.PixelMap map = PixelMapping.PixelMapper.GetPixelMap(sliceableBeingSliced.pixelMapIndex);
+
             sliceableBeingSliced.Initialise();
             currentTexture = sliceableBeingSliced.spriteRenderer.sprite.texture;
-            dynamicTexture = new Texture2D(currentTexture.width, currentTexture.height);
+            dynamicTexture = new Texture2D(currentTexture.width, currentTexture.height, currentTexture.format, false);
             dynamicTexture.filterMode = currentTexture.filterMode;
-            dynamicTexture.SetPixels(currentTexture.GetPixels());
+            dynamicTexture.SetPixels32(currentTexture.GetPixels32());
             dynamicTexture.Apply();
             textureWidth = dynamicTexture.width;
             textureHeight = dynamicTexture.height;
@@ -120,16 +122,13 @@ public class SpriteSlicer : MonoBehaviour
             boundsMinY = sliceableBeingSliced.boxCollider.bounds.min.y;
             normalisedMaxY = sliceableBeingSliced.boxCollider.bounds.max.y - boundsMinY;
             boxCollider.enabled = false;
-           /* lowerDynamicTexture = new Texture2D(currentTexture.width, currentTexture.height/2);
-            lowerDynamicTexture.filterMode = currentTexture.filterMode;
-            lowerDynamicTexture.SetPixels(currentTexture.GetPixels(0,0, lowerDynamicTexture.width, lowerDynamicTexture.height));*/
+
             Sprite currentSprite = sliceableBeingSliced.spriteRenderer.sprite;
             Sprite newSprite = Sprite.Create
                 (dynamicTexture, currentSprite.rect, new Vector2(0.5f, 0.5f), currentSprite.pixelsPerUnit);//, 1, SpriteMeshType.FullRect, currentSprite.border);
             sliceableBeingSliced.spriteRenderer.sprite = newSprite;
 
-            PixelMapping.PixelMap map = PixelMapping.PixelMapper.GetPixelMap(sliceableBeingSliced.pixelMapIndex);
-            if (map==null)
+            if (map == null)
             {
                 currentPixelMap = PixelMapping.PixelMap.GetEmergencyPixelMap(dynamicTexture);
             }
@@ -255,13 +254,6 @@ public class SpriteSlicer : MonoBehaviour
                 lastHitPixel = Vector2Int.zero;
             }
         }*/
-
-
-      /*  if (Input.GetKeyDown(KeyCode.F))
-        {
-            floodFillTexture = currentTexture;
-            FloodFillNumberOfSlices();
-        }*/
     }
 
     private void ThingsToDoOnTouchEnded()
@@ -366,7 +358,6 @@ public class SpriteSlicer : MonoBehaviour
             return MakeCircleHoleByDistanceCalculations(x, y);
         }*/
     }
-
 
     private bool MakeCircleHoleFromShape(int x, int y)
     {

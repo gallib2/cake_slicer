@@ -64,6 +64,8 @@ public class LevelsManager: MonoBehaviour
                 CurrentLevel = gameLevels[levelIndex];
                 GameManager.toSetPauseOnEnterLevel = toPauseOnEnter;
                 GameManager.currentLevelIsUntouched = (GetLevelSavedState(levelIndex) == LevelStates.UNTOUCHED);
+                //TODO: If this feature is here to stay, this reload is causing an annoying delay when going to the next level. 
+                //initialise the next level inside CakeScene instead.
                 SceneManager.LoadScene(cakesScene);
             }
         }
